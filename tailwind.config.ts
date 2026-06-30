@@ -47,6 +47,23 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        /* Named project palette (alpha-aware so bg-paper/60 etc. work) */
+        paper: {
+          DEFAULT: "hsl(var(--paper) / <alpha-value>)",
+          2: "hsl(var(--paper-2) / <alpha-value>)",
+        },
+        ink: {
+          DEFAULT: "hsl(var(--ink) / <alpha-value>)",
+          soft: "hsl(var(--ink-soft) / <alpha-value>)",
+        },
+        pine: {
+          DEFAULT: "hsl(var(--pine) / <alpha-value>)",
+          deep: "hsl(var(--pine-deep) / <alpha-value>)",
+        },
+        gold: {
+          DEFAULT: "hsl(var(--gold) / <alpha-value>)",
+          bright: "hsl(var(--gold-bright) / <alpha-value>)",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -64,9 +81,9 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        display: ["Libre Baskerville", "Georgia", "serif"],
+        display: ["Newsreader", "Georgia", "serif"],
         sans: ["IBM Plex Sans", "system-ui", "sans-serif"],
-        mono: ["UMTypewriter", "Courier New", "ui-monospace", "monospace"],
+        mono: ["Cutive Mono", "ui-monospace", "monospace"],
       },
       keyframes: {
         "accordion-down": {

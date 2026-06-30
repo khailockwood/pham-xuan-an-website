@@ -6,7 +6,7 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-0 border border-border rounded-sm overflow-hidden text-xs font-medium tracking-wide",
+        "inline-flex items-center overflow-hidden rounded-sm border border-border font-mono text-[11px] tracking-[0.1em]",
         className
       )}
       role="group"
@@ -19,10 +19,10 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
           onClick={() => setLang(l)}
           aria-pressed={lang === l}
           className={cn(
-            "px-2.5 py-1 uppercase transition-colors",
+            "px-2.5 py-1.5 uppercase transition-colors",
             lang === l
-              ? "bg-primary text-primary-foreground"
-              : "bg-transparent text-foreground/70 hover:text-foreground"
+              ? "bg-ink text-paper"
+              : "bg-transparent text-ink-soft hover:text-ink"
           )}
         >
           {l}

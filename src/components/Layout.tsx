@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { nav, siteName, ui } from "@/content/site";
+import { cite } from "@/content/project";
 import { LanguageToggle } from "./LanguageToggle";
 import { cn } from "@/lib/utils";
 
@@ -13,34 +14,35 @@ export const Layout = ({ children }: { children: ReactNode }) => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <header className="border-b border-border bg-background/80 backdrop-blur sticky top-0 z-40">
-        <div className="container flex items-center justify-between h-16 md:h-20 bg-card">
-          <Link to="/" className="font-display text-base md:text-lg leading-tight tracking-tight">
-            <span className="block">{t(siteName)}</span>
+      <header className="sticky top-0 z-40 border-b border-border bg-paper/[0.86] backdrop-blur-md">
+        <div className="container flex h-16 items-center justify-between md:h-[68px]">
+          <Link to="/" className="font-display text-lg leading-tight tracking-[0.01em]">
+            {t(siteName)}
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-7 text-sm">
+          <nav className="hidden items-center gap-7 lg:flex">
             {nav.map((n) => (
               <NavLink
                 key={n.to}
                 to={n.to}
                 className={({ isActive }) =>
                   cn(
-                    "transition-colors hover:text-accent text-sm",
-                    isActive ? "text-accent" : "text-foreground/80"
+                    "text-[13.5px] transition-colors hover:text-pine",
+                    isActive ? "text-pine" : "text-ink-soft"
                   )
                 }
               >
                 {t(n.label)}
               </NavLink>
             ))}
+            <LanguageToggle />
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 lg:hidden">
             <LanguageToggle />
             <button
               type="button"
-              className="lg:hidden p-2 -mr-2"
+              className="-mr-2 p-2"
               onClick={() => setOpen((o) => !o)}
               aria-label="Menu"
             >
@@ -50,7 +52,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         </div>
 
         {open && (
-          <div className="lg:hidden border-t border-border bg-background">
+          <div className="lg:hidden border-t border-border bg-paper">
             <nav className="container py-4 flex flex-col gap-3 text-sm">
               {nav.map((n) => (
                 <NavLink
@@ -60,7 +62,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
                   className={({ isActive }) =>
                     cn(
                       "py-1.5 transition-colors",
-                      isActive ? "text-accent" : "text-foreground/80"
+                      isActive ? "text-pine" : "text-ink-soft"
                     )
                   }
                 >
@@ -76,22 +78,39 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         {children}
       </main>
 
-      <footer className="border-t border-border mt-24 bg-primary text-primary-foreground">
-        <div className="container py-12 grid gap-8 md:grid-cols-3">
-          <div>
-            <div className="font-display text-lg mb-2">{t(siteName)}</div>
-            <p className="text-sm opacity-80 leading-relaxed">{t(ui.footerRights)}</p>
+      <footer className="bg-pine-deep text-paper/[0.82]">
+        <div className="container py-14">
+          <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
+            <div>
+              <div className="mb-2.5 font-display text-[22px] text-paper">{t(siteName)}</div>
+              <p className="max-w-[26em] text-sm leading-relaxed text-paper/60">
+                {t(ui.footerRights)}
+              </p>
+            </div>
+            <div>
+              <div className="mono-label mb-3.5 text-[11px] text-gold-bright">
+                {t({ en: "Explore", vi: "Khám phá" })}
+              </div>
+              {nav.map((n) => (
+                <Link
+                  key={n.to}
+                  to={n.to}
+                  className="mb-2 block text-sm text-paper/[0.78] hover:text-paper"
+                >
+                  {t(n.label)}
+                </Link>
+              ))}
+            </div>
+            <div>
+              <div className="mono-label mb-3.5 text-[11px] text-gold-bright">
+                {t({ en: "Cite this archive", vi: "Trích dẫn kho lưu trữ" })}
+              </div>
+              <p className="text-[13px] leading-relaxed text-paper/60">{t(cite)}</p>
+            </div>
           </div>
-          <div className="text-sm space-y-2">
-            {nav.map((n) => (
-              <Link key={n.to} to={n.to} className="block opacity-80 hover:opacity-100">
-                {t(n.label)}
-              </Link>
-            ))}
-          </div>
-          <div className="text-xs opacity-60 md:text-right self-end">
-            © {new Date().getFullYear()} The Pham Xuan An Project
-            <div className="mt-1">{lang === "vi" ? "Phiên bản tiếng Việt" : "English edition"}</div>
+          <div className="mono-label mt-11 flex flex-col gap-2 border-t border-paper/[0.18] pt-5 text-[10.5px] tracking-[0.12em] text-paper/45 sm:flex-row sm:justify-between">
+            <span>© {new Date().getFullYear()} The Pham Xuan An Project</span>
+            <span>English Edition · Phiên bản Tiếng Việt</span>
           </div>
         </div>
       </footer>

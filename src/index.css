@@ -2,60 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here.
 All colors MUST be HSL.
+
+Palette concept (see CLAUDE_CODE_HANDOFF.md §4): press / editorial DNA over a
+documentary "dossier" undertone. Archival paper tones, Dartmouth pine, gold accents.
 */
 
 @layer base {
   :root {
-    /* Dartmouth Pine & Bone Heritage — archival / editorial */
-    --background: 0 0% 100%;              /* plain white */
-    --foreground: 0 0% 10%;               /* near-black ink */
+    /* ---- shadcn semantic tokens (mapped onto the new palette) ---- */
+    --background: 42 34% 89%;            /* paper      #ECE6D8 */
+    --foreground: 48 10% 10%;            /* ink        #1B1A16 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 10%;
+    --card: 42 32% 84%;                  /* paper-2    #E3DBC9 */
+    --card-foreground: 48 10% 10%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
+    --popover: 42 34% 89%;
+    --popover-foreground: 48 10% 10%;
 
-    --primary: 157 100% 21%;              /* #00693E Dartmouth Pine Green */
-    --primary-foreground: 0 0% 100%;
+    --primary: 157 100% 21%;             /* pine       #00693E */
+    --primary-foreground: 42 34% 89%;    /* paper */
 
-    --secondary: 157 100% 15%;            /* deeper pine */
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 152 80% 12%;            /* pine-deep  #06371F */
+    --secondary-foreground: 42 34% 89%;
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 42 32% 84%;                 /* paper-2 */
+    --muted-foreground: 45 9% 32%;       /* softened ink */
 
-    --accent: 47 94% 40%;                 /* #C4A006 gold */
-    --accent-foreground: 0 0% 100%;
+    --accent: 41 61% 43%;                /* gold       #B0852B */
+    --accent-foreground: 48 10% 10%;     /* ink (gold CTAs carry dark text) */
 
-    --destructive: 0 70% 45%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 70% 40%;
+    --destructive-foreground: 42 34% 89%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 47 94% 40%;
+    --border: 40 15% 76%;                /* ink @ ~16% on paper */
+    --input: 40 15% 76%;
+    --ring: 41 61% 43%;
 
-    --radius: 0.25rem;
+    --radius: 0.125rem;                  /* sharp, document-like corners (2px) */
 
-    --font-display: 'Libre Baskerville', Georgia, serif;
+    /* ---- named palette (use via Tailwind: bg-paper, text-ink, border-gold …) ---- */
+    --paper: 42 34% 89%;
+    --paper-2: 42 32% 84%;
+    --ink: 48 10% 10%;
+    --ink-soft: 45 9% 18%;
+    --pine: 157 100% 21%;
+    --pine-deep: 152 80% 12%;
+    --gold: 41 61% 43%;
+    --gold-bright: 43 56% 52%;
+
+    /* ---- typography ---- */
+    --font-display: 'Newsreader', Georgia, serif;
     --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+    --font-mono: 'Cutive Mono', ui-monospace, monospace;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -98,11 +106,51 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
-    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4, .font-display {
     font-family: var(--font-display);
+    font-weight: 500;
     letter-spacing: -0.01em;
+  }
+}
+
+@layer components {
+  /* Mono "dateline / dossier label" utility — datelines, record numbers,
+     timestamps, uppercase letterspaced labels. Reusable across pages. */
+  .mono-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  /* Duotone "archival photograph" treatment: grayscale image + pine-deep
+     color overlay + gold→pine multiply gradient. Applied to a wrapper that
+     contains a single <img>. See DuotonePortrait component. */
+  .duotone > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(1) contrast(1.06) brightness(1.04);
+  }
+  .duotone::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: hsl(var(--pine-deep));
+    mix-blend-mode: color;
+    opacity: 0.92;
+    pointer-events: none;
+  }
+  .duotone::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, hsl(var(--gold) / 0.18), hsl(var(--pine-deep) / 0.5));
+    mix-blend-mode: multiply;
+    pointer-events: none;
   }
 }
