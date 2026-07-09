@@ -127,30 +127,57 @@ documentary "dossier" undertone. Archival paper tones, Dartmouth pine, gold acce
     text-transform: uppercase;
   }
 
-  /* Duotone "archival photograph" treatment: grayscale image + pine-deep
-     color overlay + gold→pine multiply gradient. Applied to a wrapper that
-     contains a single <img>. See DuotonePortrait component. */
+  /* Subtle archival duotone: a clean high-contrast black-and-white photograph
+     with a *whisper* of pine in the shadows and a warm paper lift in the
+     highlights — reads as a period print, not a green filter. Applied to a
+     wrapper containing a single <img>. See DuotonePortrait component. */
   .duotone > img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: grayscale(1) contrast(1.06) brightness(1.04);
+    filter: grayscale(1) contrast(1.09) brightness(1.02);
   }
   .duotone::before {
     content: "";
     position: absolute;
     inset: 0;
     background: hsl(var(--pine-deep));
-    mix-blend-mode: color;
-    opacity: 0.92;
+    mix-blend-mode: multiply;
+    opacity: 0.24;
     pointer-events: none;
   }
   .duotone::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, hsl(var(--gold) / 0.18), hsl(var(--pine-deep) / 0.5));
-    mix-blend-mode: multiply;
+    background: hsl(var(--paper));
+    mix-blend-mode: screen;
+    opacity: 0.09;
     pointer-events: none;
+  }
+
+  /* Redaction bar: a "classified" black block over the true-identity text that
+     wipes away once on load to "declassify" it — the signature device of the
+     dossier. Reduced-motion users just see the revealed text. */
+  .redaction {
+    position: relative;
+    display: inline-block;
+    vertical-align: baseline;
+  }
+  .redaction::after {
+    content: "";
+    position: absolute;
+    inset: -0.1em -0.3em;
+    background: hsl(var(--ink));
+    transform-origin: right center;
+    animation: declassify 0.72s cubic-bezier(0.65, 0, 0.35, 1) 1.05s both;
+    pointer-events: none;
+  }
+  @keyframes declassify {
+    from { transform: scaleX(1); }
+    to { transform: scaleX(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .redaction::after { animation: none; transform: scaleX(0); }
   }
 }

@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -10,11 +10,34 @@ import { cn } from "@/lib/utils";
 export const Layout = ({ children }: { children: ReactNode }) => {
   const { t, lang } = useLanguage();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const isHome = location.pathname === "/";
+
+  // On the homepage the nav rides transparently inside the dark hero at the top
+  // (one unbroken "classified cover"), then settles into a solid paper bar once
+  // you scroll past the hero. Elsewhere, and with the mobile menu open, it stays
+  // the paper bar so content beneath it reads.
+  useEffect(() => {
+    if (!isHome) return;
+    const onScroll = () => setScrolled(window.scrollY > window.innerHeight * 0.6);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isHome]);
+
+  const overlay = isHome && !scrolled && !open;
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <header className="sticky top-0 z-40 border-b border-border bg-paper/[0.86] backdrop-blur-md">
+      <header
+        className={cn(
+          "sticky top-0 z-40 transition-colors duration-300",
+          overlay
+            ? "border-b border-transparent bg-transparent text-paper"
+            : "border-b border-border bg-paper/[0.86] text-foreground backdrop-blur-md"
+        )}
+      >
         <div className="container flex h-16 items-center justify-between md:h-[68px]">
           <Link to="/" className="font-display text-lg leading-tight tracking-[0.01em]">
             {t(siteName)}
@@ -27,19 +50,25 @@ export const Layout = ({ children }: { children: ReactNode }) => {
                 to={n.to}
                 className={({ isActive }) =>
                   cn(
-                    "text-[13.5px] transition-colors hover:text-pine",
-                    isActive ? "text-pine" : "text-ink-soft"
+                    "text-[13px] tracking-[0.01em] transition-colors",
+                    overlay
+                      ? isActive
+                        ? "text-gold-bright"
+                        : "text-paper/75 hover:text-paper"
+                      : isActive
+                        ? "text-pine"
+                        : "text-ink-soft hover:text-pine"
                   )
                 }
               >
                 {t(n.label)}
               </NavLink>
             ))}
-            <LanguageToggle />
+            <LanguageToggle onDark={overlay} />
           </nav>
 
           <div className="flex items-center gap-3 lg:hidden">
-            <LanguageToggle />
+            <LanguageToggle onDark={overlay} />
             <button
               type="button"
               className="-mr-2 p-2"
