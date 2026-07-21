@@ -1,22 +1,17 @@
-import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useLanguage, type Bilingual } from "@/contexts/LanguageContext";
 import { DuotonePortrait } from "@/components/DuotonePortrait";
+import { Eyebrow } from "@/components/Eyebrow";
 import { cn } from "@/lib/utils";
 import { mission } from "@/content/project";
 import { interviews } from "@/content/interviews";
 import heroPortrait from "@/assets/pxa-hero.webp";
 import exhibitViz1 from "@/assets/exhibit-viz-1.jpg";
 import exhibitViz2 from "@/assets/exhibit-viz-2.jpg";
-
-/** Section eyebrow: a short gold rule + mono label. */
-const Eyebrow = ({ children, onDark = false }: { children: ReactNode; onDark?: boolean }) => (
-  <div className="mb-5 flex items-center gap-3.5">
-    <span className="h-px w-7 bg-gold" />
-    <span className={cn("mono-label", onDark ? "text-gold-bright" : "text-pine")}>{children}</span>
-  </div>
-);
+import ddhiLogo from "@/assets/ddhi-logo.svg";
+import fulbrightLogo from "@/assets/fulbright-logo-t.png";
+import ttuLogo from "@/assets/ttu-logo.svg";
 
 /** Original-language label for an interview record (marked in gold elsewhere). */
 const ORIGINAL_LANGUAGE: Record<string, Bilingual> = {
@@ -58,25 +53,33 @@ const featuredExhibits: {
   },
 ];
 
-/* Partner institutions (proper nouns; subtitles + outbound links). */
-const partners: { name: Bilingual; sub: Bilingual; href: string; go: string }[] = [
+/* Partner institutions (proper nouns; subtitles + outbound links).
+   Each logo renders in a single muted "ink" tone and reveals its true brand
+   colour on hover — a quiet echo of the site's hidden-identity motif. */
+const partners: { name: Bilingual; sub: Bilingual; href: string; go: string; logo: string; logoAlt: string }[] = [
   {
     name: { en: "Dartmouth Digital History Initiative", vi: "Sáng kiến Lịch sử Số Dartmouth" },
     sub: { en: "Dartmouth College", vi: "Đại học Dartmouth" },
     href: "https://ddhi.dartmouth.edu/",
     go: "ddhi.dartmouth.edu",
+    logo: ddhiLogo,
+    logoAlt: "Dartmouth Digital History Initiative",
   },
   {
     name: { en: "Vietnam Studies Center", vi: "Trung tâm Nghiên cứu Việt Nam" },
     sub: { en: "Fulbright University Vietnam", vi: "Đại học Fulbright Việt Nam" },
     href: "https://fulbright.edu.vn/vietnam-studies-center/",
     go: "fulbright.edu.vn",
+    logo: fulbrightLogo,
+    logoAlt: "Fulbright University Vietnam",
   },
   {
     name: { en: "Vietnam Center & Sam Johnson Archive", vi: "Vietnam Center & Sam Johnson Archive" },
     sub: { en: "Texas Tech University", vi: "Đại học Texas Tech" },
     href: "https://www.vietnam.ttu.edu/",
     go: "vietnam.ttu.edu",
+    logo: ttuLogo,
+    logoAlt: "Texas Tech University",
   },
 ];
 
@@ -92,20 +95,22 @@ const Index = () => {
 
   return (
     <>
-      {/* ---------- Hero (dossier cover) ---------- */}
-      <section className="relative -mt-16 overflow-hidden bg-pine-deep pt-16 text-paper md:-mt-[68px] md:pt-[68px]">
-        {/* atmospheric radial glow */}
+      {/* ---------- Hero (dossier cover — flows from the green masthead) ----------
+          A gold masthead rule closes the green field, so the shift to paper reads
+          as a deliberate structural break rather than an abrupt colour change. */}
+      <section className="relative overflow-hidden border-b-2 border-gold bg-pine-deep text-paper">
+        {/* very faint tonal lift, no hard seam — kept understated */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(120% 90% at 80% 12%, hsl(var(--pine) / 0.30), transparent 62%)",
+              "radial-gradient(110% 80% at 84% 4%, hsl(var(--pine) / 0.22), transparent 58%)",
           }}
         />
         <div className="container relative z-[2]">
           {/* typed file header */}
-          <div className="flex flex-col gap-1.5 border-b border-paper/[0.16] py-4 sm:flex-row sm:items-center sm:justify-between">
-            <span className="mono-label text-[12px] text-paper">
+          <div className="flex flex-col gap-1.5 border-b border-paper/15 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <span className="mono-label text-[11.5px] text-paper/80">
               {t({
                 en: "Dartmouth Digital History Initiative · Fulbright University Vietnam",
                 vi: "Sáng kiến Lịch sử Số Dartmouth · Đại học Fulbright Việt Nam",
@@ -116,38 +121,38 @@ const Index = () => {
             </span>
           </div>
 
-          <div className="grid items-center gap-12 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16 lg:py-[76px]">
+          <div className="grid items-center gap-12 py-14 lg:grid-cols-[1.08fr_0.92fr] lg:gap-16 lg:py-20">
             {/* hero text */}
             <div>
-              <p className="mono-label mb-7 text-[11.5px] text-paper/55">
+              <p className="mono-label mb-6 text-[11.5px] text-paper/55">
                 {t({
                   en: "An oral history of the man who lived two lives",
                   vi: "Lịch sử truyền miệng về người đàn ông sống hai cuộc đời",
                 })}
               </p>
-              <h1 className="font-display text-5xl leading-[0.98] tracking-[-0.015em] sm:text-6xl lg:text-[84px]">
+              <h1 className="font-display text-5xl leading-[0.98] tracking-[-0.015em] text-paper sm:text-6xl lg:text-[82px]">
                 Phạm Xuân Ẩn
               </h1>
-              <p className="mb-9 mt-3 font-display text-xl italic text-paper/55 lg:text-[22px]">
+              <p className="mb-8 mt-3 font-display text-xl italic text-paper/55 lg:text-[22px]">
                 1927 — 2006
               </p>
 
               {/* two-identity file record — the signature "declassify" reveal */}
-              <dl className="mb-9 border-t border-paper/[0.16]">
-                <div className="grid items-baseline gap-1.5 border-b border-paper/[0.16] py-4 sm:grid-cols-[168px_1fr] sm:gap-6">
+              <dl className="mb-8 border-t border-paper/15">
+                <div className="grid items-baseline gap-1.5 border-b border-paper/15 py-3.5 sm:grid-cols-[150px_1fr] sm:gap-6">
                   <dt className="mono-label text-[10.5px] text-paper/45">
                     {t({ en: "Cover identity", vi: "Vỏ bọc" })}
                   </dt>
-                  <dd className="font-display text-lg leading-tight lg:text-[21px]">
+                  <dd className="font-display text-lg leading-tight text-paper lg:text-[21px]">
                     {t({ en: "Correspondent", vi: "Phóng viên" })} — Reuters · New York Herald Tribune · Time
                   </dd>
                 </div>
-                <div className="grid items-baseline gap-1.5 py-4 sm:grid-cols-[168px_1fr] sm:gap-6">
+                <div className="grid items-baseline gap-1.5 py-3.5 sm:grid-cols-[150px_1fr] sm:gap-6">
                   <dt className="mono-label text-[10.5px] text-gold-bright">
                     {t({ en: "True identity", vi: "Danh tính thật" })}
                   </dt>
                   <dd className="font-display text-lg leading-tight lg:text-[21px]">
-                    <span className="redaction text-gold-bright">
+                    <span className="redaction font-medium text-gold-bright">
                       <em className="not-italic">"Hai Trung"</em>
                       {" — "}
                       {t({
@@ -159,7 +164,7 @@ const Index = () => {
                 </div>
               </dl>
 
-              <p className="mb-9 max-w-[34em] font-display text-lg italic leading-relaxed text-paper/85 lg:text-[20px]">
+              <p className="mb-8 max-w-[34em] font-display text-lg italic leading-relaxed text-paper/85 lg:text-[20px]">
                 {t({
                   en: "For a decade he filed dispatches for Time magazine while sending intelligence to Hanoi. His closest colleagues in the Saigon press corps learned the truth only after the war.",
                   vi: "Suốt một thập kỷ, ông gửi bản tin cho tạp chí Time trong khi vẫn chuyển tin tình báo về Hà Nội. Những đồng nghiệp thân thiết nhất trong giới báo chí Sài Gòn chỉ biết sự thật sau khi chiến tranh kết thúc.",
@@ -189,7 +194,7 @@ const Index = () => {
               alt="Phạm Xuân Ẩn"
               caption={t({ en: "Phạm Xuân Ẩn · Saigon", vi: "Phạm Xuân Ẩn · Sài Gòn" })}
               credit={t({ en: "Project collection", vi: "Tư liệu dự án" })}
-              className="mx-auto w-full max-w-[300px] sm:max-w-sm lg:ml-auto lg:mr-0 lg:max-w-[400px]"
+              className="mx-auto w-full max-w-[320px] sm:max-w-[360px] lg:ml-auto lg:mr-0 lg:max-w-[380px]"
             />
           </div>
         </div>
@@ -225,44 +230,44 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ---------- Interview register ---------- */}
-      <section className="bg-ink text-paper">
+      {/* ---------- Interview register (formal finding aid, on paper) ---------- */}
+      <section className="border-t border-border bg-paper-2">
         <div className="container py-20 lg:py-[84px]">
-          <Eyebrow onDark>{t({ en: "The Interviews", vi: "Phỏng vấn" })}</Eyebrow>
-          <h2 className="max-w-[16em] font-display text-3xl leading-tight text-paper lg:text-[40px]">
+          <Eyebrow>{t({ en: "The Interviews", vi: "Phỏng vấn" })}</Eyebrow>
+          <h2 className="max-w-[16em] font-display text-3xl leading-tight lg:text-[40px]">
             {t({
               en: "Voices from both of his worlds.",
               vi: "Những tiếng nói từ cả hai thế giới của ông.",
             })}
           </h2>
 
-          <div className="mt-11 border-t border-paper/[0.18]">
-            {interviews.map((iv, i) => (
+          <div className="mt-11 border-t border-border">
+            {interviews.slice(0, 4).map((iv, i) => (
               <div
                 key={iv.slug}
-                className="grid gap-5 border-b border-paper/[0.18] py-7 transition-colors hover:bg-paper/[0.04] md:grid-cols-[52px_1fr_220px] md:gap-7"
+                className="grid gap-5 border-b border-border py-7 transition-colors hover:bg-paper md:grid-cols-[52px_1fr_220px] md:gap-7"
               >
-                <div className="mono-label pt-1.5 text-[12px] text-paper/40">
+                <div className="mono-label pt-1.5 text-[12px] text-ink-soft/45">
                   {String(i + 1).padStart(2, "0")}
                 </div>
                 <div>
                   <h3 className="mb-2.5 font-display text-2xl leading-snug">{t(iv.title)}</h3>
-                  <div className="mono-label mb-3 flex flex-wrap gap-x-4 gap-y-1.5 text-[11px] text-paper/55">
-                    <span>{fmtDate(iv.date)}</span>
+                  <div className="mono-label mb-3 flex flex-wrap gap-x-4 gap-y-1.5 text-[11px] text-ink-soft/65">
+                    <span>{iv.dateDisplay ?? fmtDate(iv.date)}</span>
                     <span>{iv.duration}</span>
-                    <span className="text-paper/70">{t(ORIGINAL_LANGUAGE[iv.originalLanguage])}</span>
+                    <span className="text-pine">{t(ORIGINAL_LANGUAGE[iv.originalLanguage])}</span>
                     <span>
                       {t({ en: "Interviewer", vi: "Người phỏng vấn" })} — {iv.interviewer}
                     </span>
                   </div>
-                  <p className="max-w-[42em] text-[15.5px] leading-relaxed text-paper/[0.78]">
+                  <p className="max-w-[42em] text-[15.5px] leading-relaxed text-ink-soft">
                     {t(iv.summary)}
                   </p>
                 </div>
                 <div className="md:pt-1.5 md:text-right">
                   <Link
                     to={`/interviews/${iv.slug}`}
-                    className="inline-flex items-center gap-2 rounded-sm border border-paper/30 px-4 py-2.5 text-[13.5px] text-paper transition-colors hover:border-gold hover:bg-gold hover:text-ink"
+                    className="inline-flex items-center gap-2 rounded-sm border border-border px-4 py-2.5 text-[13.5px] text-ink transition-colors hover:border-pine hover:bg-pine hover:text-paper"
                   >
                     ▸ {t({ en: "Listen & read", vi: "Nghe & đọc" })}
                   </Link>
@@ -274,7 +279,7 @@ const Index = () => {
           <div className="mt-9">
             <Link
               to="/interviews"
-              className="mono-label border-b border-gold-bright/40 pb-0.5 text-[12px] text-gold-bright"
+              className="mono-label border-b border-pine/40 pb-0.5 text-[12px] text-pine"
             >
               {t({ en: "View all interviews →", vi: "Xem tất cả phỏng vấn →" })}
             </Link>
@@ -316,10 +321,13 @@ const Index = () => {
       <section className="border-t border-border bg-paper-2">
         <div className="container py-20 lg:py-[84px]">
           <Eyebrow>{t({ en: "Partners", vi: "Đối tác" })}</Eyebrow>
-          <h2 className="font-display text-3xl leading-tight lg:text-[40px]">
-            {t({ en: "An international collaboration.", vi: "Một sự cộng tác quốc tế." })}
+          <h2 className="max-w-[15em] font-display text-3xl leading-tight lg:text-[40px]">
+            {t({
+              en: "A multi-institution, international collaboration.",
+              vi: "Sự cộng tác quốc tế giữa nhiều tổ chức.",
+            })}
           </h2>
-          <div className="mt-10 grid border border-border sm:grid-cols-3">
+          <div className="mt-11 grid border border-border sm:grid-cols-3">
             {partners.map((p, i) => (
               <a
                 key={p.go}
@@ -327,14 +335,23 @@ const Index = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className={cn(
-                  "group px-7 py-9 transition-colors hover:bg-paper",
+                  "group flex flex-col px-8 py-9 transition-colors hover:bg-paper",
                   i < partners.length - 1 && "border-b border-border sm:border-b-0 sm:border-r"
                 )}
               >
-                <div className="mb-1.5 font-display text-xl leading-tight">{t(p.name)}</div>
-                <div className="text-sm text-ink-soft">{t(p.sub)}</div>
-                <span className="mono-label mt-4 inline-block text-[10.5px] text-pine group-hover:text-gold">
-                  {p.go} →
+                {/* logo, full colour, height-normalised across the three marks */}
+                <div className="flex h-20 items-center">
+                  <img
+                    src={p.logo}
+                    alt={p.logoAlt}
+                    loading="lazy"
+                    className="max-h-full w-auto max-w-[80%] object-contain object-left transition-transform duration-300 group-hover:scale-[1.03]"
+                  />
+                </div>
+                <div className="mt-7 font-display text-lg leading-snug">{t(p.name)}</div>
+                <div className="mt-1 text-sm text-ink-soft">{t(p.sub)}</div>
+                <span className="mono-label mt-5 inline-flex items-center gap-1.5 text-[10.5px] text-pine transition-colors group-hover:text-gold">
+                  {p.go} <span aria-hidden>→</span>
                 </span>
               </a>
             ))}

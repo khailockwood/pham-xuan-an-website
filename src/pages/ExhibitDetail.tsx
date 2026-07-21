@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Eyebrow } from "@/components/Eyebrow";
 import { exhibits } from "@/content/exhibits";
 import { interviews } from "@/content/interviews";
 import NotFound from "./NotFound";
@@ -17,13 +18,11 @@ const ExhibitDetail = () => {
 
   return (
     <article className="container py-16 md:py-24 max-w-3xl">
-      <Link to="/exhibits" className="inline-flex items-center gap-2 text-sm text-accent hover:underline mb-8">
+      <Link to="/exhibits" className="inline-flex items-center gap-2 text-sm text-pine hover:underline mb-8">
         <ArrowLeft size={14} /> {t({ en: "Back to exhibits", vi: "Quay lại triển lãm" })}
       </Link>
 
-      <div className="uppercase tracking-[0.25em] text-accent mb-3 text-sm font-bold">
-        {t({ en: "Exhibit", vi: "Triển lãm" })}
-      </div>
+      <Eyebrow>{t({ en: "Exhibit", vi: "Triển lãm" })}</Eyebrow>
       <h1 className="font-display text-4xl md:text-5xl leading-tight mb-4">{t(exhibit.title)}</h1>
       <p className="text-lg text-foreground/75 leading-relaxed mb-10">{t(exhibit.dek)}</p>
 
@@ -51,7 +50,7 @@ const ExhibitDetail = () => {
           <ul className="space-y-3">
             {related.map((iv) => iv && (
               <li key={iv.slug}>
-                <Link to={`/interviews/${iv.slug}`} className="text-accent hover:underline">
+                <Link to={`/interviews/${iv.slug}`} className="text-pine hover:underline">
                   {t(iv.title)} — <span className="text-foreground/60">{iv.interviewee}</span>
                 </Link>
               </li>

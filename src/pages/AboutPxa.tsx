@@ -1,13 +1,12 @@
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Eyebrow } from "@/components/Eyebrow";
 import { bioBody, bioIntro, timeline } from "@/content/bio";
 
 const AboutPxa = () => {
   const { t } = useLanguage();
   return (
     <article className="container py-16 md:py-24 max-w-4xl">
-      <div className="uppercase tracking-[0.25em] text-accent mb-3 text-sm font-semibold">
-        {t({ en: "Biography", vi: "Tiểu sử" })}
-      </div>
+      <Eyebrow>{t({ en: "Biography", vi: "Tiểu sử" })}</Eyebrow>
       <h1 className="font-display text-4xl md:text-5xl leading-tight mb-8">
         {t({ en: "Who Was Pham Xuan An?", vi: "Phạm Xuân Ẩn là ai?" })}
       </h1>
@@ -31,7 +30,7 @@ const AboutPxa = () => {
         {timeline.map((entry) => (
           <li key={entry.year} className="relative">
             <span className="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-accent" />
-            <div className="font-display text-lg text-accent">{entry.year}</div>
+            <div className="font-display text-lg text-pine">{entry.year}</div>
             <div className="text-foreground/80">{t(entry.event)}</div>
           </li>
         ))}

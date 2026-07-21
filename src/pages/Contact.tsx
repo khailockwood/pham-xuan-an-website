@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { z } from "zod";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Eyebrow } from "@/components/Eyebrow";
 import { ui } from "@/content/site";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -37,9 +38,7 @@ const Contact = () => {
 
   return (
     <div className="container py-16 md:py-24 max-w-2xl">
-      <div className="uppercase tracking-[0.25em] text-accent mb-3 text-sm font-semibold">
-        {t({ en: "Get in touch", vi: "Liên hệ" })}
-      </div>
+      <Eyebrow>{t({ en: "Get in touch", vi: "Liên hệ" })}</Eyebrow>
       <h1 className="font-display text-4xl md:text-5xl leading-tight mb-6">
         {t({ en: "Contact Us", vi: "Liên hệ" })}
       </h1>

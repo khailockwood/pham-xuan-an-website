@@ -13,6 +13,8 @@ import ExhibitDetail from "./pages/ExhibitDetail";
 import Interviews from "./pages/Interviews";
 import InterviewDetail from "./pages/InterviewDetail";
 import Contact from "./pages/Contact";
+import OhmsPreview from "./pages/OhmsPreview";
+import OhmsNative from "./pages/OhmsNative";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +36,10 @@ const App = () => (
               <Route path="/interviews" element={<Interviews />} />
               <Route path="/interviews/:slug" element={<InterviewDetail />} />
               <Route path="/contact" element={<Contact />} />
+              {/* Unlisted technical preview of the live OHMS embed; remove before launch. */}
+              <Route path="/ohms-preview" element={<OhmsPreview />} />
+              {/* Unlisted technical preview of the native (XML-only) player; remove before launch. */}
+              <Route path="/ohms-native" element={<OhmsNative />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Layout>
