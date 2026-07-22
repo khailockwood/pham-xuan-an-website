@@ -16,6 +16,15 @@ const InterviewDetail = () => {
 
   const showOriginalNote = iv.originalLanguage !== lang && iv.originalLanguage !== "en";
 
+  /* The primary experience is the real OHMS Viewer, baked to a static page from
+     this interview's XML (see scripts/ohms/build-viewer.mjs). Derive its path
+     from `ohmsXml`: /ohms/<id>.xml → /ohms-viewer/<id>.html. An explicit
+     `ohmsUrl` (e.g. an Aviary embed) still wins if one is ever set. */
+  const bakedViewer = iv.ohmsXml
+    ? iv.ohmsXml.replace("/ohms/", "/ohms-viewer/").replace(/\.xml$/, ".html")
+    : undefined;
+  const viewerUrl = iv.ohmsUrl ?? bakedViewer;
+
   return (
     <article className="container py-16 md:py-24 max-w-4xl">
       <Link
@@ -57,12 +66,13 @@ const InterviewDetail = () => {
       </p>
 
       {/* Primary experience: the synchronized OHMS interview, in order of
-          preference — (1) a hosted OHMS Viewer iframe, if one exists; (2) the
-          native in-browser player, which needs only the OHMS XML export; (3) the
-          placeholder, with the local audio + transcript below as the fallback. */}
+          preference — (1) the real OHMS Viewer, either an explicit hosted URL or
+          the static page baked from this interview's XML; (2) the native
+          in-browser player as a fallback; (3) the placeholder. The local audio +
+          transcript below remain available in every case. */}
       <div className="mb-12">
-        {iv.ohmsUrl ? (
-          <OhmsViewer url={iv.ohmsUrl} title={t(iv.title)} />
+        {viewerUrl ? (
+          <OhmsViewer url={viewerUrl} title={t(iv.title)} heightClass="h-[clamp(680px,90vh,1120px)]" />
         ) : iv.ohmsXml ? (
           <OhmsNativePlayer src={iv.ohmsXml} title={t(iv.title)} />
         ) : (

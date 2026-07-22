@@ -1,0 +1,17 @@
+/* Injected into every baked OHMS Viewer page (scripts/ohms/build-viewer.mjs).
+   Small, non-destructive tweaks for showing the real viewer inside an <iframe>
+   on the Phạm Xuân Ẩn site. The viewer's own CSS is left fully intact. */
+
+/* The repository logo slot is configured empty for this install; an empty
+   <img src=""> otherwise renders a broken-image icon. Hide only when unset. */
+#headerimg[src=""],
+#headerimg:not([src]) {
+  display: none !important;
+}
+
+/* Let the page own its scrolling inside the iframe rather than the iframe. */
+html,
+body {
+  height: auto;
+  overflow-x: hidden;
+}

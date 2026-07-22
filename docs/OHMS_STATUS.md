@@ -3,16 +3,38 @@
 _Last updated: July 2026._ Narrative background lives in `.claude/OhmsContext.md`;
 this file is the fast-moving state.
 
-## Where things stand
+## ✅ SHIPPED — the REAL OHMS Viewer, baked static from our XML
+
+The primary experience on every interview page is now the **genuine, current
+OHMS Viewer** (uklibraries/ohms-viewer `v3.10.16`), fed each interview's own XML.
+The full viewer — media player, timestamped index, transcript, GPS map points,
+hyperlinks, footnotes, keyword search — everything you'd see on Aviary.
+
+How it works (see `scripts/ohms/build-viewer.mjs`): the OHMS Viewer is a PHP app,
+but it only needs PHP **once**, to turn an XML export into an HTML page; all the
+interactivity after that is client-side jQuery. So the build script runs the real
+viewer locally (via `brew install php`) against each `public/ohms/interview*.xml`
+and writes the rendered pages to `public/ohms-viewer/<id>.html`, alongside a copy
+of the viewer's own CSS/JS. The committed output ships as plain static files —
+**no PHP at runtime, nothing to host**. `InterviewDetail` iframes the baked page
+via the existing `OhmsViewer` component (path derived from `ohmsXml`).
+
+Rebuild whenever the XML changes: `npm run ohms:build` (needs PHP 8 + git).
+
+The viewer's only runtime server call is its keyword-search AJAX
+(`viewer.php?action=index|search`). `scripts/ohms/search-shim.js` reproduces those
+two endpoints in the browser from the already-rendered index/transcript, returning
+the identical JSON shape — validated against the real baked DOM (accent-folding,
+synopsis-body matches, timecodes). Injected into every baked page automatically.
+
+## Prior state (superseded, kept as fallback code paths)
 
 | Piece | State |
 | --- | --- |
-| Website embed component (`OhmsViewer`) | ✅ Built |
-| Wired into interview pages (`ohmsUrl`) | ✅ Done — placeholder until a URL is set |
-| Proof the iframe renders a real OHMS viewer | ✅ Verified (see `/ohms-preview`) |
+| Website embed component (`OhmsViewer`) | ✅ Built — now iframes the baked viewer |
+| Baked real-viewer pages for all 11 interviews | ✅ Shipped — `public/ohms-viewer/` |
+| Native in-browser player (`OhmsNativePlayer`) | ✅ Kept as fallback (`/ohms-native`) |
 | Aviary embeds frame from any origin | ✅ Verified (`frame-ancestors … *`, no XFO) |
-| **Native in-browser player — XML alone is enough** | ✅ Built + tested (see `/ohms-native`) |
-| **All 11 project interviews live on the site** | ✅ Done — via `ohmsXml` + native player |
 
 ## ✅ SHIPPED — the interviews are live
 

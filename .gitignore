@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# OHMS viewer source cloned by scripts/ohms/build-viewer.mjs (baked output in
+# public/ohms-viewer/ is committed; the PHP source used to bake it is not)
+scripts/ohms/.viewer-src/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
