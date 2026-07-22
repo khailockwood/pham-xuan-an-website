@@ -155,7 +155,12 @@ async function copyAssets() {
   await fs.mkdir(OUT, { recursive: true });
   for (const dir of ASSET_DIRS) {
     const from = path.join(SRC, dir);
-    if (existsSync(from)) await fs.cp(from, path.join(OUT, dir), { recursive: true });
+    // `dereference: true` copies the *contents* of any symlinks (the viewer
+    // ships a few, e.g. js/viewer_flowplayer.js → viewer_other.js). Without it,
+    // fs.cp writes an absolute symlink into .viewer-src/, which is gitignored
+    // and absent on the deploy host — a dangling link that breaks Vite's build.
+    if (existsSync(from))
+      await fs.cp(from, path.join(OUT, dir), { recursive: true, dereference: true });
   }
   await fs.copyFile(path.join(HERE, "search-shim.js"), path.join(OUT, "ohms-search-shim.js"));
   await fs.copyFile(path.join(HERE, "embed.css"), path.join(OUT, "ohms-embed.css"));
