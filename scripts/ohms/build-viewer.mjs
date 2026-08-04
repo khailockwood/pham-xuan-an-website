@@ -39,10 +39,11 @@ const XML_DIR = path.join(ROOT, "public", "ohms");
 const OUT = path.join(ROOT, "public", "ohms-viewer");
 const CACHE = path.join(SRC, "cachefiles");
 
-// Pin the viewer version so rebuilds are reproducible. v3.10.16 = latest as of
-// this writing (Dec 2025). Bump deliberately when upgrading the viewer.
+// OHMS Viewer 4.0 — the modern PHP 8 line. `viewer_4.0` is a *branch*, not a tag:
+// it's the current preview the project is standardizing on, superseding v3.10.16.
+// Bump deliberately when upgrading; manifest.json records exactly what was baked.
 const VIEWER_REPO = "https://github.com/uklibraries/ohms-viewer.git";
-const VIEWER_TAG = "v3.10.16";
+const VIEWER_TAG = "viewer_4.0";
 
 const PORT = 8199;
 const ORIGIN = `http://127.0.0.1:${PORT}`;
@@ -50,7 +51,11 @@ const ORIGIN = `http://127.0.0.1:${PORT}`;
 // those links are rewritten to a page-relative form (still works in-page).
 const PUBLIC_BASE = process.env.OHMS_PUBLIC_BASE || ""; // e.g. https://site/ohms-viewer/
 
-const ASSET_DIRS = ["css", "js", "imgs", "fonts", "skin", "swf"];
+// Browser-facing asset dirs in viewer_4.0. Its CSS reaches into ../imgs and
+// ../fonts; lib/ and vendor/ are server-side PHP (TCPDF, Composer) and are never
+// referenced by the rendered page, so they don't ship. (v3's skin/ and swf/ are
+// gone in 4.0.)
+const ASSET_DIRS = ["css", "js", "imgs", "fonts"];
 
 const log = (...a) => console.log("[ohms]", ...a);
 const die = (m) => {
@@ -72,10 +77,22 @@ function findPhp() {
   return null;
 }
 
+const TAG_MARKER = path.join(SRC, ".ohms-viewer-tag");
+
 async function ensureViewerSrc() {
+  // Reuse an existing checkout only if it's the tag/branch we want; otherwise the
+  // stale source (e.g. a previous v3.10.16 clone) is removed and re-cloned, so an
+  // upgrade never silently bakes the wrong viewer.
   if (existsSync(path.join(SRC, "viewer.php"))) {
-    log(`viewer source present (${SRC})`);
-    return;
+    const have = existsSync(TAG_MARKER)
+      ? (await fs.readFile(TAG_MARKER, "utf8")).trim()
+      : "";
+    if (have === VIEWER_TAG) {
+      log(`viewer source present (${VIEWER_TAG}) at ${SRC}`);
+      return;
+    }
+    log(`viewer source is '${have || "unknown"}', want '${VIEWER_TAG}' — re-cloning`);
+    await fs.rm(SRC, { recursive: true, force: true });
   }
   log(`cloning ${VIEWER_REPO} @ ${VIEWER_TAG} …`);
   const r = spawnSync(
@@ -84,6 +101,7 @@ async function ensureViewerSrc() {
     { stdio: "inherit" },
   );
   if (r.status !== 0) die("git clone of the OHMS viewer failed");
+  await fs.writeFile(TAG_MARKER, VIEWER_TAG, "utf8");
 }
 
 async function writeConfig(repositories) {
@@ -105,7 +123,7 @@ ga_host =
     )
     .join("\n");
   const ini = `tmpDir = ${CACHE}
-players = other,brightcove,kaltura,youtube,soundcloud,vimeo,avalon,aviary
+players = other,kaltura,youtube,soundcloud,vimeo,avalon,aviary
 timezone = America/New_York
 exhibit_mode = false
 print_mode = false

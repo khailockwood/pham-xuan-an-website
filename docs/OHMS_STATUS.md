@@ -1,12 +1,13 @@
 # OHMS embedding — live status
 
-_Last updated: July 2026._ Narrative background lives in `.claude/OhmsContext.md`;
+_Last updated: August 2026._ Narrative background lives in `.claude/OhmsContext.md`;
 this file is the fast-moving state.
 
-## ✅ SHIPPED — the REAL OHMS Viewer, baked static from our XML
+## ✅ SHIPPED — the REAL OHMS Viewer 4.0, baked static from our XML
 
-The primary experience on every interview page is now the **genuine, current
-OHMS Viewer** (uklibraries/ohms-viewer `v3.10.16`), fed each interview's own XML.
+The primary experience on every interview page is now the **genuine OHMS Viewer
+4.0** (uklibraries/ohms-viewer, branch `viewer_4.0`, the modern PHP 8 line —
+upgraded Aug 2026 from `v3.10.16`), fed each interview's own XML.
 The full viewer — media player, timestamped index, transcript, GPS map points,
 hyperlinks, footnotes, keyword search — everything you'd see on Aviary.
 

@@ -1,72 +1,72 @@
 {
-  "viewer": "v3.10.16",
-  "builtAt": "2026-07-22T15:11:53.474Z",
+  "viewer": "viewer_4.0",
+  "builtAt": "2026-08-04T13:33:54.559Z",
   "interviews": [
     {
       "id": "interview36980",
       "file": "interview36980.xml",
-      "segments": 10,
-      "bytes": 603022
+      "segments": 20,
+      "bytes": 1669509
     },
     {
       "id": "interview36981",
       "file": "interview36981.xml",
-      "segments": 8,
-      "bytes": 302350
+      "segments": 0,
+      "bytes": 5804
     },
     {
       "id": "interview36982",
       "file": "interview36982.xml",
-      "segments": 11,
-      "bytes": 213616
+      "segments": 0,
+      "bytes": 5804
     },
     {
       "id": "interview41608",
       "file": "interview41608.xml",
       "segments": 0,
-      "bytes": 100042
+      "bytes": 177081
     },
     {
       "id": "interview41609",
       "file": "interview41609.xml",
       "segments": 0,
-      "bytes": 52562
+      "bytes": 76191
     },
     {
       "id": "interview41646",
       "file": "interview41646.xml",
-      "segments": 13,
-      "bytes": 99937
+      "segments": 26,
+      "bytes": 171112
     },
     {
       "id": "interview42105",
       "file": "interview42105.xml",
-      "segments": 10,
-      "bytes": 168595
+      "segments": 20,
+      "bytes": 310633
     },
     {
       "id": "interview42197",
       "file": "interview42197.xml",
-      "segments": 7,
-      "bytes": 119842
+      "segments": 14,
+      "bytes": 211645
     },
     {
       "id": "interview42211",
       "file": "interview42211.xml",
-      "segments": 20,
-      "bytes": 242039
+      "segments": 40,
+      "bytes": 462029
     },
     {
       "id": "interview42374",
       "file": "interview42374.xml",
-      "segments": 17,
-      "bytes": 442913
+      "segments": 34,
+      "bytes": 1091604
     },
     {
       "id": "interview42707",
       "file": "interview42707.xml",
-      "segments": 17,
-      "bytes": 435140
+      "segments": 34,
+      "bytes": 1165128
     }
   ]
 }

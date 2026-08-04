@@ -77,15 +77,22 @@ const OhmsViewer = ({ url, title, heightClass = "h-[clamp(560px,78vh,880px)]" }:
           <ExternalLink size={12} aria-hidden />
         </a>
       </figcaption>
-      <iframe
-        src={url}
-        title={t({ en: "Synchronized viewer — ", vi: "Trình xem đồng bộ — " }) + title}
-        className={`w-full ${heightClass} border-0 bg-background`}
-        loading="lazy"
-        allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-        allowFullScreen
-        referrerPolicy="no-referrer-when-downgrade"
-      />
+      {/* Paper "mat" around the viewer: the OHMS Viewer's own page background is
+          solid white and otherwise runs flush to the frame edge. Matting it in the
+          frame's paper tone (same as the header bar) gives the embed side/vertical
+          breathing room and reads as a framed archival document rather than an
+          abrupt cutoff — a touch more horizontal gutter than vertical. */}
+      <div className="bg-card px-4 py-4 sm:px-6 md:px-8">
+        <iframe
+          src={url}
+          title={t({ en: "Synchronized viewer — ", vi: "Trình xem đồng bộ — " }) + title}
+          className={`w-full ${heightClass} border border-border bg-white`}
+          loading="lazy"
+          allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+          allowFullScreen
+          referrerPolicy="no-referrer-when-downgrade"
+        />
+      </div>
     </figure>
   );
 };

@@ -46,10 +46,7 @@ if ('index' in vars) {
 }
 var firstTogglePerformed = false;
 jQuery(document).ready(function ($) {
-    // Added by AVPreserve - Start
-    ts = new toggleSwitch();
-    ts.initialize();
-    // Added by AVPreserve - End
+    
     $('#kw').on('focus', function (e) {
         if ($('#kw').val() === 'Keyword') {
             $('#kw').toggleClass('kw-entry');
@@ -65,7 +62,7 @@ jQuery(document).ready(function ($) {
 
     $('#kw').focus();
 
-    $('#accordionHolder').accordion({
+    $('.accordionHolder').accordion({
         autoHeight: false,
         collapsible: true,
         active: activeIndex,
@@ -78,6 +75,31 @@ jQuery(document).ready(function ($) {
             }
         }
     });
+
+    $('#accordionHolderSearch').accordion({
+        header: '> h3',
+        collapsible: true,
+        active: false,
+        autoHeight: false,
+    });
+
+    
+
+
+
+    // Disable default header clicks
+    $('#accordionHolderSearch h3').off('click');
+
+    // Toggle only on span click
+    $('#accordionHolderSearch').on('click', '.toggle-span, .ui-icon-triangle-1-e, .ui-icon-triangle-1-s', function (e) {
+        const $header = $(this).closest('h3');
+        const index = $('#accordionHolderSearch h3').index($header);
+        const $accordion = $('#accordionHolderSearch');
+        const current = $accordion.accordion('option', 'active');
+
+        $accordion.accordion('option', 'active', current === index ? false : index);
+    });
+
     $('.show-info').bind('click', function () {
         $('.show-info').hide();
         $('.hide-info').show();
@@ -104,24 +126,6 @@ jQuery(document).ready(function ($) {
 
     });
 
-    $(".jp-next").bind('click', function () {
-        var currentProgress = Math.floor(jQuery('#subjectPlayer').data("jPlayer").status.currentTime);
-        var futureProgress = currentProgress + 15;
-        if (futureProgress <= 0) {
-            $("#subjectPlayer").jPlayer("pause", 0);
-        } else {
-            jQuery('#subjectPlayer').jPlayer("play", futureProgress);
-        }
-    });
-    $(".jp-previous").bind('click', function () {
-        var currentProgress = Math.floor(jQuery('#subjectPlayer').data("jPlayer").status.currentTime);
-        var futureProgress = currentProgress - 15;
-        if (futureProgress <= 0) {
-            $("#subjectPlayer").jPlayer("pause", 0);
-        } else {
-            $("#subjectPlayer").jPlayer("play", futureProgress);
-        }
-    });
 
     $('#print-pdf').click(function () {
 
