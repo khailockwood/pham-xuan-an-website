@@ -1,0 +1,116 @@
+/* ============================================================================
+   Phạm Xuân Ẩn — Design System tokens
+   Source of truth mirrors src/index.css + tailwind.config.ts.
+   Concept: press / editorial DNA over a documentary "dossier" undertone.
+   Archival paper tones, Dartmouth pine, gold accents. All colours HSL.
+   ============================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Sans:wght@300;400;500;600&family=Cutive+Mono&display=swap');
+
+:root {
+  --paper: 42 34% 89%;        /* #ECE6D8 */
+  --paper-2: 42 32% 84%;      /* #E3DBC9 */
+  --ink: 48 10% 10%;          /* #1B1A16 */
+  --ink-soft: 45 9% 18%;
+  --ink-muted: 45 9% 32%;
+  --pine: 157 100% 21%;       /* #00693E */
+  --pine-deep: 152 80% 12%;   /* #06371F */
+  --gold: 41 61% 43%;         /* #B0852B */
+  --gold-bright: 43 56% 52%;
+  --border: 40 15% 76%;
+  --radius: 0.125rem;         /* 2px — sharp, document-like */
+
+  --font-display: 'Newsreader', Georgia, serif;
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'Cutive Mono', ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 40px;
+  background: hsl(var(--paper));
+  color: hsl(var(--ink));
+  font-family: var(--font-sans);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+/* ---- Dossier label / dateline ---- */
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ---- Section eyebrow: gold rule + mono label ---- */
+.eyebrow { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.eyebrow .rule { height: 1px; width: 28px; background: hsl(var(--gold)); }
+.eyebrow .label { color: hsl(var(--pine)); }
+.eyebrow.on-dark .label { color: hsl(var(--gold-bright)); }
+
+/* ---- Buttons ---- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 40px; padding: 0 16px; border: 0; cursor: pointer;
+  border-radius: var(--radius);
+  font-family: var(--font-sans); font-size: 0.875rem; font-weight: 500;
+  transition: background-color .18s ease, color .18s ease;
+}
+.btn-sm { height: 36px; padding: 0 12px; }
+.btn-lg { height: 44px; padding: 0 32px; }
+.btn-primary   { background: hsl(var(--pine)); color: hsl(var(--paper)); }
+.btn-primary:hover   { background: hsl(var(--pine) / .9); }
+.btn-secondary { background: hsl(var(--pine-deep)); color: hsl(var(--paper)); }
+.btn-secondary:hover { background: hsl(var(--pine-deep) / .85); }
+.btn-accent    { background: hsl(var(--gold)); color: hsl(var(--ink)); }
+.btn-accent:hover    { background: hsl(var(--gold-bright)); }
+.btn-outline   { background: transparent; border: 1px solid hsl(var(--border)); color: hsl(var(--ink)); }
+.btn-outline:hover   { background: hsl(var(--gold)); color: hsl(var(--ink)); }
+.btn-ghost     { background: transparent; color: hsl(var(--ink)); }
+.btn-ghost:hover     { background: hsl(var(--gold) / .18); }
+.btn-link      { background: transparent; color: hsl(var(--pine)); text-underline-offset: 4px; padding: 0; height: auto; }
+.btn-link:hover      { text-decoration: underline; }
+
+/* ---- Archival duotone frame ---- */
+.duotone { position: relative; overflow: hidden; border: 1px solid hsl(var(--ink) / .15); }
+.duotone > img { width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: grayscale(1) contrast(1.09) brightness(1.02); }
+.duotone::before { content: ""; position: absolute; inset: 0;
+  background: hsl(var(--pine-deep)); mix-blend-mode: multiply; opacity: .24; pointer-events: none; }
+.duotone::after { content: ""; position: absolute; inset: 0;
+  background: hsl(var(--paper)); mix-blend-mode: screen; opacity: .09; pointer-events: none; }
+.corner { position: absolute; z-index: 10; height: 16px; width: 16px; }
+.corner.tl { left: -1px; top: -1px; border-left: 2px solid hsl(var(--gold)); border-top: 2px solid hsl(var(--gold)); }
+.corner.br { right: -1px; bottom: -1px; border-right: 2px solid hsl(var(--gold)); border-bottom: 2px solid hsl(var(--gold)); }
+
+/* ---- Redaction / declassify bar ---- */
+.redaction { position: relative; display: inline-block; }
+.redaction::after {
+  content: ""; position: absolute; inset: -0.1em -0.3em;
+  background: hsl(var(--ink)); transform-origin: right center;
+  animation: declassify .72s cubic-bezier(.65,0,.35,1) 1.05s infinite alternate;
+}
+@keyframes declassify { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+@media (prefers-reduced-motion: reduce) { .redaction::after { animation: none; transform: scaleX(0); } }
+
+/* ---- Paper card surface ---- */
+.paper-card { background: hsl(var(--paper-2)); border: 1px solid hsl(var(--border));
+  border-radius: var(--radius); padding: 28px; }
+
+/* ---- Doc scaffolding shared by preview pages ---- */
+.ds-title { font-size: 1.05rem; margin-bottom: 4px; }
+.ds-sub { color: hsl(var(--ink-muted)); font-size: 0.8rem; margin-bottom: 28px; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.stack { display: flex; flex-direction: column; gap: 20px; }
