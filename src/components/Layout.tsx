@@ -24,7 +24,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
+    <div className="min-h-screen flex flex-col overflow-x-clip bg-background text-foreground">
       <header
         className={cn(
           "sticky top-0 z-40 bg-pine-deep text-paper transition-shadow duration-300",

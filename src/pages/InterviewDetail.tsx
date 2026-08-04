@@ -70,15 +70,28 @@ const InterviewDetail = () => {
           the static page baked from this interview's XML; (2) the native
           in-browser player as a fallback; (3) the placeholder. The local audio +
           transcript below remain available in every case. */}
-      <div className="mb-12">
-        {viewerUrl ? (
-          <OhmsViewer url={viewerUrl} title={t(iv.title)} heightClass="h-[clamp(680px,90vh,1120px)]" />
-        ) : iv.ohmsXml ? (
+      {viewerUrl ? (
+        /* The OHMS Viewer only lays its media+index and transcript out as two
+           side-by-side panes above ~992px wide; inside the article's reading
+           column (max-w-4xl) it fell under that and rendered its stacked
+           "mobile" form. Break it out to (near) full-viewport width — capped and
+           padded — so the desktop two-pane layout shows. `overflow-x-clip` on the
+           Layout root keeps the 100vw breakout from adding a horizontal scrollbar.
+           The native-player fallback and placeholder below stay in the column. */
+        <div className="mb-12 ml-[calc(50%-50vw)] w-screen max-w-[100vw]">
+          <div className="mx-auto w-full max-w-[1760px] px-3 sm:px-4 lg:px-6">
+            <OhmsViewer url={viewerUrl} title={t(iv.title)} heightClass="h-[clamp(680px,88vh,1160px)]" />
+          </div>
+        </div>
+      ) : iv.ohmsXml ? (
+        <div className="mb-12">
           <OhmsNativePlayer src={iv.ohmsXml} title={t(iv.title)} />
-        ) : (
+        </div>
+      ) : (
+        <div className="mb-12">
           <OhmsViewer title={t(iv.title)} />
-        )}
-      </div>
+        </div>
+      )}
 
       <h2 className="mb-3 font-display text-2xl">
         {iv.ohmsUrl || iv.ohmsXml

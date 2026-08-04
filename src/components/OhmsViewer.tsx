@@ -82,7 +82,7 @@ const OhmsViewer = ({ url, title, heightClass = "h-[clamp(560px,78vh,880px)]" }:
           frame's paper tone (same as the header bar) gives the embed side/vertical
           breathing room and reads as a framed archival document rather than an
           abrupt cutoff — a touch more horizontal gutter than vertical. */}
-      <div className="bg-card px-4 py-4 sm:px-6 md:px-8">
+      <div className="bg-card px-3 py-3 sm:px-4 sm:py-4 md:px-5">
         <iframe
           src={url}
           title={t({ en: "Synchronized viewer — ", vi: "Trình xem đồng bộ — " }) + title}
