@@ -26,3 +26,6 @@ scripts/ohms/.viewer-src/
 *.njsproj
 *.sln
 *.sw?
+
+# transient staging dir for scripts/ohms/build-viewer.mjs (atomic swap)
+public/ohms-viewer.staging/

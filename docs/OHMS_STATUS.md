@@ -34,7 +34,7 @@ synopsis-body matches, timecodes). Injected into every baked page automatically.
 | --- | --- |
 | Website embed component (`OhmsViewer`) | ✅ Built — now iframes the baked viewer |
 | Baked real-viewer pages for all 11 interviews | ✅ Shipped — `public/ohms-viewer/` |
-| Native in-browser player (`OhmsNativePlayer`) | ✅ Kept as fallback (`/ohms-native`) |
+| Native in-browser player (`OhmsNativePlayer`) | ✅ Kept as fallback (used by `InterviewDetail`) |
 | Aviary embeds frame from any origin | ✅ Verified (`frame-ancestors … *`, no XFO) |
 
 ## ✅ SHIPPED — the interviews are live
@@ -82,8 +82,9 @@ https://ohms-viewer.oralhistoriesatksu.org/viewer.php?cachefile=OHMS-Sample-001.
 That host returns HTTP 200 with **no `X-Frame-Options`** and only
 `Content-Security-Policy: upgrade-insecure-requests` — i.e. a stock
 `uklibraries/ohms-viewer` install is cross-origin-embeddable out of the box. The
-`/ohms-preview` route embeds this sample as a labelled demonstration (it is **not**
-a PXA interview — remove the route before launch).
+`/ohms-preview` route embedded this sample as a labelled demonstration; that route
+was removed before launch (it was **not** PXA content, and it put visitor traffic
+on another institution's server).
 
 ## ✅ DECIDED: Aviary (the project has an account)
 
@@ -94,7 +95,8 @@ OHMS XML and publishes a ready-made embed URL.
 Verified: Aviary embed URLs return HTTP 200 with
 `content-security-policy: frame-ancestors 'self' … *` and **no `X-Frame-Options`**,
 i.e. they can be framed from any origin including Vercel, with zero configuration.
-`/ohms-preview` embeds a live public Aviary interview as proof.
+This was verified from the (now removed) `/ohms-preview` route, which framed a
+live public Aviary interview as proof.
 
 ### What to do in Aviary, per interview
 1. Upload the media, and attach the interview's **OHMS XML** so Aviary builds the
@@ -117,7 +119,9 @@ in the browser with `DOMParser` and render the synchronized experience directly:
 media player, timestamped index, transcript, Index/Transcript toggle, keyword
 search, click-to-seek, and active-passage highlight/auto-scroll. Styled to the
 site's design system and bilingual (OHMS's own `_alt` / `transcript_alt`
-translation fields are wired to the EN/VI toggle). Demo: **`/ohms-native`**.
+translation fields are wired to the EN/VI toggle). The `/ohms-native` demo route
+was removed before launch; the component itself is live in `InterviewDetail`
+wherever an interview sets `ohmsXml`.
 
 **To use it:** put the XML in `public/ohms/` and set `ohmsXml: "/ohms/<file>.xml"`
 on that interview. That's the whole procedure — the XML file alone is sufficient.

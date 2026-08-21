@@ -47,15 +47,9 @@ Config for the two easiest hosts is already included.
    (`vercel.json` already handles client-side routing.)
 4. Deploy. Every push to the main branch redeploys automatically.
 
-### Netlify
-1. Push this repo to GitHub.
-2. In Netlify, "Add new site" -> "Import an existing project."
-3. Build command `npm run build`, publish directory `dist`.
-   (`netlify.toml` and `public/_redirects` already handle this.)
-4. Deploy. Every push to the main branch redeploys automatically.
-
-Both include a redirect rule so deep links like `/interviews` resolve to the
-app instead of 404ing.
+`vercel.json` carries the catch-all rewrite, so deep links like
+`/interviews/:slug` resolve to the app instead of 404ing, plus cache headers for
+the baked OHMS viewer assets.
 
 ## Project structure
 
