@@ -7,14 +7,40 @@
     <meta name="description" content="A bilingual digital humanities archive of oral history interviews with and about Pham Xuan An, the legendary Vietnamese journalist." />
     <meta name="author" content="The Pham Xuan An Project" />
 
-    <meta property="og:title" content="The Pham Xuan An Project" />
-    <meta property="og:description" content="A bilingual oral history archive about Pham Xuan An." />
+    <!--
+      Social share card.
+
+      %SITE_ORIGIN% is substituted at build time by the `pxa:site-origin-html`
+      plugin in vite.config.ts, which reads Vercel's VERCEL_PROJECT_PRODUCTION_URL
+      system env var. Nothing here needs editing when the domain changes: that var
+      resolves to the .vercel.app domain today and to the custom domain the moment
+      one is attached. Off Vercel (or if the project's "Enable access to System
+      Environment Variables" setting is off) it collapses to "", leaving the URLs
+      root-relative — which every major scraper still resolves against the page.
+
+      og-image.jpg lives in public/ (not src/assets/) on purpose: Vite content-
+      hashes anything imported from src/, which would change this URL on every
+      build and break already-scraped cards. public/ is copied verbatim, so
+      /og-image.jpg is stable forever. It is a 1200x630 crop of the same Pham Xuan
+      An portrait used on the home page, on the site's paper ground.
+    -->
+    <meta property="og:title" content="The Pham Xuan An Project — Oral History Archive" />
+    <meta property="og:description" content="A bilingual digital humanities archive of oral history interviews with and about Pham Xuan An, the legendary Vietnamese journalist." />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta property="og:site_name" content="The Pham Xuan An Project" />
+    <meta property="og:url" content="%SITE_ORIGIN%/" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="vi_VN" />
+    <meta property="og:image" content="%SITE_ORIGIN%/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Pham Xuan An in central Saigon, cigarette in hand." />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@Lovable" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta name="twitter:title" content="The Pham Xuan An Project — Oral History Archive" />
+    <meta name="twitter:description" content="A bilingual digital humanities archive of oral history interviews with and about Pham Xuan An, the legendary Vietnamese journalist." />
+    <meta name="twitter:image" content="%SITE_ORIGIN%/og-image.jpg" />
+    <meta name="twitter:image:alt" content="Pham Xuan An in central Saigon, cigarette in hand." />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
