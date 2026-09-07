@@ -63,6 +63,8 @@ const PUBLIC_BASE = process.env.OHMS_PUBLIC_BASE || ""; // e.g. https://site/ohm
 // ../fonts; lib/ and vendor/ are server-side PHP (TCPDF, Composer) and are never
 // referenced by the rendered page, so they don't ship. (v3's skin/ and swf/ are
 // gone in 4.0.)
+// Kept in sync by hand with the /ohms-viewer/ cache-header rule in vercel.json.
+// Drifting only weakens caching for a new dir; it never breaks a page.
 const ASSET_DIRS = ["css", "js", "imgs", "fonts"];
 
 // Sanity floor for a baked page. The two pages truncated by the upstream
@@ -244,13 +246,8 @@ function transform(html, id, file) {
   const headInjection = `<link rel="stylesheet" href="ohms-embed.css">`;
   const bodyInjection = `<script src="ohms-search-shim.js"></script>`;
 
-  // No silent fallback: if the page has no </head> or </body> the render was
-  // truncated (the usual cause is a PHP fatal mid-template), and appending our
-  // script tag to the wreckage would only disguise it. Fail the build instead.
-  if (!html.includes("</head>"))
-    throw new Error(`${id}: rendered page has no </head> — truncated or unexpected output`);
-  if (!html.includes("</body>"))
-    throw new Error(`${id}: rendered page has no </body> — truncated or unexpected output`);
+  // assertBakedPage() has already proved both tags are present, so these
+  // replacements cannot silently no-op.
   html = html.replace("</head>", `${headInjection}\n</head>`);
   html = html.replace("</body>", `${bodyInjection}\n</body>`);
   return html;
@@ -262,8 +259,12 @@ function transform(html, id, file) {
  * PHP errors were suppressed, nothing looked at the output, and the broken pages
  * sat in the repo for months. A bake that cannot be verified must fail, loudly.
  *
+ * Runs on the raw response, before transform() rewrites it: every check below
+ * concerns what PHP produced, and transform() only rewrites URLs and appends two
+ * tags. Keeping the whole definition of "valid page" in one function means there
+ * is a single place to tighten it.
+ *
  * @param {{id: string, html: string, points: number}} page
- * @returns {{bytes: number, segments: number}}
  */
 function assertBakedPage({ id, html, points }) {
   const bytes = Buffer.byteLength(html, "utf8");
@@ -274,7 +275,13 @@ function assertBakedPage({ id, html, points }) {
   const err = /(?:Fatal error|Parse error|Uncaught \w*Error):[^\n<]{0,200}/i.exec(html);
   if (err) throw new Error(`${id}: PHP error in rendered output — ${err[0].trim()}`);
 
-  // 2. Structural: a complete render ends with </html>.
+  // 2. Structural: a complete render has both closing tags transform() targets
+  //    and ends with </html>. The usual cause of a miss is a PHP fatal
+  //    mid-template; appending our tags to the wreckage would disguise it.
+  if (!html.includes("</head>"))
+    throw new Error(`${id}: rendered page has no </head> — truncated or unexpected output`);
+  if (!html.includes("</body>"))
+    throw new Error(`${id}: rendered page has no </body> — truncated or unexpected output`);
   if (!/<\/html>\s*$/i.test(html))
     throw new Error(`${id}: page does not end with </html> (${bytes} B) — render was truncated`);
 
@@ -292,8 +299,6 @@ function assertBakedPage({ id, html, points }) {
     throw new Error(
       `${id}: ${segments} index segments rendered but the source XML has ${points} <point> elements`,
     );
-
-  return { bytes, segments };
 }
 
 async function copyAssets(dest) {
@@ -329,12 +334,12 @@ async function main() {
   await fs.rm(CACHE, { recursive: true, force: true });
   await fs.mkdir(CACHE, { recursive: true });
   const repositories = new Set();
-  const facts = new Map(); // file -> { repository, points }
+  const interviews = []; // { file, id, points } — the bake loop's work list
   for (const f of xmlFiles) {
     await fs.copyFile(path.join(XML_DIR, f), path.join(CACHE, f));
-    const info = await inspectXml(path.join(XML_DIR, f));
-    facts.set(f, info);
-    repositories.add(info.repository || "Dartmouth DDHI");
+    const { repository, points } = await inspectXml(path.join(XML_DIR, f));
+    interviews.push({ file: f, id: f.replace(/\.xml$/, ""), points });
+    repositories.add(repository || "Dartmouth DDHI");
   }
   await writeConfig(repositories);
   log(`config repositories: ${[...repositories].join(", ")}`);
@@ -370,16 +375,9 @@ async function main() {
   };
   process.on("exit", stop);
 
-  /** Write the captured PHP stderr to disk and return its last few lines. */
-  const flushServerLog = async () => {
-    const text = serverErr.join("");
-    try {
-      await fs.writeFile(PHP_LOG, text, "utf8");
-    } catch {
-      /* best effort */
-    }
-    return text.split("\n").filter(Boolean).slice(-40).join("\n");
-  };
+  /** The last few lines of the captured PHP stderr, for the failure message. */
+  const serverLogTail = () =>
+    serverErr.join("").split("\n").filter(Boolean).slice(-40).join("\n");
 
   try {
     await waitForServer(`${ORIGIN}/index.php`);
@@ -397,17 +395,19 @@ async function main() {
     log(`copied viewer assets → staging`);
 
     const manifest = [];
-    for (const file of xmlFiles) {
-      const id = file.replace(/\.xml$/, "");
-      const { points } = facts.get(file);
+    for (const { file, id, points } of interviews) {
       const res = await fetch(`${ORIGIN}/viewer.php?cachefile=${encodeURIComponent(file)}`);
       if (!res.ok) throw new Error(`viewer.php returned ${res.status} for ${file}`);
-      const html = transform(await res.text(), id, file);
-      // Verify before writing, so a bad render never reaches public/ohms-viewer/.
-      const { bytes, segments } = assertBakedPage({ id, html, points });
+      // Verify the raw render before rewriting or writing it, so a bad page
+      // never reaches public/ohms-viewer/ and fails with the specific reason.
+      const raw = await res.text();
+      assertBakedPage({ id, html: raw, points });
+      const html = transform(raw, id, file);
+      const bytes = Buffer.byteLength(html, "utf8");
       await fs.writeFile(path.join(STAGE, `${id}.html`), html, "utf8");
-      manifest.push({ id, file, points, segments, bytes });
-      log(`baked ${id}.html  (${segments}/${points} index segments, ${bytes} B)`);
+      // segments === points is guaranteed by assertBakedPage, so record it once.
+      manifest.push({ id, file, segments: points, bytes });
+      log(`baked ${id}.html  (${points} index segments, ${bytes} B)`);
     }
 
     await fs.writeFile(
@@ -424,7 +424,7 @@ async function main() {
     await fs.rename(STAGE, OUT);
     log(`done — ${manifest.length} pages in public/ohms-viewer/`);
   } catch (e) {
-    const tail = await flushServerLog();
+    const tail = serverLogTail();
     if (tail)
       console.error(
         `[ohms] --- php server stderr (last lines) ---\n${tail}\n` +
@@ -432,7 +432,8 @@ async function main() {
       );
     throw e;
   } finally {
-    await flushServerLog();
+    // Single writer for the log, on both the success and failure paths.
+    await fs.writeFile(PHP_LOG, serverErr.join(""), "utf8").catch(() => {});
     stop();
     // Staging only survives a successful run long enough to be renamed over OUT;
     // if we got here with it still on disk the bake aborted, so don't leave it.

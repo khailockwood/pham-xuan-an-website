@@ -1,81 +1,70 @@
 {
   "viewer": "viewer_4.0",
-  "builtAt": "2026-08-21T03:42:20.209Z",
+  "builtAt": "2026-09-07T23:13:45.197Z",
   "interviews": [
     {
       "id": "interview36980",
       "file": "interview36980.xml",
-      "points": 10,
       "segments": 10,
       "bytes": 1680563
     },
     {
       "id": "interview36981",
       "file": "interview36981.xml",
-      "points": 8,
       "segments": 8,
       "bytes": 804870
     },
     {
       "id": "interview36982",
       "file": "interview36982.xml",
-      "points": 11,
       "segments": 11,
       "bytes": 553450
     },
     {
       "id": "interview41608",
       "file": "interview41608.xml",
-      "points": 0,
       "segments": 0,
       "bytes": 177199
     },
     {
       "id": "interview41609",
       "file": "interview41609.xml",
-      "points": 0,
       "segments": 0,
       "bytes": 76195
     },
     {
       "id": "interview41646",
       "file": "interview41646.xml",
-      "points": 13,
       "segments": 13,
       "bytes": 171448
     },
     {
       "id": "interview42105",
       "file": "interview42105.xml",
-      "points": 10,
       "segments": 10,
       "bytes": 311053
     },
     {
       "id": "interview42197",
       "file": "interview42197.xml",
-      "points": 7,
       "segments": 7,
       "bytes": 211825
     },
     {
       "id": "interview42211",
       "file": "interview42211.xml",
-      "points": 20,
       "segments": 20,
       "bytes": 462073
     },
     {
       "id": "interview42374",
       "file": "interview42374.xml",
-      "points": 17,
       "segments": 17,
       "bytes": 1093973
     },
     {
       "id": "interview42707",
       "file": "interview42707.xml",
-      "points": 17,
       "segments": 17,
       "bytes": 1167042
     }
