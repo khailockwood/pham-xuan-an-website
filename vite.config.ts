@@ -41,10 +41,9 @@ function siteOrigin(): string {
  * runs it before Vite's own HTML env hook sees the token.
  *
  * With no origin available the token collapses to "", so `%SITE_ORIGIN%/og-image.jpg`
- * becomes `/og-image.jpg` — the root-relative form every major scraper resolves
- * against the page URL. og:url is dropped entirely in that case: a bare "/" is a
- * useless canonical, whereas a relative image still works. The literal token and
- * the string "undefined" can never reach the output.
+ * becomes `/og-image.jpg` and og:url becomes `/` — the root-relative form every
+ * major scraper resolves against the page URL. Degraded, not broken, and only on
+ * builds that never get scraped (local, or Vercel with system env vars off).
  */
 function siteOriginHtml(): Plugin {
   const TOKEN = "%SITE_ORIGIN%";
@@ -52,17 +51,7 @@ function siteOriginHtml(): Plugin {
     name: "pxa:site-origin-html",
     transformIndexHtml: {
       order: "pre",
-      handler(html: string) {
-        const origin = siteOrigin();
-        let out = origin
-          ? html
-          : html.replace(/^[ \t]*<meta property="og:url"[^>]*>[ \t]*\r?\n/m, "");
-        out = out.split(TOKEN).join(origin);
-        if (out.includes(TOKEN)) {
-          throw new Error(`${TOKEN} survived substitution in index.html`);
-        }
-        return out;
-      },
+      handler: (html: string) => html.split(TOKEN).join(siteOrigin()),
     },
   };
 }
