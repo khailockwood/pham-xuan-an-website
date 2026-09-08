@@ -40,7 +40,7 @@ export const DuotonePortrait = ({
     {(caption || credit) && (
       <figcaption
         className={cn(
-          "mono-label mt-3 flex justify-between text-[10.5px] tracking-[0.14em]",
+          "meta-label mt-3 flex justify-between gap-4",
           onLight ? "text-ink-soft/70" : "text-paper/50"
         )}
       >

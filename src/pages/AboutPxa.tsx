@@ -5,9 +5,9 @@ import { bioBody, bioIntro, timeline } from "@/content/bio";
 const AboutPxa = () => {
   const { t } = useLanguage();
   return (
-    <article className="container py-16 md:py-24 max-w-4xl">
+    <article className="container py-section prose-measure">
       <Eyebrow>{t({ en: "Biography", vi: "Tiểu sử" })}</Eyebrow>
-      <h1 className="font-display text-4xl md:text-5xl leading-tight mb-8">
+      <h1 className="font-display text-title mb-8">
         {t({ en: "Who Was Pham Xuan An?", vi: "Phạm Xuân Ẩn là ai?" })}
       </h1>
 

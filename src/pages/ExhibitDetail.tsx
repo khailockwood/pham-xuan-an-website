@@ -17,14 +17,14 @@ const ExhibitDetail = () => {
     .filter(Boolean);
 
   return (
-    <article className="container py-16 md:py-24 max-w-3xl">
+    <article className="container py-section prose-measure">
       <Link to="/exhibits" className="inline-flex items-center gap-2 text-sm text-pine hover:underline mb-8">
         <ArrowLeft size={14} /> {t({ en: "Back to exhibits", vi: "Quay lại triển lãm" })}
       </Link>
 
       <Eyebrow>{t({ en: "Exhibit", vi: "Triển lãm" })}</Eyebrow>
-      <h1 className="font-display text-4xl md:text-5xl leading-tight mb-4">{t(exhibit.title)}</h1>
-      <p className="text-lg text-foreground/75 leading-relaxed mb-10">{t(exhibit.dek)}</p>
+      <h1 className="font-display text-title mb-4">{t(exhibit.title)}</h1>
+      <p className="text-lead text-ink-soft mb-10">{t(exhibit.dek)}</p>
 
       <div className="aspect-[16/9] bg-muted border border-border mb-10 overflow-hidden">
         <img src={exhibit.cover} alt="" className="w-full h-full object-cover" />
@@ -51,7 +51,7 @@ const ExhibitDetail = () => {
             {related.map((iv) => iv && (
               <li key={iv.slug}>
                 <Link to={`/interviews/${iv.slug}`} className="text-pine hover:underline">
-                  {t(iv.title)} — <span className="text-foreground/60">{iv.interviewee}</span>
+                  {t(iv.title)} — <span className="text-ink-muted">{iv.interviewee}</span>
                 </Link>
               </li>
             ))}

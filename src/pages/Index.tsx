@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
 import { useLanguage, type Bilingual } from "@/contexts/LanguageContext";
 import { DuotonePortrait } from "@/components/DuotonePortrait";
 import { Eyebrow } from "@/components/Eyebrow";
@@ -110,13 +109,14 @@ const Index = () => {
         <div className="container relative z-[2]">
           {/* typed file header */}
           <div className="flex flex-col gap-1.5 border-b border-paper/15 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <span className="mono-label text-[11.5px] text-paper/80">
+            <span className="text-label text-paper/90">
               {t({
                 en: "Dartmouth Digital History Initiative · Fulbright University Vietnam",
                 vi: "Sáng kiến Lịch sử Số Dartmouth · Đại học Fulbright Việt Nam",
               })}
             </span>
-            <span className="mono-label text-[11px] text-paper/45">
+            {/* A file reference is a machine-typed value — this one stays mono. */}
+            <span className="mono-label text-paper/70">
               {t({ en: "File · PXA — 1927–2006", vi: "Hồ sơ · PXA — 1927–2006" })}
             </span>
           </div>
@@ -124,34 +124,34 @@ const Index = () => {
           <div className="grid items-center gap-12 py-14 lg:grid-cols-[1.08fr_0.92fr] lg:gap-16 lg:py-20">
             {/* hero text */}
             <div>
-              <p className="mono-label mb-6 text-[11.5px] text-paper/55">
+              <p className="mb-6 font-display text-lead italic text-paper/85">
                 {t({
                   en: "An oral history of the man who lived two lives",
                   vi: "Lịch sử truyền miệng về người đàn ông sống hai cuộc đời",
                 })}
               </p>
-              <h1 className="font-display text-5xl leading-[0.98] tracking-[-0.015em] text-paper sm:text-6xl lg:text-[82px]">
+              <h1 className="font-display text-title text-paper lg:text-masthead">
                 Phạm Xuân Ẩn
               </h1>
-              <p className="mb-8 mt-3 font-display text-xl italic text-paper/55 lg:text-[22px]">
+              <p className="mb-8 mt-3 font-display text-lead italic text-paper/70">
                 1927 — 2006
               </p>
 
               {/* two-identity file record — the signature "declassify" reveal */}
               <dl className="mb-8 border-t border-paper/15">
                 <div className="grid items-baseline gap-1.5 border-b border-paper/15 py-3.5 sm:grid-cols-[150px_1fr] sm:gap-6">
-                  <dt className="mono-label text-[10.5px] text-paper/45">
+                  <dt className="text-label text-paper/70">
                     {t({ en: "Cover identity", vi: "Vỏ bọc" })}
                   </dt>
-                  <dd className="font-display text-lg leading-tight text-paper lg:text-[21px]">
+                  <dd className="font-display text-lead leading-tight text-paper">
                     {t({ en: "Correspondent", vi: "Phóng viên" })} — Reuters · New York Herald Tribune · Time
                   </dd>
                 </div>
                 <div className="grid items-baseline gap-1.5 py-3.5 sm:grid-cols-[150px_1fr] sm:gap-6">
-                  <dt className="mono-label text-[10.5px] text-gold-bright">
+                  <dt className="text-label font-medium text-gold-bright">
                     {t({ en: "True identity", vi: "Danh tính thật" })}
                   </dt>
-                  <dd className="font-display text-lg leading-tight lg:text-[21px]">
+                  <dd className="font-display text-lead leading-tight">
                     <span className="redaction font-medium text-gold-bright">
                       <em className="not-italic">"Hai Trung"</em>
                       {" — "}
@@ -164,7 +164,7 @@ const Index = () => {
                 </div>
               </dl>
 
-              <p className="mb-8 max-w-[34em] font-display text-lg italic leading-relaxed text-paper/85 lg:text-[20px]">
+              <p className="prose-measure mb-8 font-display italic text-paper/90">
                 {t({
                   en: "For a decade he filed dispatches for Time magazine while sending intelligence to Hanoi. His closest colleagues in the Saigon press corps learned the truth only after the war.",
                   vi: "Suốt một thập kỷ, ông gửi bản tin cho tạp chí Time trong khi vẫn chuyển tin tình báo về Hà Nội. Những đồng nghiệp thân thiết nhất trong giới báo chí Sài Gòn chỉ biết sự thật sau khi chiến tranh kết thúc.",
@@ -174,10 +174,9 @@ const Index = () => {
               <div className="flex flex-wrap items-center gap-x-7 gap-y-4">
                 <Link
                   to="/interviews"
-                  className="group inline-flex items-center gap-2.5 rounded-sm bg-gold px-6 py-3 text-sm font-medium text-ink transition-colors hover:bg-gold-bright"
+                  className="inline-flex items-center rounded-sm bg-gold px-6 py-3 text-label font-medium text-ink transition-colors hover:bg-gold-bright"
                 >
                   {t({ en: "Enter the archive", vi: "Vào kho lưu trữ" })}
-                  <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
                 </Link>
                 <Link
                   to="/about-pxa"
@@ -201,18 +200,17 @@ const Index = () => {
       </section>
 
       {/* ---------- Intro ---------- */}
-      <section className="container py-20 lg:py-[88px]">
+      <section className="container py-section lg:py-section-lg">
         <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
           <div>
-            <Eyebrow>{t({ en: "The Project", vi: "Dự án" })}</Eyebrow>
-            <p className="font-display text-2xl leading-snug lg:text-[25px]">
+            <p className="font-display text-sub leading-snug">
               {t({
                 en: "Fifty years after the fall of Saigon, a bilingual archive that asks what the sources we trust can still tell us about the Vietnam War.",
                 vi: "Năm mươi năm sau ngày Sài Gòn sụp đổ, một kho lưu trữ song ngữ đặt câu hỏi: những nguồn tư liệu ta tin tưởng còn có thể cho ta biết điều gì về Chiến tranh Việt Nam.",
               })}
             </p>
           </div>
-          <div className="space-y-4 leading-relaxed text-ink-soft">
+          <div className="prose-measure space-y-4 text-ink-soft">
             <p>{t(mission)}</p>
             <p>
               {t({
@@ -222,9 +220,9 @@ const Index = () => {
             </p>
             <Link
               to="/about-project"
-              className="mono-label inline-flex items-center gap-1.5 border-b border-gold pb-0.5 text-[11.5px] text-pine"
+              className="inline-flex items-center border-b border-gold pb-0.5 text-label text-pine"
             >
-              {t({ en: "About this project", vi: "Về dự án" })} <span className="font-mono">→</span>
+              {t({ en: "About this project", vi: "Về dự án" })}
             </Link>
           </div>
         </div>
@@ -232,9 +230,9 @@ const Index = () => {
 
       {/* ---------- Interview register (formal finding aid, on paper) ---------- */}
       <section className="border-t border-border bg-paper-2">
-        <div className="container py-20 lg:py-[84px]">
+        <div className="container py-section lg:py-section-lg">
           <Eyebrow>{t({ en: "The Interviews", vi: "Phỏng vấn" })}</Eyebrow>
-          <h2 className="max-w-[16em] font-display text-3xl leading-tight lg:text-[40px]">
+          <h2 className="max-w-[16em] font-display text-head">
             {t({
               en: "Voices from both of his worlds.",
               vi: "Những tiếng nói từ cả hai thế giới của ông.",
@@ -242,34 +240,32 @@ const Index = () => {
           </h2>
 
           <div className="mt-11 border-t border-border">
-            {interviews.slice(0, 4).map((iv, i) => (
+            {interviews.slice(0, 4).map((iv) => (
               <div
                 key={iv.slug}
-                className="grid gap-5 border-b border-border py-7 transition-colors hover:bg-paper md:grid-cols-[52px_1fr_220px] md:gap-7"
+                className="grid gap-5 border-b border-border py-7 transition-colors hover:bg-paper md:grid-cols-[1fr_220px] md:gap-7"
               >
-                <div className="mono-label pt-1.5 text-[12px] text-ink-soft/45">
-                  {String(i + 1).padStart(2, "0")}
-                </div>
                 <div>
-                  <h3 className="mb-2.5 font-display text-2xl leading-snug">{t(iv.title)}</h3>
-                  <div className="mono-label mb-3 flex flex-wrap gap-x-4 gap-y-1.5 text-[11px] text-ink-soft/65">
-                    <span>{iv.dateDisplay ?? fmtDate(iv.date)}</span>
-                    <span>{iv.duration}</span>
-                    <span className="text-pine">{t(ORIGINAL_LANGUAGE[iv.originalLanguage])}</span>
-                    <span>
-                      {t({ en: "Interviewer", vi: "Người phỏng vấn" })} — {iv.interviewer}
-                    </span>
-                  </div>
-                  <p className="max-w-[42em] text-[15.5px] leading-relaxed text-ink-soft">
-                    {t(iv.summary)}
-                  </p>
+                  <h3 className="mb-2.5 font-display text-sub leading-snug">{t(iv.title)}</h3>
+                  {/* Each fact is its own element, not a middle-dot string: a
+                      screen reader reads "52 min · VI" as one utterance. */}
+                  <dl className="meta-label mb-3 flex flex-wrap gap-x-5 gap-y-1">
+                    <dd>{iv.dateDisplay ?? fmtDate(iv.date)}</dd>
+                    <dd>{iv.duration}</dd>
+                    <dd className="text-pine">{t(ORIGINAL_LANGUAGE[iv.originalLanguage])}</dd>
+                    <div className="flex gap-1.5">
+                      <dt>{t({ en: "Interviewer", vi: "Người phỏng vấn" })}</dt>
+                      <dd className="text-ink-soft">{iv.interviewer}</dd>
+                    </div>
+                  </dl>
+                  <p className="prose-measure text-ink-soft">{t(iv.summary)}</p>
                 </div>
                 <div className="md:pt-1.5 md:text-right">
                   <Link
                     to={`/interviews/${iv.slug}`}
-                    className="inline-flex items-center gap-2 rounded-sm border border-border px-4 py-2.5 text-[13.5px] text-ink transition-colors hover:border-pine hover:bg-pine hover:text-paper"
+                    className="inline-flex items-center gap-2 rounded-sm border border-strong px-4 py-2.5 text-label text-ink transition-colors hover:border-pine hover:bg-pine hover:text-paper"
                   >
-                    ▸ {t({ en: "Listen & read", vi: "Nghe & đọc" })}
+                    {t({ en: "Listen & read", vi: "Nghe & đọc" })}
                   </Link>
                 </div>
               </div>
@@ -279,18 +275,18 @@ const Index = () => {
           <div className="mt-9">
             <Link
               to="/interviews"
-              className="mono-label border-b border-pine/40 pb-0.5 text-[12px] text-pine"
+              className="border-b border-pine/40 pb-0.5 text-label text-pine"
             >
-              {t({ en: "View all interviews →", vi: "Xem tất cả phỏng vấn →" })}
+              {t({ en: "View all interviews", vi: "Xem tất cả phỏng vấn" })}
             </Link>
           </div>
         </div>
       </section>
 
       {/* ---------- Exhibits & Research ---------- */}
-      <section className="container py-20 lg:py-[84px]">
+      <section className="container py-section lg:py-section-lg">
         <Eyebrow>{t({ en: "Exhibits & Research", vi: "Triển lãm & Nghiên cứu" })}</Eyebrow>
-        <h2 className="max-w-[16em] font-display text-3xl leading-tight lg:text-[40px]">
+        <h2 className="max-w-[16em] font-display text-head">
           {t({ en: "Reading the archive against itself.", vi: "Đọc kho lưu trữ ngược lại chính nó." })}
         </h2>
         <div className="mt-12 grid gap-8 md:grid-cols-2">
@@ -308,9 +304,9 @@ const Index = () => {
                 />
               </div>
               <div className="px-7 pb-8 pt-6">
-                <div className="mono-label mb-3 text-[10.5px] text-pine">{t(ex.tag)}</div>
-                <h3 className="mb-2.5 font-display text-2xl leading-snug">{t(ex.title)}</h3>
-                <p className="text-[15px] leading-relaxed text-ink-soft">{t(ex.blurb)}</p>
+                <div className="meta-label mb-3 text-pine">{t(ex.tag)}</div>
+                <h3 className="mb-2.5 font-display text-sub leading-snug">{t(ex.title)}</h3>
+                <p className="text-body text-ink-soft">{t(ex.blurb)}</p>
               </div>
             </Link>
           ))}
@@ -319,9 +315,8 @@ const Index = () => {
 
       {/* ---------- Partners ---------- */}
       <section className="border-t border-border bg-paper-2">
-        <div className="container py-20 lg:py-[84px]">
-          <Eyebrow>{t({ en: "Partners", vi: "Đối tác" })}</Eyebrow>
-          <h2 className="max-w-[15em] font-display text-3xl leading-tight lg:text-[40px]">
+        <div className="container py-section lg:py-section-lg">
+          <h2 className="max-w-[15em] font-display text-head">
             {t({
               en: "A multi-institution, international collaboration.",
               vi: "Sự cộng tác quốc tế giữa nhiều tổ chức.",
@@ -348,10 +343,11 @@ const Index = () => {
                     className="max-h-full w-auto max-w-[80%] object-contain object-left transition-transform duration-300 group-hover:scale-[1.03]"
                   />
                 </div>
-                <div className="mt-7 font-display text-lg leading-snug">{t(p.name)}</div>
-                <div className="mt-1 text-sm text-ink-soft">{t(p.sub)}</div>
-                <span className="mono-label mt-5 inline-flex items-center gap-1.5 text-[10.5px] text-pine transition-colors group-hover:text-gold">
-                  {p.go} <span aria-hidden>→</span>
+                <div className="mt-7 font-display text-lead leading-snug">{t(p.name)}</div>
+                <div className="mt-1 text-label text-ink-muted">{t(p.sub)}</div>
+                {/* The domain is a machine-typed value, so it keeps the mono face. */}
+                <span className="mono-label mt-5 inline-flex items-center text-pine transition-colors group-hover:text-pine-deep">
+                  {p.go}
                 </span>
               </a>
             ))}

@@ -43,7 +43,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
                 to={n.to}
                 className={({ isActive }) =>
                   cn(
-                    "text-[13px] tracking-[0.01em] transition-colors",
+                    "text-label transition-colors",
                     isActive ? "text-gold-bright" : "text-paper/70 hover:text-paper"
                   )
                 }
@@ -99,13 +99,13 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         <div className="container py-14">
           <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
             <div>
-              <div className="mb-2.5 font-display text-[22px] text-paper">{t(siteName)}</div>
+              <div className="mb-2.5 font-display text-lead text-paper">{t(siteName)}</div>
               <p className="max-w-[26em] text-sm leading-relaxed text-paper/60">
                 {t(ui.footerRights)}
               </p>
             </div>
             <div>
-              <div className="mono-label mb-3.5 text-[11px] text-gold-bright">
+              <div className="text-label mb-3.5 font-medium text-gold-bright">
                 {t({ en: "Explore", vi: "Khám phá" })}
               </div>
               {nav.map((n) => (
@@ -119,13 +119,13 @@ export const Layout = ({ children }: { children: ReactNode }) => {
               ))}
             </div>
             <div>
-              <div className="mono-label mb-3.5 text-[11px] text-gold-bright">
+              <div className="text-label mb-3.5 font-medium text-gold-bright">
                 {t({ en: "Cite this archive", vi: "Trích dẫn kho lưu trữ" })}
               </div>
-              <p className="text-[13px] leading-relaxed text-paper/60">{t(cite)}</p>
+              <p className="text-label leading-relaxed text-paper/70">{t(cite)}</p>
             </div>
           </div>
-          <div className="mono-label mt-11 flex flex-col gap-2 border-t border-paper/[0.18] pt-5 text-[10.5px] tracking-[0.12em] text-paper/45 sm:flex-row sm:justify-between">
+          <div className="mt-11 flex flex-col gap-2 border-t border-paper/[0.18] pt-5 text-label text-paper/70 sm:flex-row sm:justify-between">
             <span>© {new Date().getFullYear()} The Pham Xuan An Project</span>
             <span>English Edition · Phiên bản Tiếng Việt</span>
           </div>

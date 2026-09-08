@@ -1,14 +1,12 @@
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Eyebrow } from "@/components/Eyebrow";
 import { User } from "lucide-react";
 import { cite, methodology, mission, partners, team, studentResearchers } from "@/content/project";
 
 const AboutProject = () => {
   const { t } = useLanguage();
   return (
-    <article className="container py-16 md:py-24 max-w-4xl">
-      <Eyebrow>{t({ en: "About", vi: "Về dự án" })}</Eyebrow>
-      <h1 className="font-display text-4xl md:text-5xl leading-tight mb-10">
+    <article className="container py-section prose-measure">
+      <h1 className="font-display text-title mb-10">
         {t({ en: "The Pham Xuan An Project", vi: "Về dự án" })}
       </h1>
 

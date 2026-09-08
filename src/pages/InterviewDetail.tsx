@@ -29,7 +29,7 @@ const InterviewDetail = () => {
     <article className="container py-16 md:py-24 max-w-4xl">
       <Link
         to="/interviews"
-        className="mono-label mb-8 inline-flex items-center gap-2 text-[10.5px] text-ink-soft transition-colors hover:text-pine"
+        className="mb-8 inline-flex items-center gap-2 text-label text-ink-muted transition-colors hover:text-pine"
       >
         <ArrowLeft size={13} /> {t({ en: "Back to interviews", vi: "Quay lại phỏng vấn" })}
       </Link>
@@ -39,29 +39,30 @@ const InterviewDetail = () => {
 
       <dl className="mb-10 grid grid-cols-2 gap-6 border-y border-border py-6 text-sm md:grid-cols-4">
         <div>
-          <dt className="mono-label text-[10.5px] text-ink-soft/55">{t(ui.interviewee)}</dt>
+          <dt className="meta-label">{t(ui.interviewee)}</dt>
           <dd className="mt-1.5 font-display text-lg leading-tight">{iv.interviewee}</dd>
         </div>
         <div>
-          <dt className="mono-label text-[10.5px] text-ink-soft/55">{t(ui.interviewer)}</dt>
+          <dt className="meta-label">{t(ui.interviewer)}</dt>
           <dd className="mt-1.5 font-display text-lg leading-tight">{iv.interviewer}</dd>
         </div>
         <div>
-          <dt className="mono-label text-[10.5px] text-ink-soft/55">{t(ui.date)}</dt>
+          <dt className="meta-label">{t(ui.date)}</dt>
           <dd className="mt-1.5 font-display text-lg leading-tight">
             {iv.dateDisplay ??
               new Date(iv.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
           </dd>
         </div>
         <div>
-          <dt className="mono-label text-[10.5px] text-ink-soft/55">{t(ui.duration)}</dt>
+          <dt className="meta-label">{t(ui.duration)}</dt>
           <dd className="mt-1.5 font-display text-lg leading-tight">
-            {iv.duration} · {iv.originalLanguage.toUpperCase()}
+            <span>{iv.duration}</span>{" "}
+            <span className="text-ink-muted">{iv.originalLanguage.toUpperCase()}</span>
           </dd>
         </div>
       </dl>
 
-      <p className="mb-10 max-w-[46em] font-display text-xl italic leading-relaxed text-ink-soft">
+      <p className="prose-measure mb-10 font-display italic text-ink-soft">
         {t(iv.summary)}
       </p>
 
@@ -105,7 +106,7 @@ const InterviewDetail = () => {
         <a
           href={iv.audio}
           download
-          className="mono-label mt-3.5 inline-flex items-center gap-2 text-[10.5px] text-ink-soft transition-colors hover:text-pine"
+          className="mt-3.5 inline-flex items-center gap-2 text-label text-ink-muted transition-colors hover:text-pine"
         >
           <Download size={12} /> {t(ui.download)}
         </a>
@@ -113,7 +114,7 @@ const InterviewDetail = () => {
 
       <h2 className="mb-2 font-display text-2xl">{t(ui.transcript)}</h2>
       {showOriginalNote && (
-        <p className="mb-6 text-[13px] italic text-ink-soft/70">
+        <p className="mb-6 text-label italic text-ink-muted">
           {t({
             en: `Originally recorded in ${iv.originalLanguage.toUpperCase()}. Translation provided.`,
             vi: `Ghi âm gốc bằng ${iv.originalLanguage.toUpperCase()}. Bản dịch được cung cấp.`,
@@ -127,12 +128,12 @@ const InterviewDetail = () => {
             key={i}
             className="grid grid-cols-[64px_1fr] gap-4 border-b border-border py-5 text-sm md:grid-cols-[80px_150px_1fr]"
           >
-            <div className="mono-label pt-1 text-[10.5px] tabular-nums text-pine">{seg.timestamp}</div>
-            <div className="mono-label hidden pt-1 text-[10.5px] text-ink-soft/60 md:block">
+            <div className="mono-label pt-1 tabular-nums text-pine">{seg.timestamp}</div>
+            <div className="meta-label hidden pt-1 md:block">
               {seg.speaker}
             </div>
-            <div className="max-w-[46em] leading-relaxed text-ink-soft">
-              <span className="mono-label mb-1.5 block text-[10.5px] text-ink-soft/60 md:hidden">
+            <div className="prose-measure text-ink-soft">
+              <span className="meta-label mb-1.5 block md:hidden">
                 {seg.speaker}
               </span>
               {t(seg.text)}
