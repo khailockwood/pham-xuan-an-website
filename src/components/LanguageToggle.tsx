@@ -13,7 +13,7 @@ export const LanguageToggle = ({
   return (
     <div
       className={cn(
-        "inline-flex items-center overflow-hidden rounded-sm border font-mono text-[11px] tracking-[0.1em]",
+        "inline-flex items-center overflow-hidden rounded-sm border font-mono text-micro tracking-[0.06em]",
         onDark ? "border-paper/30" : "border-border",
         className
       )}

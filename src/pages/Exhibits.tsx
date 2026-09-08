@@ -1,14 +1,12 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Eyebrow } from "@/components/Eyebrow";
 import { exhibits } from "@/content/exhibits";
 
 const Exhibits = () => {
   const { t } = useLanguage();
   return (
     <div className="container py-16 md:py-24">
-      <Eyebrow>{t({ en: "Research", vi: "Nghiên cứu" })}</Eyebrow>
-      <h1 className="font-display text-4xl md:text-5xl leading-tight mb-12">
+      <h1 className="font-display text-title mb-12">
         {t({ en: "Exhibits", vi: "Triển lãm" })}
       </h1>
 
@@ -26,7 +24,7 @@ const Exhibits = () => {
               <h2 className="font-display text-2xl leading-tight mb-2 group-hover:text-pine transition-colors">
                 {t(ex.title)}
               </h2>
-              <p className="text-sm text-foreground/70 leading-relaxed">{t(ex.dek)}</p>
+              <p className="text-sm text-ink-soft leading-relaxed">{t(ex.dek)}</p>
             </div>
           </Link>
         ))}

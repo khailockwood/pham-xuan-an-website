@@ -38,63 +38,35 @@ documentary "dossier" undertone. Archival paper tones, Dartmouth pine, gold acce
 
     --border: 40 15% 76%;                /* ink @ ~16% on paper */
     --input: 40 15% 76%;
-    --ring: 41 61% 43%;
+    --ring: 48 10% 10%;                  /* ink — gold was 2.69:1 and failed as a focus ring */
 
     --radius: 0.125rem;                  /* sharp, document-like corners (2px) */
 
     /* ---- named palette (use via Tailwind: bg-paper, text-ink, border-gold …) ---- */
     --paper: 42 34% 89%;
     --paper-2: 42 32% 84%;
-    --ink: 48 10% 10%;
-    --ink-soft: 45 9% 18%;
+    --ink: 48 10% 10%;                   /* 13.9:1 on paper */
+    --ink-soft: 45 9% 18%;               /* 10.7:1 — secondary prose */
+    --ink-muted: 46 9% 32%;              /*  6.0:1 — metadata, captions, labels.
+                                            The third solid rank. Alpha-fading
+                                            ink-soft to /45…/65 landed between
+                                            2.4:1 and 4.0:1 and failed AA. */
     --pine: 157 100% 21%;
     --pine-deep: 152 80% 12%;
     --gold: 41 61% 43%;
     --gold-bright: 43 56% 52%;
 
+    /* Two rule weights: the hairline that separates records in a register, and
+       the 3:1 edge WCAG 1.4.11 requires of an actual control boundary. */
+    --rule-strong: 40 15% 44%;           /*  3.6:1 on paper */
+
     /* ---- typography ---- */
     --font-display: 'Newsreader', Georgia, serif;
     --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
-    --font-mono: 'Cutive Mono', ui-monospace, monospace;
-
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 0 0% 7%;
-    --foreground: 0 0% 95%;
-    --card: 0 0% 10%;
-    --card-foreground: 0 0% 95%;
-    --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 157 60% 35%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 157 40% 20%;
-    --secondary-foreground: 0 0% 95%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
-    --accent: 47 80% 50%;
-    --accent-foreground: 0 0% 7%;
-    --destructive: 0 60% 40%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 47 80% 50%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* IBM Plex Mono, not Cutive Mono: Cutive ships no `vietnamese` unicode
+       subset, so ạ ẩ ị ử ồ fell back to a system face mid-word — including in
+       "Phạm Xuân Ẩn" itself. Plex Mono is the sans's own superfamily. */
+    --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
   }
 }
 
@@ -115,16 +87,56 @@ documentary "dossier" undertone. Archival paper tones, Dartmouth pine, gold acce
     font-weight: 500;
     letter-spacing: -0.01em;
   }
+
+  /* Two-layer focus ring. No single colour in the palette clears 3:1 against
+     both paper and pine-deep — gold is 2.69 on paper, pine is 2.02 on pine-deep
+     — so the ink outline carries the contrast on light grounds, the gold halo
+     carries it on dark, and the outline inverts to paper inside .on-dark. */
+  :where(a, button, input, textarea, select, [tabindex]):focus-visible {
+    outline: 2px solid hsl(var(--ink));
+    outline-offset: 2px;
+    box-shadow: 0 0 0 5px hsl(var(--gold-bright));
+    border-radius: 1px;
+  }
+  .on-dark :where(a, button, input, textarea, select, [tabindex]):focus-visible {
+    outline-color: hsl(var(--paper));
+  }
 }
 
 @layer components {
-  /* Mono "dateline / dossier label" utility — datelines, record numbers,
-     timestamps, uppercase letterspaced labels. Reusable across pages. */
+  /* Mono utility for MACHINE-TYPED values only: timecodes, record and file
+     identifiers, the archival reference numbers a researcher would copy.
+     It is deliberately no longer the site's metadata voice — uppercase mono at
+     10.5px was carrying dates, durations, languages and interviewer names, and
+     tracked-out caps is the wrong register for anything a person reads as
+     prose. Metadata is `.meta-label` below. 13px is the floor; do not override
+     it downward. */
   .mono-label {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    font-size: 0.8125rem;
+    letter-spacing: 0.06em;
+  }
+
+  /* The metadata voice: sentence-case sans at a readable size. Pairs a label
+     with its value in a <dl> rather than joining facts with middle dots. */
+  .meta-label {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: hsl(var(--ink-muted));
+  }
+
+  /* Running prose sits under 75 characters. The serif display face carries a
+     slightly longer measure and more leading than the sans, per the type
+     scale's body rank. */
+  .prose-measure {
+    max-width: 68ch;
+    font-size: 1.0625rem;
+    line-height: 1.65;
+  }
+  .prose-measure.font-display {
+    max-width: 72ch;
+    line-height: 1.7;
   }
 
   /* Subtle archival duotone: a clean high-contrast black-and-white photograph

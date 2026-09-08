@@ -5,7 +5,6 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { interviews } from "@/content/interviews";
 import { ui } from "@/content/site";
 import { Input } from "@/components/ui/input";
-import { Eyebrow } from "@/components/Eyebrow";
 import { cn } from "@/lib/utils";
 import interviewPxaImg from "@/assets/interview-pxa.jpg";
 
@@ -36,19 +35,18 @@ const Interviews = () => {
 
   return (
     <div className="container py-16 md:py-24">
-      <Eyebrow>{t({ en: "Archive", vi: "Kho lưu trữ" })}</Eyebrow>
-      <h1 className="mb-10 font-display text-4xl leading-tight md:text-5xl">
+      <h1 className="mb-10 font-display text-title">
         {t({ en: "Interviews", vi: "Phỏng vấn" })}
       </h1>
 
       <div className="mb-10 flex flex-col gap-4 border-y border-border py-5 md:flex-row md:items-center">
         <div className="relative flex-1">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-soft/50" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
           <Input
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder={t(ui.search)}
-            className="border-border bg-background pl-9"
+            className="border-strong bg-background pl-9"
           />
         </div>
         <div className="flex items-center gap-1">
@@ -57,10 +55,10 @@ const Interviews = () => {
               key={l}
               onClick={() => setLangFilter(l)}
               className={cn(
-                "mono-label border px-3 py-2 text-[10.5px] transition-colors",
+                "text-label border px-3 py-2 transition-colors",
                 langFilter === l
                   ? "border-pine bg-pine text-paper"
-                  : "border-border bg-background text-ink-soft hover:border-pine hover:text-pine"
+                  : "border-strong bg-background text-ink-soft hover:border-pine hover:text-pine"
               )}
             >
               {l === "all" ? t({ en: "All", vi: "Tất cả" }) : l}
@@ -73,42 +71,40 @@ const Interviews = () => {
         <p className="text-ink-soft">{t(ui.noResults)}</p>
       ) : (
         <ul className="border-t border-border">
-          {filtered.map((iv, i) => (
+          {filtered.map((iv) => (
             <li key={iv.slug}>
               <Link
                 to={`/interviews/${iv.slug}`}
-                className="group grid gap-6 border-b border-border py-7 transition-colors hover:bg-paper-2 md:grid-cols-12"
+                className="group grid gap-6 border-b border-border py-7 transition-colors hover:bg-paper-2 md:grid-cols-11"
               >
-                <div className="mono-label hidden pt-1 text-[12px] text-ink-soft/45 md:col-span-1 md:block">
-                  {String(i + 1).padStart(2, "0")}
-                </div>
                 <div className="md:col-span-3">
                   <div className="aspect-[4/3] w-full overflow-hidden border border-border bg-paper-2">
                     {thumbnails[iv.slug] ? (
                       <img src={thumbnails[iv.slug]} alt="" className="h-full w-full object-cover grayscale-[.35]" />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center text-ink-soft/40">
+                      <div className="flex h-full w-full items-center justify-center text-ink-muted">
                         <ImageIcon size={26} strokeWidth={1.25} />
                       </div>
                     )}
                   </div>
                 </div>
                 <div className="md:col-span-5">
-                  <h2 className="font-display text-2xl leading-snug transition-colors group-hover:text-pine">
+                  <h2 className="font-display text-sub leading-snug transition-colors group-hover:text-pine">
                     {t(iv.title)}
                   </h2>
-                  <p className="mt-2.5 line-clamp-2 text-[15px] leading-relaxed text-ink-soft">
+                  <p className="prose-measure mt-2.5 line-clamp-2 text-ink-soft">
                     {t(iv.summary)}
                   </p>
                 </div>
                 <div className="space-y-1.5 md:col-span-3 md:text-right">
-                  <div className="font-display text-lg leading-tight">{iv.interviewee}</div>
-                  <div className="mono-label text-[10.5px] text-ink-soft/65">
+                  <div className="font-display text-lead leading-tight">{iv.interviewee}</div>
+                  <div className="meta-label">
                     {iv.dateDisplay ??
                       new Date(iv.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                   </div>
-                  <div className="mono-label text-[10.5px] text-pine">
-                    {iv.duration} · {iv.originalLanguage.toUpperCase()}
+                  <div className="meta-label flex gap-3 md:justify-end">
+                    <span>{iv.duration}</span>
+                    <span className="text-pine">{iv.originalLanguage.toUpperCase()}</span>
                   </div>
                 </div>
               </Link>
