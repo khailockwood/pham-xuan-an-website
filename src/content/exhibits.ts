@@ -8,41 +8,38 @@ export type Exhibit = {
   dek: Bilingual;
   cover: string;
   body: Bilingual; // paragraphs separated by \n\n
-  pullQuote?: Bilingual;
   relatedInterviews?: string[];
 };
 
+/* Both exhibits are unpublished drafts. The bodies below are working text, not
+   final copy, and the specifics in them have not been checked against a source.
+   TODO before publishing either one: verify every factual claim, have the VI
+   reviewed, and set `relatedInterviews` to real slugs from interviews.ts. */
 export const exhibits: Exhibit[] = [
   {
     slug: "the-double-life",
     title: { en: "Coming soon", vi: "Sắp ra mắt" },
     dek: {
-      en: "Exhibit coming soon",
-      vi: "Triển lãm sắp ra mắt",
+      en: "Exhibit coming soon.",
+      vi: "Triển lãm sắp ra mắt.",
     },
     cover: exhibitViz1,
     body: {
-      en: "For nearly two decades, Pham Xuan An lived a life that should not have been possible. By day he filed dispatches from the Continental Hotel terrace; by night he encoded reports for Hanoi. This exhibit assembles colleagues' recollections, declassified material, and An's own carefully chosen words.\n\nWhat emerges is not a portrait of duplicity but of a man who insisted, until the end of his life, that he had betrayed no one. The interviews gathered here let visitors weigh that claim for themselves.",
-      vi: "Trong gần hai thập kỷ, Phạm Xuân Ẩn sống một cuộc đời tưởng chừng không thể. Ban ngày ông gửi bản tin từ sân thượng khách sạn Continental; ban đêm ông mã hóa báo cáo gửi về Hà Nội. Triển lãm này tập hợp ký ức của đồng nghiệp, tư liệu giải mật và những lời nói được lựa chọn cẩn trọng của chính ông.\n\nNhững gì hiện ra không phải là chân dung của sự phản bội mà là của một người, đến cuối đời, vẫn khẳng định rằng ông không phản bội ai. Các cuộc phỏng vấn ở đây để người xem tự đánh giá lời khẳng định ấy.",
+      en: "For nearly two decades Phạm Xuân Ẩn filed for the American press in Saigon and reported to Hanoi at the same time. This exhibit sets his colleagues' recollections alongside the documentary record and his own account, given late in his life.\n\nAn maintained to the end that he had betrayed no one. The interviews gathered here let visitors weigh that claim against what the people around him say.",
+      vi: "Trong gần hai thập kỷ, Phạm Xuân Ẩn vừa viết bài cho báo chí Mỹ tại Sài Gòn vừa báo cáo về Hà Nội. Triển lãm này đặt ký ức của các đồng nghiệp bên cạnh tư liệu lưu trữ và lời kể của chính ông những năm cuối đời.\n\nÔng Ẩn khẳng định đến cuối đời rằng mình không phản bội ai. Các cuộc phỏng vấn tập hợp tại đây để người xem tự đối chiếu lời khẳng định ấy với những gì người quanh ông kể lại.",
     },
-    pullQuote: {
-      en: "\"He was the best journalist among us. The fact that he was also something else does not change that.\"",
-      vi: "\"Ông là nhà báo giỏi nhất trong số chúng tôi. Việc ông còn là một điều gì khác không thay đổi điều đó.\"",
-    },
-    relatedInterviews: ["robert-shaplen-recollection", "nguyen-thi-thu-an"],
   },
   {
     slug: "time-magazine-years",
     title: { en: "Coming soon", vi: "Sắp ra mắt" },
     dek: {
-      en: "Exhibit coming soon",
-      vi: "Bên trong văn phòng Sài Gòn, 1965–1975: nếp làm việc, sự cạnh tranh và bài báo đã định hình cách nước Mỹ nhìn cuộc chiến.",
+      en: "Exhibit coming soon.",
+      vi: "Triển lãm sắp ra mắt.",
     },
     cover: exhibitViz2,
     body: {
-      en: "An was hired by Time in 1965 and remained the magazine's only Vietnamese staff correspondent for the next decade. This exhibit reconstructs the daily life of the bureau — the coffee at Givral, the wire copy filed by teletype, the Sunday morning analyses that shaped how Henry Luce's magazine framed the war for millions of American readers.",
-      vi: "Ông Ẩn được Time tuyển dụng năm 1965 và trong suốt một thập kỷ sau đó là phóng viên Việt Nam duy nhất của tạp chí. Triển lãm này tái dựng đời sống hằng ngày của văn phòng — cà phê tại Givral, bản tin gửi bằng teletype, các phân tích sáng Chủ nhật đã định hình cách tạp chí của Henry Luce trình bày cuộc chiến cho hàng triệu độc giả Mỹ.",
+      en: "Time hired An in 1965, and for the next decade he was the magazine's only Vietnamese staff correspondent. This exhibit reconstructs how the Saigon bureau worked day to day, and how its reporting reached American readers.",
+      vi: "Time tuyển ông Ẩn năm 1965, và trong một thập kỷ sau đó ông là phóng viên chính thức người Việt duy nhất của tạp chí. Triển lãm này tái dựng cách văn phòng Sài Gòn vận hành hằng ngày, và cách những bài viết từ đó đến với độc giả Mỹ.",
     },
-    relatedInterviews: ["robert-shaplen-recollection"],
   },
 ];

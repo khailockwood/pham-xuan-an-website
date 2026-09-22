@@ -31,6 +31,7 @@ const Contact = () => {
     }
     setErrors({});
     const body = `From: ${parsed.data.name} <${parsed.data.email}>\n\n${parsed.data.message}`;
+    // TODO: confirm this mailbox exists and is monitored before launch.
     window.location.href = `mailto:contact@phamxuananproject.org?subject=${encodeURIComponent(parsed.data.subject)}&body=${encodeURIComponent(body)}`;
     toast({ title: t(ui.sent) });
   };
@@ -38,9 +39,9 @@ const Contact = () => {
   return (
     <div className="container py-16 md:py-24 max-w-2xl">
       <h1 className="font-display text-title mb-6">
-        {t({ en: "Contact Us", vi: "Liên hệ" })}
+        {t({ en: "Contact", vi: "Liên hệ" })}
       </h1>
-      <p className="text-foreground/75 leading-relaxed mb-10">
+      <p className="prose-measure mb-10 text-ink-soft">
         {t({
           en: "We welcome inquiries from researchers, journalists, family members, and anyone with material to contribute.",
           vi: "Chúng tôi hoan nghênh thư từ các nhà nghiên cứu, nhà báo, gia đình và bất kỳ ai có tư liệu muốn đóng góp.",
@@ -96,9 +97,9 @@ const Contact = () => {
 
 const Field = ({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) => (
   <label className="block">
-    <span className="block text-xs uppercase tracking-wider text-foreground/60 mb-2">{label}</span>
+    <span className="meta-label mb-2 block">{label}</span>
     {children}
-    {error && <span className="block text-xs text-destructive mt-1">{error}</span>}
+    {error && <span className="mt-1 block text-label text-destructive">{error}</span>}
   </label>
 );
 

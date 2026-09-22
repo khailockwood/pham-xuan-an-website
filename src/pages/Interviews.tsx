@@ -75,7 +75,7 @@ const Interviews = () => {
             <li key={iv.slug}>
               <Link
                 to={`/interviews/${iv.slug}`}
-                className="group grid gap-6 border-b border-border py-7 transition-colors hover:bg-paper-2 md:grid-cols-11"
+                className="group grid gap-6 border-b border-border px-4 py-7 transition-colors hover:bg-paper-2 sm:px-5 md:grid-cols-11"
               >
                 <div className="md:col-span-3">
                   <div className="aspect-[4/3] w-full overflow-hidden border border-border bg-paper-2">
@@ -102,10 +102,7 @@ const Interviews = () => {
                     {iv.dateDisplay ??
                       new Date(iv.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                   </div>
-                  <div className="meta-label flex gap-3 md:justify-end">
-                    <span>{iv.duration}</span>
-                    <span className="text-pine">{iv.originalLanguage.toUpperCase()}</span>
-                  </div>
+                  <div className="meta-label tabular-nums">{iv.duration}</div>
                 </div>
               </Link>
             </li>

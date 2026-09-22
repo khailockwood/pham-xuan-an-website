@@ -5,7 +5,6 @@ import { interviews } from "@/content/interviews";
 import { ui } from "@/content/site";
 import OhmsViewer from "@/components/OhmsViewer";
 import OhmsNativePlayer from "@/components/OhmsNativePlayer";
-import { Eyebrow } from "@/components/Eyebrow";
 import NotFound from "./NotFound";
 
 const InterviewDetail = () => {
@@ -14,6 +13,11 @@ const InterviewDetail = () => {
   const iv = interviews.find((i) => i.slug === slug);
   if (!iv) return <NotFound />;
 
+  const LANGUAGE_NAME: Record<string, { en: string; vi: string }> = {
+    en: { en: "English", vi: "tiếng Anh" },
+    vi: { en: "Vietnamese", vi: "tiếng Việt" },
+    fr: { en: "French", vi: "tiếng Pháp" },
+  };
   const showOriginalNote = iv.originalLanguage !== lang && iv.originalLanguage !== "en";
 
   /* The primary experience is the real OHMS Viewer, baked to a static page from
@@ -34,35 +38,31 @@ const InterviewDetail = () => {
         <ArrowLeft size={13} /> {t({ en: "Back to interviews", vi: "Quay lại phỏng vấn" })}
       </Link>
 
-      <Eyebrow>{t({ en: "Interview", vi: "Phỏng vấn" })}</Eyebrow>
-      <h1 className="mb-6 font-display text-3xl leading-tight md:text-5xl">{t(iv.title)}</h1>
+      <h1 className="mb-6 font-display text-head leading-tight md:text-title">{t(iv.title)}</h1>
 
       <dl className="mb-10 grid grid-cols-2 gap-6 border-y border-border py-6 text-sm md:grid-cols-4">
         <div>
           <dt className="meta-label">{t(ui.interviewee)}</dt>
-          <dd className="mt-1.5 font-display text-lg leading-tight">{iv.interviewee}</dd>
+          <dd className="mt-1.5 font-display text-lead leading-tight">{iv.interviewee}</dd>
         </div>
         <div>
           <dt className="meta-label">{t(ui.interviewer)}</dt>
-          <dd className="mt-1.5 font-display text-lg leading-tight">{iv.interviewer}</dd>
+          <dd className="mt-1.5 font-display text-lead leading-tight">{iv.interviewer}</dd>
         </div>
         <div>
           <dt className="meta-label">{t(ui.date)}</dt>
-          <dd className="mt-1.5 font-display text-lg leading-tight">
+          <dd className="mt-1.5 font-display text-lead leading-tight">
             {iv.dateDisplay ??
               new Date(iv.date).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
           </dd>
         </div>
         <div>
           <dt className="meta-label">{t(ui.duration)}</dt>
-          <dd className="mt-1.5 font-display text-lg leading-tight">
-            <span>{iv.duration}</span>{" "}
-            <span className="text-ink-muted">{iv.originalLanguage.toUpperCase()}</span>
-          </dd>
+          <dd className="mt-1.5 font-display text-lead leading-tight tabular-nums">{iv.duration}</dd>
         </div>
       </dl>
 
-      <p className="prose-measure mb-10 font-display italic text-ink-soft">
+      <p className="prose-measure mb-10 text-ink-soft">
         {t(iv.summary)}
       </p>
 
@@ -94,7 +94,7 @@ const InterviewDetail = () => {
         </div>
       )}
 
-      <h2 className="mb-3 font-display text-2xl">
+      <h2 className="mb-3 font-display text-sub">
         {iv.ohmsUrl || iv.ohmsXml
           ? t({ en: "Audio (download)", vi: "Âm thanh (tải về)" })
           : t({ en: "Listen", vi: "Nghe" })}
@@ -112,12 +112,12 @@ const InterviewDetail = () => {
         </a>
       </div>
 
-      <h2 className="mb-2 font-display text-2xl">{t(ui.transcript)}</h2>
+      <h2 className="mb-2 font-display text-sub">{t(ui.transcript)}</h2>
       {showOriginalNote && (
-        <p className="mb-6 text-label italic text-ink-muted">
+        <p className="mb-6 text-label text-ink-muted">
           {t({
-            en: `Originally recorded in ${iv.originalLanguage.toUpperCase()}. Translation provided.`,
-            vi: `Ghi âm gốc bằng ${iv.originalLanguage.toUpperCase()}. Bản dịch được cung cấp.`,
+            en: `This interview was recorded in ${LANGUAGE_NAME[iv.originalLanguage].en}. The transcript below is a translation.`,
+            vi: `Cuộc phỏng vấn này được ghi bằng ${LANGUAGE_NAME[iv.originalLanguage].vi}. Bản ghi dưới đây là bản dịch.`,
           })}
         </p>
       )}

@@ -43,7 +43,7 @@ const OhmsViewer = ({ url, title, heightClass = "h-[clamp(560px,78vh,880px)]" }:
       <figure className="border border-border bg-card">
         <figcaption className="flex items-center gap-2.5 border-b border-border px-5 py-3">
           <span className="h-1.5 w-1.5 rounded-full bg-gold" aria-hidden />
-          <span className="meta-label text-pine">{label} · OHMS</span>
+          <span className="meta-label text-pine">{label}</span>
         </figcaption>
         <div className="flex flex-col items-center justify-center gap-2 px-6 py-16 text-center">
           <p className="font-display text-lg text-foreground">
@@ -65,7 +65,7 @@ const OhmsViewer = ({ url, title, heightClass = "h-[clamp(560px,78vh,880px)]" }:
       <figcaption className="flex items-center justify-between gap-3 border-b border-border px-5 py-3">
         <span className="flex items-center gap-2.5">
           <span className="h-1.5 w-1.5 rounded-full bg-gold" aria-hidden />
-          <span className="meta-label text-pine">{label} · OHMS</span>
+          <span className="meta-label text-pine">{label}</span>
         </span>
         <a
           href={url}

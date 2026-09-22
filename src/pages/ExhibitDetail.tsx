@@ -1,7 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Eyebrow } from "@/components/Eyebrow";
 import { exhibits } from "@/content/exhibits";
 import { interviews } from "@/content/interviews";
 import NotFound from "./NotFound";
@@ -22,7 +21,6 @@ const ExhibitDetail = () => {
         <ArrowLeft size={14} /> {t({ en: "Back to exhibits", vi: "Quay lại triển lãm" })}
       </Link>
 
-      <Eyebrow>{t({ en: "Exhibit", vi: "Triển lãm" })}</Eyebrow>
       <h1 className="font-display text-title mb-4">{t(exhibit.title)}</h1>
       <p className="text-lead text-ink-soft mb-10">{t(exhibit.dek)}</p>
 
@@ -36,23 +34,19 @@ const ExhibitDetail = () => {
         ))}
       </div>
 
-      {exhibit.pullQuote && (
-        <blockquote className="my-12 border-l-4 border-accent pl-6 font-display text-2xl italic leading-snug text-foreground/90">
-          {t(exhibit.pullQuote)}
-        </blockquote>
-      )}
 
       {related.length > 0 && (
         <section className="mt-16 border-t border-border pt-10">
-          <h2 className="font-display text-2xl mb-6">
+          <h2 className="font-display text-sub mb-6">
             {t({ en: "Related interviews", vi: "Phỏng vấn liên quan" })}
           </h2>
           <ul className="space-y-3">
             {related.map((iv) => iv && (
               <li key={iv.slug}>
                 <Link to={`/interviews/${iv.slug}`} className="text-pine hover:underline">
-                  {t(iv.title)} — <span className="text-ink-muted">{iv.interviewee}</span>
+                  {t(iv.title)}
                 </Link>
+                <span className="meta-label ml-2">{iv.interviewee}</span>
               </li>
             ))}
           </ul>

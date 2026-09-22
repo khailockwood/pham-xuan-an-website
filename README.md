@@ -86,6 +86,12 @@ the whole site between them.
 ## Interviews and the OHMS viewer
 
 Each interview is rendered with the OHMS (Oral History Metadata Synchronizer)
-viewer, embedded via iframe from its hosted viewer URL. Interview records live
-in `src/content/interviews.ts`.
+viewer. The viewer is a PHP application, but it only needs PHP once — to turn an
+OHMS XML export into an HTML page — so `npm run ohms:build` renders each export
+ahead of time into `public/ohms-viewer/`, and the site ships those as plain static
+files. Nothing needs a server at runtime.
+
+Interview records live in `src/content/interviews.ts`. To add one, put its OHMS
+XML in `public/ohms/`, set `ohmsXml` on the record, and re-run `npm run ohms:build`.
+See `docs/OHMS_STATUS.md` for the details.
 

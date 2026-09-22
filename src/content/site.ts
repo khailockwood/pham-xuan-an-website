@@ -5,11 +5,6 @@ export const siteName: Bilingual = {
   vi: "Dự án Phạm Xuân Ẩn",
 };
 
-export const tagline: Bilingual = {
-  en: "An oral history archive of the journalist who lived two lives.",
-  vi: "Kho lưu trữ lịch sử truyền miệng về nhà báo đã sống hai cuộc đời.",
-};
-
 export const nav: { to: string; label: Bilingual }[] = [
   { to: "/about-pxa", label: { en: "Who Was Pham Xuan An?", vi: "Phạm Xuân Ẩn là ai?" } },
   { to: "/about-project", label: { en: "The Pham Xuan An Project", vi: "Về dự án" } },
@@ -36,7 +31,7 @@ export const ui = {
   email: { en: "Email", vi: "Email" },
   subject: { en: "Subject", vi: "Chủ đề" },
   message: { en: "Message", vi: "Tin nhắn" },
-  sent: { en: "Message ready — your email client will open.", vi: "Tin nhắn đã sẵn sàng — ứng dụng thư của bạn sẽ mở." },
+  sent: { en: "Your email client will open with the message ready to send.", vi: "Ứng dụng thư của bạn sẽ mở với tin nhắn đã sẵn sàng để gửi." },
   footerRights: {
     en: "An oral history and digital humanities project.",
     vi: "Một dự án lịch sử truyền miệng và nhân văn số.",

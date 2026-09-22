@@ -35,7 +35,13 @@ export type Interview = {
    - `audio` points at the same public https media the XML references.
    - Summaries are derived from the indexed segment titles.
      TODO: replace with curated bilingual summaries; VI copy needs review.
-   - Berman 1a/1b have no index segments published yet (audio only). */
+   - Berman 1a/1b have no index segments published yet (audio only).
+   - Miller, McMorris 1/2 and Cloud carry <duration>00:00:00</duration> in their
+     OHMS exports. Their `duration` below was read from the media files' own
+     headers instead (MP3 frame/Xing headers, MP4 `mvhd`), a method verified
+     against the Morrow records, where it reproduces the OHMS values exactly.
+   - Swanson is the one disagreement: OHMS says 01:52:46, the published media runs
+     01:58:41. OHMS's value is kept here pending a check of which cut is current. */
 export const interviews: Interview[] = [
   {
     slug: "miller-pham-xuan-an",
@@ -43,7 +49,7 @@ export const interviews: Interview[] = [
     interviewee: "Pham Xuan An",
     interviewer: "Edward G. Miller",
     date: "2005-01-11",
-    duration: "—",
+    duration: "01:28:47",
     originalLanguage: "en",
     summary: {
       en: "Indexed oral history interview with Pham Xuan An, conducted by Edward G. Miller. Topics include The Rivalry Between Ngô Đình Nhu and Ngô Đình Cẩn, Labor Unions and Dr. Trần Kim Tuyến's Role in 1950s South Vietnamese Politics.",
@@ -60,7 +66,7 @@ export const interviews: Interview[] = [
     interviewer: "Sean McMorris",
     date: "2005",
     dateDisplay: "2005 (date uncertain)",
-    duration: "—",
+    duration: "01:02:36",
     originalLanguage: "en",
     summary: {
       en: "Indexed oral history interview with Pham Xuan An, conducted by Sean McMorris. Topics include Greetings and Light Conversations, American Ideology, Foreign Intervention, and Vietnamese Resistance in early Vietnam War and The Vietnam War v.s. Previous 20th Century Conflicts.",
@@ -77,7 +83,7 @@ export const interviews: Interview[] = [
     interviewer: "Sean McMorris",
     date: "2005",
     dateDisplay: "2005 (date uncertain)",
-    duration: "—",
+    duration: "00:55:48",
     originalLanguage: "en",
     summary: {
       en: "Indexed oral history interview with Pham Xuan An, conducted by Sean McMorris. Topics include Start of discussion, literature and general reflections on the war, Pause in Interview, Visuals of books and American Lessons Learned about the War/ What was the war about?.",
@@ -96,8 +102,8 @@ export const interviews: Interview[] = [
     duration: "01:37:01",
     originalLanguage: "en",
     summary: {
-      en: "Oral history interview with Pham Xuan An, conducted by Larry Berman. Audio only — no index has been published for this recording yet.",
-      vi: "Phỏng vấn lịch sử truyền miệng với Phạm Xuân Ẩn, do Larry Berman thực hiện. Chỉ có âm thanh — chưa có chỉ mục cho bản ghi này.",
+      en: "Oral history interview with Pham Xuan An, conducted by Larry Berman. Audio only; no index has been published for this recording yet.",
+      vi: "Phỏng vấn lịch sử truyền miệng với Phạm Xuân Ẩn, do Larry Berman thực hiện. Chỉ có âm thanh; chưa có chỉ mục cho bản ghi này.",
     },
     audio: "https://rcweb.dartmouth.edu/DDHI/pham_xuan_an/1237au4106a.wav",
     transcript: [],
@@ -112,8 +118,8 @@ export const interviews: Interview[] = [
     duration: "04:51:30",
     originalLanguage: "en",
     summary: {
-      en: "Oral history interview with Pham Xuan An, conducted by Larry Berman. Audio only — no index has been published for this recording yet.",
-      vi: "Phỏng vấn lịch sử truyền miệng với Phạm Xuân Ẩn, do Larry Berman thực hiện. Chỉ có âm thanh — chưa có chỉ mục cho bản ghi này.",
+      en: "Oral history interview with Pham Xuan An, conducted by Larry Berman. Audio only; no index has been published for this recording yet.",
+      vi: "Phỏng vấn lịch sử truyền miệng với Phạm Xuân Ẩn, do Larry Berman thực hiện. Chỉ có âm thanh; chưa có chỉ mục cho bản ghi này.",
     },
     audio: "https://rcweb.dartmouth.edu/DDHI/pham_xuan_an/1237au4106b.wav",
     transcript: [],
@@ -205,7 +211,7 @@ export const interviews: Interview[] = [
     interviewee: "Stanley Cloud",
     interviewer: "Jack Zipper",
     date: "2026-04-04",
-    duration: "—",
+    duration: "01:34:56",
     originalLanguage: "en",
     summary: {
       en: "Indexed oral history interview with Stanley Cloud, conducted by Jack Zipper. Topics include Introduction, Early Life and Military Service and Early Journalism and Tenure at Time San Francisco.",

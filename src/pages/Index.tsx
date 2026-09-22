@@ -1,84 +1,125 @@
 import { Link } from "react-router-dom";
 import { useLanguage, type Bilingual } from "@/contexts/LanguageContext";
 import { DuotonePortrait } from "@/components/DuotonePortrait";
-import { Eyebrow } from "@/components/Eyebrow";
 import { cn } from "@/lib/utils";
-import { mission } from "@/content/project";
 import { interviews } from "@/content/interviews";
+import { partners } from "@/content/project";
 import heroPortrait from "@/assets/pxa-hero.webp";
 import exhibitViz1 from "@/assets/exhibit-viz-1.jpg";
 import exhibitViz2 from "@/assets/exhibit-viz-2.jpg";
-import ddhiLogo from "@/assets/ddhi-logo.svg";
-import fulbrightLogo from "@/assets/fulbright-logo-t.png";
-import ttuLogo from "@/assets/ttu-logo.svg";
 
-/** Original-language label for an interview record (marked in gold elsewhere). */
-const ORIGINAL_LANGUAGE: Record<string, Bilingual> = {
-  en: { en: "English", vi: "Tiếng Anh" },
-  vi: { en: "Tiếng Việt", vi: "Tiếng Việt" },
-  fr: { en: "French", vi: "Tiếng Pháp" },
+/* ---------------------------------------------------------------------------
+   The double record — the page's one structural argument.
+
+   1953–1976 read as a single chronology with two sides: the career his
+   colleagues in the Saigon press corps could see, and the one running underneath
+   it. Every year belongs to one side or the other, except 1975, which is the
+   only row with an entry on both — the page's pivot, and the reason the layout
+   is a spine rather than two lists.
+
+   Facts are the vetted ones from `content/bio.ts`; the split is kept local
+   because that file's timeline is flat and carries no public/concealed
+   distinction. TODO: have the VI strings reviewed.
+--------------------------------------------------------------------------- */
+type RecordYear = {
+  year: string;
+  /** What the press corps knew at the time. */
+  seen?: Bilingual;
+  /** What was happening at the same time, and was not known until later. */
+  also?: Bilingual;
 };
 
-/* Homepage exhibit showcase. exhibits.ts currently holds placeholder copy
-   ("Coming soon"), so the homepage features the curated mockup copy here.
-   TODO: replace with final bilingual content once exhibits.ts is filled in,
-   and have the VI strings below reviewed. */
-const featuredExhibits: {
+const RECORD_HEADS = {
+  seen: { en: "What his colleagues saw", vi: "Điều các đồng nghiệp nhìn thấy" },
+  also: { en: "What was also true", vi: "Điều cũng là sự thật" },
+} satisfies Record<"seen" | "also", Bilingual>;
+
+const doubleRecord: RecordYear[] = [
+  {
+    year: "1953",
+    also: {
+      en: "Joins the Việt Minh, and is later recruited into strategic intelligence.",
+      vi: "Gia nhập Việt Minh, sau đó được tuyển vào ngành tình báo chiến lược.",
+    },
+  },
+  {
+    year: "1957",
+    seen: {
+      en: "Sails to California to study journalism at Orange Coast College.",
+      vi: "Sang California học báo chí tại Orange Coast College.",
+    },
+  },
+  {
+    year: "1959",
+    seen: {
+      en: "Returns to Saigon and begins filing for Reuters.",
+      vi: "Trở về Sài Gòn và bắt đầu viết bài cho Reuters.",
+    },
+  },
+  {
+    year: "1960s",
+    also: {
+      en: "Begins sending intelligence north to Hanoi under the name Hai Trung.",
+      vi: "Bắt đầu gửi tin tình báo ra Hà Nội dưới bí danh Hai Trung.",
+    },
+  },
+  {
+    year: "1965",
+    seen: {
+      en: "Hired by Time, the magazine's only Vietnamese staff correspondent.",
+      vi: "Được Time tuyển dụng, phóng viên chính thức người Việt duy nhất của tạp chí.",
+    },
+  },
+  {
+    year: "1975",
+    seen: {
+      en: "Covers the fall of Saigon for Time.",
+      vi: "Đưa tin về sự kiện 30 tháng 4 cho Time.",
+    },
+    also: {
+      en: "Stays behind when the American correspondents fly out.",
+      vi: "Ở lại khi các phóng viên Mỹ rời đi.",
+    },
+  },
+  {
+    year: "1976",
+    also: {
+      en: "Publicly named a colonel in the People's Army of Vietnam.",
+      vi: "Được công khai phong hàm Đại tá Quân đội Nhân dân Việt Nam.",
+    },
+  },
+];
+
+/* Exhibits in preparation. `exhibits.ts` still carries "Coming soon" titles, so
+   the working titles live here alongside the status marker — the section says
+   plainly that neither is published yet rather than presenting them as ready.
+   TODO: drop this block once exhibits.ts holds final bilingual content. */
+const forthcomingExhibits: {
   slug: string;
   cover: string;
-  tag: Bilingual;
+  kind: Bilingual;
   title: Bilingual;
   blurb: Bilingual;
 }[] = [
   {
     slug: "the-double-life",
     cover: exhibitViz1,
-    tag: { en: "Data Visualization", vi: "Trực quan hóa dữ liệu" },
+    kind: { en: "Data visualization", vi: "Trực quan hóa dữ liệu" },
     title: { en: "Mapping a divided career", vi: "Bản đồ một sự nghiệp bị chia đôi" },
     blurb: {
-      en: "Tracing the bylines, datelines, and movements of a correspondent whose reporting served two governments at once.",
-      vi: "Lần theo các bài ký tên, dòng tin và hành trình của một phóng viên mà công việc đưa tin phục vụ cùng lúc hai chính phủ.",
+      en: "Where An filed from and when, mapped against what he was sending to Hanoi over the same years.",
+      vi: "Ông Ẩn gửi bài từ đâu và khi nào, đối chiếu với những gì ông chuyển về Hà Nội trong cùng quãng thời gian đó.",
     },
   },
   {
     slug: "time-magazine-years",
     cover: exhibitViz2,
-    tag: { en: "Essay", vi: "Tiểu luận" },
-    title: { en: "The man the press corps trusted", vi: "Người mà giới báo chí tin tưởng" },
+    kind: { en: "Essay", vi: "Tiểu luận" },
+    title: { en: "Inside the Saigon bureau", vi: "Bên trong văn phòng Sài Gòn" },
     blurb: {
-      en: "How a generation of American journalists came to rely on the one colleague who knew more than any of them — and why.",
-      vi: "Vì sao cả một thế hệ nhà báo Mỹ đặt niềm tin vào người đồng nghiệp biết nhiều hơn tất cả họ — và lý do đằng sau điều đó.",
+      en: "How Time's Saigon bureau worked between 1965 and 1975, and how its reporting reached readers in the United States.",
+      vi: "Cách văn phòng Time tại Sài Gòn vận hành giai đoạn 1965–1975, và cách những bài viết từ đó đến với độc giả Hoa Kỳ.",
     },
-  },
-];
-
-/* Partner institutions (proper nouns; subtitles + outbound links).
-   Each logo renders in a single muted "ink" tone and reveals its true brand
-   colour on hover — a quiet echo of the site's hidden-identity motif. */
-const partners: { name: Bilingual; sub: Bilingual; href: string; go: string; logo: string; logoAlt: string }[] = [
-  {
-    name: { en: "Dartmouth Digital History Initiative", vi: "Sáng kiến Lịch sử Số Dartmouth" },
-    sub: { en: "Dartmouth College", vi: "Đại học Dartmouth" },
-    href: "https://ddhi.dartmouth.edu/",
-    go: "ddhi.dartmouth.edu",
-    logo: ddhiLogo,
-    logoAlt: "Dartmouth Digital History Initiative",
-  },
-  {
-    name: { en: "Vietnam Studies Center", vi: "Trung tâm Nghiên cứu Việt Nam" },
-    sub: { en: "Fulbright University Vietnam", vi: "Đại học Fulbright Việt Nam" },
-    href: "https://fulbright.edu.vn/vietnam-studies-center/",
-    go: "fulbright.edu.vn",
-    logo: fulbrightLogo,
-    logoAlt: "Fulbright University Vietnam",
-  },
-  {
-    name: { en: "Vietnam Center & Sam Johnson Archive", vi: "Vietnam Center & Sam Johnson Archive" },
-    sub: { en: "Texas Tech University", vi: "Đại học Texas Tech" },
-    href: "https://www.vietnam.ttu.edu/",
-    go: "vietnam.ttu.edu",
-    logo: ttuLogo,
-    logoAlt: "Texas Tech University",
   },
 ];
 
@@ -92,266 +133,301 @@ const Index = () => {
       year: "numeric",
     });
 
+  /* One record per voice in the archive, in catalogue order — An himself, then
+     the three people interviewed about him. The homepage shows the shape of the
+     collection rather than its first four rows, which are all the same subject. */
+  const featured = interviews
+    .filter((iv, i) => interviews.findIndex((o) => o.interviewee === iv.interviewee) === i)
+    .slice(0, 4);
+
+  const withAn = interviews.filter((iv) => iv.interviewee === "Pham Xuan An").length;
+  const aboutAn = interviews.length - withAn;
+
+  /** The chronology, stacked as two plain lists. Visible on small screens; kept
+      in the accessibility tree at every size, because the spine below is a
+      visual arrangement that does not read in a sensible order. */
+  const RecordList = ({ side }: { side: "seen" | "also" }) => (
+    <div>
+      <h3 className="mb-4 border-b border-strong pb-2 font-display text-lead">
+        {t(RECORD_HEADS[side])}
+      </h3>
+      <dl className="grid grid-cols-[3.75rem_1fr] gap-x-4 gap-y-3">
+        {doubleRecord
+          .filter((r) => r[side])
+          .map((r) => (
+            <div key={r.year} className="contents">
+              <dt className="font-display text-lead leading-snug tabular-nums text-ink-muted">
+                {r.year}
+              </dt>
+              <dd className="text-body text-ink-soft">{t(r[side]!)}</dd>
+            </div>
+          ))}
+      </dl>
+    </div>
+  );
+
   return (
     <>
-      {/* ---------- Hero (dossier cover — flows from the green masthead) ----------
-          A gold masthead rule closes the green field, so the shift to paper reads
-          as a deliberate structural break rather than an abrupt colour change. */}
-      <section className="relative overflow-hidden border-b-2 border-gold bg-pine-deep text-paper">
-        {/* very faint tonal lift, no hard seam — kept understated */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(110% 80% at 84% 4%, hsl(var(--pine) / 0.22), transparent 58%)",
-          }}
-        />
-        <div className="container relative z-[2]">
-          {/* typed file header */}
-          <div className="flex flex-col gap-1.5 border-b border-paper/15 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <span className="text-label text-paper/90">
+      {/* ---------- Hero ----------
+          The name as it is filed in two places, the three sentences that make the
+          archive make sense, and the way in. No page-load motion: the material
+          is doing the work. */}
+      <section className="border-b-2 border-gold bg-pine-deep text-paper">
+        <div className="container grid items-center gap-12 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:py-24">
+          <div>
+            <h1 className="font-display text-title leading-[1.02] lg:text-masthead">
+              <span className="block text-paper">Phạm Xuân Ẩn</span>
+              <span className="block text-gold-bright">Hai Trung</span>
+            </h1>
+            <p className="mt-4 font-display text-lead tabular-nums text-paper/70">1927–2006</p>
+
+            <p className="prose-measure mt-7 font-display text-lead text-paper/90">
               {t({
-                en: "Dartmouth Digital History Initiative · Fulbright University Vietnam",
-                vi: "Sáng kiến Lịch sử Số Dartmouth · Đại học Fulbright Việt Nam",
+                en: "He reported the Vietnam War from Saigon for Reuters, the New York Herald Tribune, and Time. He also reported it to Hanoi, as an intelligence officer named Hai Trung. Most of his colleagues in the press corps learned this only after the war had ended.",
+                vi: "Ông đưa tin về Chiến tranh Việt Nam từ Sài Gòn cho Reuters, New York Herald Tribune và Time. Ông cũng đưa tin về cuộc chiến ấy cho Hà Nội, với tư cách một sĩ quan tình báo mang bí danh Hai Trung. Phần lớn đồng nghiệp trong giới báo chí chỉ biết điều này sau khi chiến tranh kết thúc.",
               })}
-            </span>
-            {/* A file reference is a machine-typed value — this one stays mono. */}
-            <span className="mono-label text-paper/70">
-              {t({ en: "File · PXA — 1927–2006", vi: "Hồ sơ · PXA — 1927–2006" })}
-            </span>
-          </div>
+            </p>
 
-          <div className="grid items-center gap-12 py-14 lg:grid-cols-[1.08fr_0.92fr] lg:gap-16 lg:py-20">
-            {/* hero text */}
-            <div>
-              <p className="mb-6 font-display text-lead italic text-paper/85">
-                {t({
-                  en: "An oral history of the man who lived two lives",
-                  vi: "Lịch sử truyền miệng về người đàn ông sống hai cuộc đời",
-                })}
-              </p>
-              <h1 className="font-display text-title text-paper lg:text-masthead">
-                Phạm Xuân Ẩn
-              </h1>
-              <p className="mb-8 mt-3 font-display text-lead italic text-paper/70">
-                1927 — 2006
-              </p>
-
-              {/* two-identity file record — the signature "declassify" reveal */}
-              <dl className="mb-8 border-t border-paper/15">
-                <div className="grid items-baseline gap-1.5 border-b border-paper/15 py-3.5 sm:grid-cols-[150px_1fr] sm:gap-6">
-                  <dt className="text-label text-paper/70">
-                    {t({ en: "Cover identity", vi: "Vỏ bọc" })}
-                  </dt>
-                  <dd className="font-display text-lead leading-tight text-paper">
-                    {t({ en: "Correspondent", vi: "Phóng viên" })} — Reuters · New York Herald Tribune · Time
-                  </dd>
-                </div>
-                <div className="grid items-baseline gap-1.5 py-3.5 sm:grid-cols-[150px_1fr] sm:gap-6">
-                  <dt className="text-label font-medium text-gold-bright">
-                    {t({ en: "True identity", vi: "Danh tính thật" })}
-                  </dt>
-                  <dd className="font-display text-lead leading-tight">
-                    <span className="redaction font-medium text-gold-bright">
-                      <em className="not-italic">"Hai Trung"</em>
-                      {" — "}
-                      {t({
-                        en: "Colonel, People's Army of Vietnam",
-                        vi: "Đại tá, Quân đội Nhân dân Việt Nam",
-                      })}
-                    </span>
-                  </dd>
-                </div>
-              </dl>
-
-              <p className="prose-measure mb-8 font-display italic text-paper/90">
-                {t({
-                  en: "For a decade he filed dispatches for Time magazine while sending intelligence to Hanoi. His closest colleagues in the Saigon press corps learned the truth only after the war.",
-                  vi: "Suốt một thập kỷ, ông gửi bản tin cho tạp chí Time trong khi vẫn chuyển tin tình báo về Hà Nội. Những đồng nghiệp thân thiết nhất trong giới báo chí Sài Gòn chỉ biết sự thật sau khi chiến tranh kết thúc.",
-                })}
-              </p>
-
-              <div className="flex flex-wrap items-center gap-x-7 gap-y-4">
-                <Link
-                  to="/interviews"
-                  className="inline-flex items-center rounded-sm bg-gold px-6 py-3 text-label font-medium text-ink transition-colors hover:bg-gold-bright"
-                >
-                  {t({ en: "Enter the archive", vi: "Vào kho lưu trữ" })}
-                </Link>
-                <Link
-                  to="/about-pxa"
-                  className="border-b border-paper/30 pb-1 text-sm text-paper/80 transition-colors hover:border-paper hover:text-paper"
-                >
-                  {t({ en: "Who was Pham Xuan An?", vi: "Phạm Xuân Ẩn là ai?" })}
-                </Link>
-              </div>
+            <div className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-4">
+              <Link
+                to="/interviews"
+                className="inline-flex items-center rounded-sm bg-gold px-6 py-3 text-label font-medium text-ink transition-colors hover:bg-gold-bright"
+              >
+                {t({ en: "Listen to the interviews", vi: "Nghe các cuộc phỏng vấn" })}
+              </Link>
+              <Link
+                to="/about-pxa"
+                className="border-b border-paper/30 pb-1 text-label text-paper/80 transition-colors hover:border-paper hover:text-paper"
+              >
+                {t({ en: "Who was Phạm Xuân Ẩn?", vi: "Phạm Xuân Ẩn là ai?" })}
+              </Link>
             </div>
-
-            {/* archival print */}
-            <DuotonePortrait
-              src={heroPortrait}
-              alt="Phạm Xuân Ẩn"
-              caption={t({ en: "Phạm Xuân Ẩn · Saigon", vi: "Phạm Xuân Ẩn · Sài Gòn" })}
-              credit={t({ en: "Project collection", vi: "Tư liệu dự án" })}
-              className="mx-auto w-full max-w-[320px] sm:max-w-[360px] lg:ml-auto lg:mr-0 lg:max-w-[380px]"
-            />
           </div>
+
+          <DuotonePortrait
+            src={heroPortrait}
+            alt="Phạm Xuân Ẩn"
+            caption={t({ en: "Phạm Xuân Ẩn, Saigon", vi: "Phạm Xuân Ẩn, Sài Gòn" })}
+            credit={t({ en: "Project collection", vi: "Tư liệu dự án" })}
+            className="mx-auto w-full max-w-[320px] sm:max-w-[360px] lg:ml-auto lg:mr-0 lg:max-w-[380px]"
+          />
         </div>
       </section>
 
-      {/* ---------- Intro ---------- */}
+      {/* ---------- The double record ---------- */}
       <section className="container py-section lg:py-section-lg">
-        <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
-          <div>
-            <p className="font-display text-sub leading-snug">
-              {t({
-                en: "Fifty years after the fall of Saigon, a bilingual archive that asks what the sources we trust can still tell us about the Vietnam War.",
-                vi: "Năm mươi năm sau ngày Sài Gòn sụp đổ, một kho lưu trữ song ngữ đặt câu hỏi: những nguồn tư liệu ta tin tưởng còn có thể cho ta biết điều gì về Chiến tranh Việt Nam.",
-              })}
-            </p>
+        <h2 className="max-w-[14em] font-display text-head">
+          {t({ en: "Two careers, the same years.", vi: "Hai sự nghiệp, cùng một quãng thời gian." })}
+        </h2>
+
+        {/* Stacked lists: the small-screen layout, and the reading order for
+            assistive technology at every size. */}
+        <div className="mt-stack grid gap-10 sm:grid-cols-2 md:sr-only">
+          <RecordList side="seen" />
+          <RecordList side="also" />
+        </div>
+
+        {/* The spine: one chronology, entries hanging off the years to the side
+            they belong to. 1975 is the only year with both. */}
+        <div className="mt-stack hidden max-w-[60rem] md:mx-auto md:block" aria-hidden="true">
+          <div className="grid grid-cols-[1fr_5.5rem_1fr] items-end gap-x-8 border-b border-border pb-3">
+            <h3 className="font-display text-lead text-ink-muted md:text-right">
+              {t(RECORD_HEADS.seen)}
+            </h3>
+            <span />
+            <h3 className="font-display text-lead text-ink-muted">{t(RECORD_HEADS.also)}</h3>
           </div>
+
+          {doubleRecord.map((r) => (
+            <div
+              key={r.year}
+              className="grid min-h-[5.75rem] grid-cols-[1fr_5.5rem_1fr] items-center gap-x-8"
+            >
+              <p className="py-3 text-right text-body leading-snug text-ink-soft">
+                {r.seen && t(r.seen)}
+              </p>
+              {/* the year knocks a hole in the rule it sits on; `self-stretch`
+                  keeps the rule spanning the full row while the year centres */}
+              <div className="relative flex items-center justify-center self-stretch">
+                <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-ink/25" />
+                <span className="relative bg-paper px-2.5 font-display text-sub leading-none tabular-nums">
+                  {r.year}
+                </span>
+              </div>
+              <p className="py-3 text-body leading-snug text-ink-soft">{r.also && t(r.also)}</p>
+            </div>
+          ))}
+        </div>
+
+        <Link
+          to="/about-pxa"
+          className="mt-10 inline-flex border-b border-gold pb-0.5 text-label text-pine"
+        >
+          {t({ en: "Read the full biography", vi: "Đọc tiểu sử đầy đủ" })}
+        </Link>
+      </section>
+
+      {/* ---------- What the archive is ---------- */}
+      <section className="border-t border-border bg-paper-2">
+        <div className="container grid gap-8 py-section lg:grid-cols-[0.62fr_1.38fr] lg:gap-16 lg:py-section-lg">
+          <h2 className="max-w-[9em] font-display text-head leading-tight">
+            {t({ en: "What this archive holds", vi: "Kho lưu trữ này gồm những gì" })}
+          </h2>
           <div className="prose-measure space-y-4 text-ink-soft">
-            <p>{t(mission)}</p>
             <p>
               {t({
-                en: "Together they invite audiences in the United States, Vietnam, and beyond to reconsider the stories we tell about the war, and the double life of the journalist at its center.",
-                vi: "Cùng nhau, họ mời gọi công chúng tại Hoa Kỳ, Việt Nam và nhiều nơi khác cùng nhìn lại những câu chuyện ta kể về cuộc chiến, và cuộc đời hai mặt của nhà báo ở trung tâm câu chuyện ấy.",
+                en: "The project is recovering a set of oral history interviews recorded with Phạm Xuân Ẩn more than twenty years ago, restoring the audio, and publishing each one with a topic-by-topic index you can search and skip through. Alongside them sit new interviews with people who knew him, recorded by students and researchers at Fulbright University Vietnam and Dartmouth, together with scholarly essays and visualizations built from the same material.",
+                vi: "Dự án đang khôi phục một loạt cuộc phỏng vấn lịch sử truyền miệng được ghi với Phạm Xuân Ẩn hơn hai mươi năm trước, xử lý lại phần âm thanh, và công bố mỗi bản ghi kèm một chỉ mục theo chủ đề để người xem tìm kiếm và chuyển đoạn. Bên cạnh đó là các cuộc phỏng vấn mới với những người từng quen biết ông, do sinh viên và nhà nghiên cứu tại Đại học Fulbright Việt Nam và Dartmouth thực hiện, cùng với các tiểu luận học thuật và trực quan hóa dựng từ chính nguồn tư liệu ấy.",
+              })}
+            </p>
+            <p>
+              {t({
+                en: "Fifty years after the fall of Saigon, the aim is practical: put the sources in front of readers in both countries, in both languages.",
+                vi: "Năm mươi năm sau ngày Sài Gòn sụp đổ, mục tiêu rất thực tế: đưa các nguồn tư liệu đến với độc giả ở cả hai nước, bằng cả hai ngôn ngữ.",
               })}
             </p>
             <Link
               to="/about-project"
-              className="inline-flex items-center border-b border-gold pb-0.5 text-label text-pine"
+              className="inline-flex border-b border-gold pb-0.5 text-label text-pine"
             >
-              {t({ en: "About this project", vi: "Về dự án" })}
+              {t({ en: "About the project", vi: "Về dự án" })}
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ---------- Interview register (formal finding aid, on paper) ---------- */}
-      <section className="border-t border-border bg-paper-2">
-        <div className="container py-section lg:py-section-lg">
-          <Eyebrow>{t({ en: "The Interviews", vi: "Phỏng vấn" })}</Eyebrow>
-          <h2 className="max-w-[16em] font-display text-head">
-            {t({
-              en: "Voices from both of his worlds.",
-              vi: "Những tiếng nói từ cả hai thế giới của ông.",
-            })}
-          </h2>
+      {/* ---------- The recordings (finding aid) ---------- */}
+      <section className="container py-section lg:py-section-lg">
+        <h2 className="font-display text-head">{t({ en: "Interviews", vi: "Phỏng vấn" })}</h2>
+        <p className="prose-measure mt-4 text-body text-ink-soft">
+          {t({
+            en: `${interviews.length} recordings. ${withAn} are conversations with Phạm Xuân Ẩn himself, taped in 2005, the year before he died. The other ${aboutAn} are with colleagues and friends, recorded by the project since 2025.`,
+            vi: `${interviews.length} bản ghi. ${withAn} bản là các cuộc trò chuyện với chính Phạm Xuân Ẩn, ghi năm 2005, một năm trước khi ông qua đời. ${aboutAn} bản còn lại là với đồng nghiệp và bạn bè, do dự án thực hiện từ năm 2025.`,
+          })}
+        </p>
 
-          <div className="mt-11 border-t border-border">
-            {interviews.slice(0, 4).map((iv) => (
-              <div
-                key={iv.slug}
-                className="grid gap-5 border-b border-border py-7 transition-colors hover:bg-paper md:grid-cols-[1fr_220px] md:gap-7"
+        <ul className="mt-stack border-t border-border">
+          {featured.map((iv) => (
+            <li key={iv.slug}>
+              <Link
+                to={`/interviews/${iv.slug}`}
+                className="group grid gap-x-8 gap-y-4 border-b border-border px-4 py-7 transition-colors hover:bg-paper-2 sm:px-5 md:grid-cols-[220px_1fr]"
               >
                 <div>
-                  <h3 className="mb-2.5 font-display text-sub leading-snug">{t(iv.title)}</h3>
-                  {/* Each fact is its own element, not a middle-dot string: a
-                      screen reader reads "52 min · VI" as one utterance. */}
-                  <dl className="meta-label mb-3 flex flex-wrap gap-x-5 gap-y-1">
-                    <dd>{iv.dateDisplay ?? fmtDate(iv.date)}</dd>
-                    <dd>{iv.duration}</dd>
-                    <dd className="text-pine">{t(ORIGINAL_LANGUAGE[iv.originalLanguage])}</dd>
+                  <div className="font-display text-lead leading-tight">{iv.interviewee}</div>
+                  {/* Each fact is its own element: a screen reader reads these as
+                      separate utterances rather than one run-on line. */}
+                  <dl className="meta-label mt-2 space-y-0.5">
                     <div className="flex gap-1.5">
-                      <dt>{t({ en: "Interviewer", vi: "Người phỏng vấn" })}</dt>
-                      <dd className="text-ink-soft">{iv.interviewer}</dd>
+                      <dt className="sr-only">{t({ en: "Interviewer", vi: "Người phỏng vấn" })}</dt>
+                      <dd>
+                        {t({ en: "Interviewed by", vi: "Phỏng vấn bởi" })} {iv.interviewer}
+                      </dd>
                     </div>
+                    <dd>{iv.dateDisplay ?? fmtDate(iv.date)}</dd>
+                    {iv.duration !== "—" && <dd className="tabular-nums">{iv.duration}</dd>}
                   </dl>
-                  <p className="prose-measure text-ink-soft">{t(iv.summary)}</p>
                 </div>
-                <div className="md:pt-1.5 md:text-right">
-                  <Link
-                    to={`/interviews/${iv.slug}`}
-                    className="inline-flex items-center gap-2 rounded-sm border border-strong px-4 py-2.5 text-label text-ink transition-colors hover:border-pine hover:bg-pine hover:text-paper"
-                  >
-                    {t({ en: "Listen & read", vi: "Nghe & đọc" })}
-                  </Link>
+                <div>
+                  <h3 className="font-display text-sub leading-snug transition-colors group-hover:text-pine">
+                    {t(iv.title)}
+                  </h3>
+                  <p className="prose-measure mt-2.5 text-ink-soft">{t(iv.summary)}</p>
                 </div>
-              </div>
-            ))}
-          </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
 
-          <div className="mt-9">
-            <Link
-              to="/interviews"
-              className="border-b border-pine/40 pb-0.5 text-label text-pine"
-            >
-              {t({ en: "View all interviews", vi: "Xem tất cả phỏng vấn" })}
-            </Link>
-          </div>
-        </div>
+        <Link
+          to="/interviews"
+          className="mt-10 inline-flex border-b border-gold pb-0.5 text-label text-pine"
+        >
+          {t({ en: "View all interviews", vi: "Xem tất cả phỏng vấn" })}
+        </Link>
       </section>
 
-      {/* ---------- Exhibits & Research ---------- */}
-      <section className="container py-section lg:py-section-lg">
-        <Eyebrow>{t({ en: "Exhibits & Research", vi: "Triển lãm & Nghiên cứu" })}</Eyebrow>
-        <h2 className="max-w-[16em] font-display text-head">
-          {t({ en: "Reading the archive against itself.", vi: "Đọc kho lưu trữ ngược lại chính nó." })}
-        </h2>
-        <div className="mt-12 grid gap-8 md:grid-cols-2">
-          {featuredExhibits.map((ex) => (
-            <Link
-              key={ex.slug}
-              to={`/exhibits/${ex.slug}`}
-              className="group flex flex-col border border-border bg-paper-2 transition-colors hover:border-gold"
-            >
-              <div className="aspect-[16/10] overflow-hidden bg-[#cfc6b2]">
-                <img
-                  src={ex.cover}
-                  alt=""
-                  className="h-full w-full object-cover grayscale-[.35] transition-transform duration-500 group-hover:scale-[1.02]"
-                />
-              </div>
-              <div className="px-7 pb-8 pt-6">
-                <div className="meta-label mb-3 text-pine">{t(ex.tag)}</div>
-                <h3 className="mb-2.5 font-display text-sub leading-snug">{t(ex.title)}</h3>
-                <p className="text-body text-ink-soft">{t(ex.blurb)}</p>
-              </div>
-            </Link>
-          ))}
+      {/* ---------- Exhibits ----------
+          Same register structure as the interviews above, so the page has one
+          way of listing things rather than two. Both entries are unpublished and
+          say so. */}
+      <section className="border-t border-border bg-paper-2">
+        <div className="container py-section lg:py-section-lg">
+          <h2 className="font-display text-head">{t({ en: "Exhibits", vi: "Triển lãm" })}</h2>
+          <p className="prose-measure mt-4 text-body text-ink-soft">
+            {t({
+              en: "Essays and data visualizations built from the recordings. Two are in preparation.",
+              vi: "Các tiểu luận và trực quan hóa dữ liệu dựng từ những bản ghi này. Hai triển lãm đang được chuẩn bị.",
+            })}
+          </p>
+
+          <ul className="mt-stack border-t border-border">
+            {forthcomingExhibits.map((ex) => (
+              <li key={ex.slug}>
+                <Link
+                  to={`/exhibits/${ex.slug}`}
+                  className="group grid gap-x-8 gap-y-4 border-b border-border px-4 py-7 transition-colors hover:bg-paper sm:px-5 md:grid-cols-[220px_1fr]"
+                >
+                  <div className="aspect-[4/3] w-full max-w-[280px] overflow-hidden border border-border bg-[#cfc6b2] md:max-w-none">
+                    <img
+                      src={ex.cover}
+                      alt=""
+                      loading="lazy"
+                      className="h-full w-full object-cover grayscale-[.35]"
+                    />
+                  </div>
+                  <div>
+                    <div className="meta-label flex flex-wrap gap-x-4">
+                      <span className="text-pine">{t(ex.kind)}</span>
+                      <span>{t({ en: "In preparation", vi: "Đang chuẩn bị" })}</span>
+                    </div>
+                    <h3 className="mt-2 font-display text-sub leading-snug transition-colors group-hover:text-pine">
+                      {t(ex.title)}
+                    </h3>
+                    <p className="prose-measure mt-2.5 text-ink-soft">{t(ex.blurb)}</p>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
       {/* ---------- Partners ---------- */}
-      <section className="border-t border-border bg-paper-2">
-        <div className="container py-section lg:py-section-lg">
-          <h2 className="max-w-[15em] font-display text-head">
-            {t({
-              en: "A multi-institution, international collaboration.",
-              vi: "Sự cộng tác quốc tế giữa nhiều tổ chức.",
-            })}
-          </h2>
-          <div className="mt-11 grid border border-border sm:grid-cols-3">
-            {partners.map((p, i) => (
-              <a
-                key={p.go}
-                href={p.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(
-                  "group flex flex-col px-8 py-9 transition-colors hover:bg-paper",
-                  i < partners.length - 1 && "border-b border-border sm:border-b-0 sm:border-r"
-                )}
-              >
-                {/* logo, full colour, height-normalised across the three marks */}
-                <div className="flex h-20 items-center">
-                  <img
-                    src={p.logo}
-                    alt={p.logoAlt}
-                    loading="lazy"
-                    className="max-h-full w-auto max-w-[80%] object-contain object-left transition-transform duration-300 group-hover:scale-[1.03]"
-                  />
-                </div>
-                <div className="mt-7 font-display text-lead leading-snug">{t(p.name)}</div>
-                <div className="mt-1 text-label text-ink-muted">{t(p.sub)}</div>
-                {/* The domain is a machine-typed value, so it keeps the mono face. */}
-                <span className="mono-label mt-5 inline-flex items-center text-pine transition-colors group-hover:text-pine-deep">
-                  {p.go}
-                </span>
-              </a>
-            ))}
-          </div>
+      <section className="container py-section lg:py-section-lg">
+        <h2 className="max-w-[15em] font-display text-head">
+          {t({
+            en: "A multi-institution, international collaboration.",
+            vi: "Sự cộng tác quốc tế giữa nhiều tổ chức.",
+          })}
+        </h2>
+        <div className="mt-stack grid border border-border sm:grid-cols-3">
+          {partners.map((p, i) => (
+            <a
+              key={p.go}
+              href={p.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                "group flex min-w-0 flex-col px-8 py-9 transition-colors hover:bg-paper-2",
+                i < partners.length - 1 && "border-b border-border sm:border-b-0 sm:border-r"
+              )}
+            >
+              <div className="flex h-20 w-full items-center">
+                <img
+                  src={p.logo}
+                  alt={p.logoAlt}
+                  loading="lazy"
+                  className="max-h-full w-auto max-w-full object-contain object-left"
+                />
+              </div>
+              <div className="mt-7 font-display text-lead leading-snug">{t(p.name)}</div>
+              <div className="mt-1 text-label text-ink-muted">{t(p.sub)}</div>
+              <span className="mt-5 text-label text-pine transition-colors group-hover:text-pine-deep">
+                {p.go}
+              </span>
+            </a>
+          ))}
         </div>
       </section>
     </>
