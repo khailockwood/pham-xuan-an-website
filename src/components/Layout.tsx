@@ -127,7 +127,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           </div>
           <div className="mt-11 flex flex-col gap-2 border-t border-paper/[0.18] pt-5 text-label text-paper/70 sm:flex-row sm:justify-between">
             <span>© {new Date().getFullYear()} The Pham Xuan An Project</span>
-            <span>English Edition · Phiên bản Tiếng Việt</span>
+            <span>{t({ en: "Published in English and Vietnamese", vi: "Xuất bản bằng tiếng Anh và tiếng Việt" })}</span>
           </div>
         </div>
       </footer>
