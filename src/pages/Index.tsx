@@ -1,10 +1,18 @@
 import { Link } from "react-router-dom";
+import { ImageIcon } from "lucide-react";
 import { useLanguage, type Bilingual } from "@/contexts/LanguageContext";
 import { DuotonePortrait } from "@/components/DuotonePortrait";
 import { cn } from "@/lib/utils";
 import { interviews } from "@/content/interviews";
 import { partners } from "@/content/project";
+import {
+  formatTimecode,
+  highlightsOf,
+  segmentCountOf,
+  segmentHref,
+} from "@/lib/ohms-highlights";
 import heroPortrait from "@/assets/pxa-hero.webp";
+import interviewPxaImg from "@/assets/interview-pxa.jpg";
 import exhibitViz1 from "@/assets/exhibit-viz-1.jpg";
 import exhibitViz2 from "@/assets/exhibit-viz-2.jpg";
 
@@ -122,6 +130,18 @@ const forthcomingExhibits: {
     },
   },
 ];
+
+/* Portraits on file. Only the recordings An himself sat for have one; the other
+   subjects fall back to the same placeholder mark `pages/Interviews.tsx` uses,
+   so the register keeps one shape until photographs arrive.
+   TODO: portraits for Morrow, Swanson and Cloud. */
+const PORTRAITS: Record<string, string> = {
+  "miller-pham-xuan-an": interviewPxaImg,
+  "mcmorris-pham-xuan-an-1": interviewPxaImg,
+  "mcmorris-pham-xuan-an-2": interviewPxaImg,
+  "berman-pham-xuan-an-1a": interviewPxaImg,
+  "berman-pham-xuan-an-1b": interviewPxaImg,
+};
 
 const Index = () => {
   const { t, lang } = useLanguage();
@@ -296,7 +316,13 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ---------- The recordings (finding aid) ---------- */}
+      {/* ---------- The recordings (finding aid) ----------
+          Every record gets the same entry: portrait, full citation, and the
+          opening run of its OHMS index, each topic linking to its own second of
+          audio (see `lib/ohms-highlights.ts`). The topics stand in for the
+          `summary` field in `interviews.ts`, which is auto-derived — all four
+          summaries open with the same sentence and say nothing that
+          distinguishes one recording from another. */}
       <section className="container py-section lg:py-section-lg">
         <h2 className="font-display text-head">{t({ en: "Interviews", vi: "Phỏng vấn" })}</h2>
         <p className="prose-measure mt-4 text-body text-ink-soft">
@@ -307,36 +333,136 @@ const Index = () => {
         </p>
 
         <ul className="mt-stack border-t border-border">
-          {featured.map((iv) => (
-            <li key={iv.slug}>
-              <Link
-                to={`/interviews/${iv.slug}`}
-                className="group grid gap-x-8 gap-y-4 border-b border-border px-4 py-7 transition-colors hover:bg-paper-2 sm:px-5 md:grid-cols-[220px_1fr]"
-              >
-                <div>
-                  <div className="font-display text-lead leading-tight">{iv.interviewee}</div>
-                  {/* Each fact is its own element: a screen reader reads these as
-                      separate utterances rather than one run-on line. */}
-                  <dl className="meta-label mt-2 space-y-0.5">
-                    <div className="flex gap-1.5">
-                      <dt className="sr-only">{t({ en: "Interviewer", vi: "Người phỏng vấn" })}</dt>
-                      <dd>
-                        {t({ en: "Interviewed by", vi: "Phỏng vấn bởi" })} {iv.interviewer}
-                      </dd>
+          {featured.map((iv) => {
+            const portrait = PORTRAITS[iv.slug];
+            const topics = highlightsOf(iv, 4);
+            const segmentCount = segmentCountOf(iv);
+
+            return (
+              <li key={iv.slug}>
+                {/* An <article>, not a wrapping <Link>: the title and every
+                    topic are their own destination, and an anchor cannot
+                    contain anchors. */}
+                <article className="grid gap-x-10 gap-y-6 border-b border-border py-8 md:grid-cols-[minmax(0,200px)_1fr]">
+                  <div>
+                    <div className="aspect-[4/5] w-full max-w-[200px] overflow-hidden border border-border bg-paper-2">
+                      {portrait ? (
+                        <img
+                          src={portrait}
+                          alt=""
+                          loading="lazy"
+                          className="h-full w-full object-cover grayscale-[.35]"
+                        />
+                      ) : (
+                        /* No portrait on file for this subject yet. The frame
+                           stays so the register keeps one shape; the gap is
+                           meant to read as a gap. */
+                        <div className="flex h-full w-full items-center justify-center text-ink-muted">
+                          <ImageIcon size={26} strokeWidth={1.25} aria-hidden />
+                        </div>
+                      )}
                     </div>
-                    <dd>{iv.dateDisplay ?? fmtDate(iv.date)}</dd>
-                    {iv.duration !== "—" && <dd className="tabular-nums">{iv.duration}</dd>}
-                  </dl>
-                </div>
-                <div>
-                  <h3 className="font-display text-sub leading-snug transition-colors group-hover:text-pine">
-                    {t(iv.title)}
-                  </h3>
-                  <p className="prose-measure mt-2.5 text-ink-soft">{t(iv.summary)}</p>
-                </div>
-              </Link>
-            </li>
-          ))}
+
+                    <div className="mt-4 font-display text-lead leading-tight">
+                      {iv.interviewee}
+                    </div>
+                    {/* Each fact is its own element: a screen reader reads these
+                        as separate utterances rather than one run-on line. */}
+                    <dl className="meta-label mt-2 space-y-0.5">
+                      <div className="flex gap-1.5">
+                        <dt className="sr-only">
+                          {t({ en: "Interviewer", vi: "Người phỏng vấn" })}
+                        </dt>
+                        <dd>
+                          {t({ en: "Interviewed by", vi: "Phỏng vấn bởi" })} {iv.interviewer}
+                        </dd>
+                      </div>
+                      <dd>{iv.dateDisplay ?? fmtDate(iv.date)}</dd>
+                      {iv.duration !== "—" && <dd className="tabular-nums">{iv.duration}</dd>}
+                      {segmentCount > 0 && (
+                        <dd>
+                          {t({
+                            en: `${segmentCount} indexed segments`,
+                            // TODO: verify VI
+                            vi: `${segmentCount} đoạn được lập chỉ mục`,
+                          })}
+                        </dd>
+                      )}
+                    </dl>
+                  </div>
+
+                  <div>
+                    <h3 className="font-display text-sub leading-snug">
+                      <Link
+                        to={`/interviews/${iv.slug}`}
+                        className="transition-colors hover:text-pine"
+                      >
+                        {t(iv.title)}
+                      </Link>
+                    </h3>
+
+                    {topics.length > 0 ? (
+                      <>
+                        <p className="meta-label mt-5">
+                          {t({
+                            en: "Topics in this recording",
+                            // TODO: verify VI
+                            vi: "Các chủ đề trong bản ghi này",
+                          })}
+                        </p>
+                        {/* The rules and the hover ground run 12px wider than the
+                            column on each side, and the rows pad back in by the
+                            same amount — so the timecode keeps its gap from the
+                            edge of the shading without falling out of line with
+                            the title above it. */}
+                        <ol className="-mx-3 mt-2 border-t border-border">
+                          {topics.map((s) => (
+                            <li key={s.time}>
+                              <Link
+                                to={segmentHref(iv.slug, s.time)}
+                                className="group grid grid-cols-[4.5rem_1fr] items-baseline gap-x-4 border-b border-border px-3 py-3 transition-colors hover:bg-paper-2"
+                              >
+                                <span className="mono-label tabular-nums text-ink-muted">
+                                  {formatTimecode(s.time)}
+                                </span>
+                                {/* Segment titles come from the OHMS export,
+                                    which has no Vietnamese index yet — marked as
+                                    English rather than machine-translated. */}
+                                <span
+                                  lang="en"
+                                  className="text-body text-ink-soft transition-colors group-hover:text-pine"
+                                >
+                                  {s.titleAlt || s.title}
+                                </span>
+                              </Link>
+                            </li>
+                          ))}
+                        </ol>
+                        <Link
+                          to={`/interviews/${iv.slug}`}
+                          className="mt-5 inline-flex border-b border-gold pb-0.5 text-label text-pine"
+                        >
+                          {t({ en: "Open the full index", vi: "Mở chỉ mục đầy đủ" })}
+                        </Link>
+                      </>
+                    ) : (
+                      /* Published as audio while indexing continues — Berman
+                         1a/1b are in this state today. */
+                      <>
+                        <p className="prose-measure mt-4 text-ink-soft">{t(iv.summary)}</p>
+                        <Link
+                          to={`/interviews/${iv.slug}`}
+                          className="mt-5 inline-flex border-b border-gold pb-0.5 text-label text-pine"
+                        >
+                          {t({ en: "Listen to this recording", vi: "Nghe bản ghi này" })}
+                        </Link>
+                      </>
+                    )}
+                  </div>
+                </article>
+              </li>
+            );
+          })}
         </ul>
 
         <Link

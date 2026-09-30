@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "ohms:build": "node scripts/ohms/build-viewer.mjs"
+    "ohms:build": "node scripts/ohms/build-viewer.mjs && node scripts/ohms/build-index.mjs",
+    "ohms:index": "node scripts/ohms/build-index.mjs"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.11",

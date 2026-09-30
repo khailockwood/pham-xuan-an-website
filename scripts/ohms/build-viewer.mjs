@@ -17,6 +17,9 @@
  * The one thing the viewer does at runtime is the keyword-search AJAX
  * (viewer.php?action=index|search). `search-shim.js` reproduces those two
  * endpoints in the browser; this script injects it into every baked page.
+ * `segment-link-shim.js` goes in the same way, and makes the viewer's own
+ * `#segment<seconds>` direct-segment links seek — upstream those are resolved
+ * by viewer.php, which a baked page no longer has.
  *
  * Two things keep the bake honest, both below:
  *   - VIEWER_PATCHES, applied to the fresh clone before rendering, carries our
@@ -244,7 +247,9 @@ function transform(html, id, file) {
   html = html.split(`${ORIGIN}/`).join(PUBLIC_BASE || "");
 
   const headInjection = `<link rel="stylesheet" href="ohms-embed.css">`;
-  const bodyInjection = `<script src="ohms-search-shim.js"></script>`;
+  const bodyInjection =
+    `<script src="ohms-search-shim.js"></script>\n` +
+    `<script src="ohms-segment-link-shim.js"></script>`;
 
   // assertBakedPage() has already proved both tags are present, so these
   // replacements cannot silently no-op.
@@ -313,6 +318,10 @@ async function copyAssets(dest) {
       await fs.cp(from, path.join(dest, dir), { recursive: true, dereference: true });
   }
   await fs.copyFile(path.join(HERE, "search-shim.js"), path.join(dest, "ohms-search-shim.js"));
+  await fs.copyFile(
+    path.join(HERE, "segment-link-shim.js"),
+    path.join(dest, "ohms-segment-link-shim.js")
+  );
   await fs.copyFile(path.join(HERE, "embed.css"), path.join(dest, "ohms-embed.css"));
 }
 
