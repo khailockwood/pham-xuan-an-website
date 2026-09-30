@@ -105,3 +105,84 @@ export const cite: Bilingual = {
   en: "[Interviewee name], interviewed by [Interviewer], [Date], The Pham Xuan An Project.",
   vi: "[Tên người được phỏng vấn], phỏng vấn bởi [Người phỏng vấn], [Ngày], Dự án Phạm Xuân Ẩn.",
 };
+
+/* ------------------------------------------------------------------------- *
+ * What the collection holds
+ * ------------------------------------------------------------------------- */
+
+/** Extent of the collection, stated in the finding-aid sense: how much material
+ *  there is and how much of it has been indexed. Every figure is passed in by
+ *  the caller, which derives it from `interviews.ts` and the OHMS exports, so
+ *  this copy cannot drift out of date as recordings are added or indexed. */
+export const collectionNote = (n: {
+  recordings: number;
+  people: number;
+  hours: number;
+  minutes: number;
+  /** Indexed segments across every export. */
+  segments: number;
+}): Bilingual => ({
+  en: `${n.recordings} recordings with ${n.people} people, ${n.hours} hours ${n.minutes} minutes in all, indexed into ${n.segments} passages. The 2005 sessions are conversations with An himself, recorded by historians and writers in the last year of his life. The rest were recorded by the project, with colleagues and friends who knew him.`,
+  // TODO: verify VI
+  vi: `${n.recordings} bản ghi với ${n.people} người, tổng cộng ${n.hours} giờ ${n.minutes} phút, được lập chỉ mục thành ${n.segments} đoạn. Các buổi ghi năm 2005 là những cuộc trò chuyện với chính ông Ẩn, do các nhà sử học và nhà văn thực hiện trong năm cuối đời ông. Số còn lại do dự án ghi, với đồng nghiệp và bạn bè từng quen biết ông.`,
+});
+
+/** Stated on the voice whose recordings are only partly indexed, so a passage
+ *  count is never read as covering everything that person recorded. */
+export const pendingIndexLine = (n: { unindexed: number; total: number }): Bilingual => ({
+  en: `${n.unindexed} of these ${n.total} recordings ${n.unindexed === 1 ? "is" : "are"} published as audio while indexing continues.`,
+  // TODO: verify VI
+  vi: `${n.unindexed} trong số ${n.total} bản ghi này hiện chỉ có âm thanh trong khi phần lập chỉ mục được hoàn thiện.`,
+});
+
+/** Lead-in to the sample of real indexed segment titles shown under each voice.
+ *  The titles themselves come from the OHMS exports and are English-only —
+ *  `title_alt` is empty in every current export — so the label carries the
+ *  language and the titles are marked `lang="en"` rather than faked in VI. */
+export const indexedTopicsLabel: Bilingual = {
+  en: "Indexed topics include",
+  // TODO: verify VI
+  vi: "Các chủ đề được lập chỉ mục gồm",
+};
+
+/** Shown in place of the topic sample for a voice whose recordings carry no
+ *  index segments at all. */
+export const noIndexYet: Bilingual = {
+  en: "No index has been published for these recordings yet.",
+  // TODO: verify VI
+  vi: "Chưa có chỉ mục nào được công bố cho các bản ghi này.",
+};
+
+/** Joins names as running prose. Deliberately not a middle-dot fact string. */
+const joinNames = (names: string[], and: string) =>
+  names.length <= 1
+    ? (names[0] ?? "")
+    : `${names.slice(0, -1).join(", ")} ${and} ${names[names.length - 1]}`;
+
+/** Who recorded one person, and when. `span` is a year or a "2025–2026" range. */
+export const recordingsLine = (n: {
+  count: number;
+  span: string;
+  interviewers: string[];
+}): Bilingual => {
+  const range = n.span.includes("–");
+  return {
+    en: `${n.count} ${n.count === 1 ? "recording" : "recordings"}, made in ${n.span} by ${joinNames(n.interviewers, "and")}.`,
+    // TODO: verify VI
+    vi: `${n.count} bản ghi, do ${joinNames(n.interviewers, "và")} thực hiện ${range ? "trong" : "năm"} ${n.span}.`,
+  };
+};
+
+/** Extent as a person reads it, so it stays out of the mono timecode register. */
+export const runtimeLabel = (hours: number, minutes: number): Bilingual => ({
+  en: hours === 0 ? `${minutes} min` : `${hours} hr ${minutes} min`,
+  // TODO: verify VI
+  vi: hours === 0 ? `${minutes} phút` : `${hours} giờ ${minutes} phút`,
+});
+
+/** How much of a person's material carries an OHMS index. */
+export const passagesLabel = (count: number): Bilingual => ({
+  en: `${count} indexed ${count === 1 ? "passage" : "passages"}`,
+  // TODO: verify VI
+  vi: `${count} đoạn được lập chỉ mục`,
+});

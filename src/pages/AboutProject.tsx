@@ -1,18 +1,31 @@
 import { Link } from "react-router-dom";
 import { useLanguage, type Bilingual } from "@/contexts/LanguageContext";
-import { interviews } from "@/content/interviews";
+import { interviews, type Interview } from "@/content/interviews";
 import {
   bilingualNote,
   cite,
   citeNote,
+  collectionNote,
+  indexedTopicsLabel,
   methodology,
   mission,
+  noIndexYet,
   partners,
   partnersNote,
+  passagesLabel,
+  pendingIndexLine,
   presentation,
+  recordingsLine,
+  runtimeLabel,
   standfirst,
   teamNote,
 } from "@/content/project";
+import {
+  highlightsOf,
+  segmentCountOf,
+  segmentHref,
+  type OhmsIndexSegment,
+} from "@/lib/ohms-highlights";
 import { cn } from "@/lib/utils";
 
 /** Heading + prose, set as a two-column spread on wide screens. */
@@ -37,26 +50,84 @@ const Spread = ({
 const AboutProject = () => {
   const { t } = useLanguage();
 
-  /* The composition of the collection, read off the records themselves so the
-     page cannot drift out of date as interviews are added. */
-  const subjects = interviews.reduce<
-    { name: string; count: number; years: string[]; interviewers: string[] }[]
-  >((acc, iv) => {
-    const year = iv.date.slice(0, 4);
-    const found = acc.find((s) => s.name === iv.interviewee);
-    if (found) {
-      found.count += 1;
-      if (!found.years.includes(year)) found.years.push(year);
-      if (!found.interviewers.includes(iv.interviewer)) found.interviewers.push(iv.interviewer);
-    } else {
-      acc.push({ name: iv.interviewee, count: 1, years: [year], interviewers: [iv.interviewer] });
-    }
-    return acc;
-  }, []);
+  /* The composition of the collection, read off the records themselves and off
+     the OHMS exports, so the page cannot drift out of date as interviews are
+     added or indexed. Nothing below is a hardcoded count. */
 
   const span = (years: string[]) => {
     const sorted = [...years].sort();
     return sorted.length > 1 ? `${sorted[0]}–${sorted[sorted.length - 1]}` : sorted[0];
+  };
+
+  const seconds = (hhmmss: string) => {
+    const parts = hhmmss.split(":").map(Number);
+    if (parts.length !== 3 || parts.some(Number.isNaN)) return 0; // "—" when OHMS carries no duration
+    return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  };
+
+  /* Truncated rather than rounded, the way a duration is normally reported: a
+     recording that runs 9:55:42 is nine hours and fifty-five minutes long, not
+     fifty-six. Truncating everywhere also keeps the rows and the total from
+     rounding in opposite directions. */
+  const hoursMinutes = (total: number) => ({
+    hours: Math.floor(total / 3600),
+    minutes: Math.floor((total % 3600) / 60),
+  });
+
+  /** One sampled topic, carrying the recording it belongs to so it can link. */
+  type Topic = OhmsIndexSegment & { slug: string };
+
+  /** Topics shown per voice. Three fits a row without turning it into a list. */
+  const TOPICS_PER_VOICE = 3;
+
+  /* Sampled round-robin — the first topic of each of a person's recordings,
+     then the second of each — rather than straight down the first recording.
+     Morrow's first interview is entirely childhood and Dartmouth, so reading it
+     in order would describe him as a student and never reach Vietnam. */
+  const sampleTopics = (recordings: Interview[]): Topic[] => {
+    const perRecording = recordings.map((iv) =>
+      highlightsOf(iv, TOPICS_PER_VOICE).map((s) => ({ ...s, slug: iv.slug }))
+    );
+    const picked: Topic[] = [];
+    for (let rank = 0; rank < TOPICS_PER_VOICE; rank += 1) {
+      for (const list of perRecording) {
+        if (picked.length >= TOPICS_PER_VOICE) break;
+        if (list[rank]) picked.push(list[rank]);
+      }
+    }
+    return picked;
+  };
+
+  /* Group by interviewee, keeping the order the records are published in. */
+  const grouped = new Map<string, Interview[]>();
+  for (const iv of interviews) {
+    const found = grouped.get(iv.interviewee);
+    if (found) found.push(iv);
+    else grouped.set(iv.interviewee, [iv]);
+  }
+
+  const subjects = [...grouped].map(([name, recordings]) => {
+    const total = recordings.reduce((sum, iv) => sum + seconds(iv.duration), 0);
+    return {
+      name,
+      count: recordings.length,
+      span: span([...new Set(recordings.map((iv) => iv.date.slice(0, 4)))]),
+      interviewers: [...new Set(recordings.map((iv) => iv.interviewer))],
+      runtime: hoursMinutes(total),
+      passages: recordings.reduce((sum, iv) => sum + segmentCountOf(iv), 0),
+      topics: sampleTopics(recordings),
+      /* Berman 1a/1b publish no index, and they sit under An alongside five
+         recordings that do. Without this the row's passage count reads as
+         covering everything he recorded. */
+      unindexed: recordings.filter((iv) => segmentCountOf(iv) === 0).length,
+    };
+  });
+
+  const collection = {
+    recordings: interviews.length,
+    people: subjects.length,
+    ...hoursMinutes(interviews.reduce((sum, iv) => sum + seconds(iv.duration), 0)),
+    segments: interviews.reduce((sum, iv) => sum + segmentCountOf(iv), 0),
   };
 
   return (
@@ -96,40 +167,72 @@ const AboutProject = () => {
       </section>
 
       {/* ---------- What the collection holds ----------
-          A register of the archive's voices, derived from `interviews.ts`. */}
+          A scope-and-extent register of the archive's voices. Each entry states
+          how much material there is (derived from `interviews.ts`) and what the
+          OHMS index actually covers (derived from the exports, via
+          `ohms-highlights`), with the topics linking into the recording at the
+          point they begin. Segment titles come from the exports and are
+          English-only — `title_alt` is empty in every current export — so they
+          carry `lang="en"` and the labels around them stay bilingual. */}
       <section className="border-t border-border bg-paper-2">
         <div className="container py-section lg:py-section-lg">
           <h2 className="font-display text-head">
             {t({ en: "What the collection holds", vi: "Kho lưu trữ gồm những gì" })}
           </h2>
           <p className="prose-measure mt-4 text-body text-ink-soft">
-            {t({
-              en: `${interviews.length} recordings with ${subjects.length} people. The 2005 sessions are conversations with An himself, recorded by historians and writers in the last year of his life. The rest were recorded by the project, with colleagues and friends who knew him.`,
-              vi: `${interviews.length} bản ghi với ${subjects.length} người. Các buổi ghi năm 2005 là những cuộc trò chuyện với chính ông Ẩn, do các nhà sử học và nhà văn thực hiện trong năm cuối đời ông. Số còn lại do dự án ghi, với đồng nghiệp và bạn bè từng quen biết ông.`,
-            })}
+            {t(collectionNote(collection))}
           </p>
 
           <dl className="mt-stack border-t border-border">
             {subjects.map((s) => (
               <div
                 key={s.name}
-                className="grid gap-x-8 gap-y-2 border-b border-border px-4 py-6 sm:grid-cols-[1fr_auto] sm:px-5"
+                className="grid gap-x-10 gap-y-3 border-b border-border py-7 sm:grid-cols-[minmax(0,1fr)_auto] sm:py-8"
               >
-                <div>
-                  <dt className="font-display text-sub leading-snug">{s.name}</dt>
-                  <dd className="meta-label mt-1.5">
-                    {t({ en: "Interviewed by", vi: "Phỏng vấn bởi" })}{" "}
-                    {s.interviewers.join(", ")}
-                  </dd>
-                </div>
-                <dd className="meta-label tabular-nums sm:text-right">
-                  <span className="text-ink-soft">
-                    {s.count}{" "}
-                    {s.count === 1
-                      ? t({ en: "recording", vi: "bản ghi" })
-                      : t({ en: "recordings", vi: "bản ghi" })}
+                <dt className="font-display text-sub leading-snug sm:col-start-1 sm:row-start-1">
+                  {s.name}
+                </dt>
+
+                {/* Extent. Stated in words, not as a timecode, so it stays out
+                    of the mono register reserved for machine values. */}
+                <dd className="sm:col-start-2 sm:row-span-2 sm:row-start-1 sm:text-right">
+                  <span className="block font-display text-lead tabular-nums">
+                    {t(runtimeLabel(s.runtime.hours, s.runtime.minutes))}
                   </span>
-                  <span className="block">{span(s.years)}</span>
+                  <span className="meta-label mt-1 block">{t(passagesLabel(s.passages))}</span>
+                </dd>
+
+                <dd className="sm:col-start-1 sm:row-start-2">
+                  <p className="meta-label">
+                    {t(recordingsLine({ count: s.count, span: s.span, interviewers: s.interviewers }))}
+                  </p>
+
+                  {s.topics.length > 0 ? (
+                    <>
+                      <p className="meta-label mt-4">{t(indexedTopicsLabel)}</p>
+                      <ul className="mt-1.5 space-y-1.5">
+                        {s.topics.map((topic) => (
+                          <li key={`${topic.slug}-${topic.time}`}>
+                            <Link
+                              to={segmentHref(topic.slug, topic.time)}
+                              lang="en"
+                              className="text-body text-ink-soft underline decoration-gold underline-offset-4 transition-colors hover:text-pine"
+                            >
+                              {topic.title}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : (
+                    <p className="meta-label mt-4">{t(noIndexYet)}</p>
+                  )}
+
+                  {s.unindexed > 0 && s.topics.length > 0 && (
+                    <p className="meta-label mt-3">
+                      {t(pendingIndexLine({ unindexed: s.unindexed, total: s.count }))}
+                    </p>
+                  )}
                 </dd>
               </div>
             ))}

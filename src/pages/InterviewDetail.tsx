@@ -1,7 +1,9 @@
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { ArrowLeft, Download } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { interviews } from "@/content/interviews";
+import { parseSegmentHash } from "@/lib/ohms-highlights";
 import { ui } from "@/content/site";
 import OhmsViewer from "@/components/OhmsViewer";
 import OhmsNativePlayer from "@/components/OhmsNativePlayer";
@@ -9,7 +11,21 @@ import NotFound from "./NotFound";
 
 const InterviewDetail = () => {
   const { slug } = useParams();
+  const { hash } = useLocation();
   const { t, lang } = useLanguage();
+  const viewerRef = useRef<HTMLDivElement>(null);
+
+  /* Arriving on a `#segment<seconds>` link — from a topic listed on the
+     homepage, or from the "Direct segment link" the viewer itself hands out —
+     means the reader asked for one moment inside the recording, which sits
+     below the fold. Put it on screen. The seek itself happens inside the frame
+     (scripts/ohms/segment-link-shim.js); this only answers the click. */
+  const segment = parseSegmentHash(hash);
+  useEffect(() => {
+    if (segment === undefined) return;
+    viewerRef.current?.scrollIntoView({ block: "start" });
+  }, [segment, slug]);
+
   const iv = interviews.find((i) => i.slug === slug);
   if (!iv) return <NotFound />;
 
@@ -27,7 +43,12 @@ const InterviewDetail = () => {
   const bakedViewer = iv.ohmsXml
     ? iv.ohmsXml.replace("/ohms/", "/ohms-viewer/").replace(/\.xml$/, ".html")
     : undefined;
-  const viewerUrl = iv.ohmsUrl ?? bakedViewer;
+  /* A segment hash rides along to the framed page, where the shim reads it and
+     seeks. Only for the baked viewer: a third-party `ohmsUrl` (an Aviary embed,
+     say) has its own deep-link syntax and no shim of ours. */
+  const viewerUrl = iv.ohmsUrl ?? (bakedViewer && segment !== undefined
+    ? `${bakedViewer}#segment${segment}`
+    : bakedViewer);
 
   return (
     <article className="container py-16 md:py-24 max-w-4xl">
@@ -79,7 +100,7 @@ const InterviewDetail = () => {
            padded — so the desktop two-pane layout shows. `overflow-x-clip` on the
            Layout root keeps the 100vw breakout from adding a horizontal scrollbar.
            The native-player fallback and placeholder below stay in the column. */
-        <div className="mb-12 ml-[calc(50%-50vw)] w-screen max-w-[100vw]">
+        <div ref={viewerRef} className="mb-12 ml-[calc(50%-50vw)] w-screen max-w-[100vw] scroll-mt-6">
           <div className="mx-auto w-full max-w-[1760px] px-3 sm:px-4 lg:px-6">
             <OhmsViewer url={viewerUrl} title={t(iv.title)} heightClass="h-[clamp(680px,88vh,1160px)]" />
           </div>
