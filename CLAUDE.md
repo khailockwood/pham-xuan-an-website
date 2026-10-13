@@ -58,8 +58,8 @@ Never hardcode English. If a Vietnamese translation is uncertain, still supply o
 and mark it `// TODO: verify VI` — several already carry that marker.
 
 Copy lives in `src/content/*`, not inside components: `site.ts` (nav, shared UI
-strings), `bio.ts` (biography + timeline), `project.ts` (mission, citation),
-`exhibits.ts`, `interviews.ts`. Edit copy there.
+strings), `bio.ts` (biography, life dates, the double record), `project.ts` (mission, citation),
+`exhibits.ts`, `interviews.ts`, `bibliography.ts`. Edit copy there.
 
 Vietnamese stacks diacritics (ẩ, ữ, ọ). **Only use fonts with a full Vietnamese
 subset**, and check the VI toggle visually after any type change. This is why the
@@ -74,29 +74,31 @@ Tokens live in `src/index.css` (HSL custom properties) and are mapped to Tailwin
 utilities in `tailwind.config.ts`. `design-system/` holds standalone preview pages
 and mirrors the same tokens.
 
-**Palette** — archival paper, Dartmouth pine, gold accent:
+**Palette** — white ground, Dartmouth pine, gold accent:
 
 | token         | hex       | role                                        |
 |---------------|-----------|---------------------------------------------|
-| `paper`       | `#ECE6D8` | page ground (dominant)                      |
-| `paper-2`     | `#E3DBC9` | recessed bands                              |
-| `ink`         | `#1B1A16` | primary text — 13.9:1 on paper              |
-| `ink-soft`    |           | secondary prose — 10.7:1                    |
-| `ink-muted`   |           | metadata, captions — 6.0:1                  |
+| `paper`       | `#FFFFFF` | page ground (dominant)                      |
+| `paper-2`     | `#F3F4F4` | recessed bands, tiles                       |
+| `ink`         | `#151918` | primary text — 17.8:1 on paper              |
+| `ink-soft`    |           | secondary prose — 12.3:1                    |
+| `ink-muted`   |           | metadata, captions — 6.5:1 (5.9:1 on paper-2) |
 | `pine`        | `#00693E` | institutional accent, links                 |
-| `pine-deep`   | `#06371F` | masthead, hero, footer                      |
-| `gold`        | `#B0852B` | accent on paper                             |
+| `pine-deep`   | `#06371F` | masthead, footer, scrim over footage        |
+| `gold`        | `#B0852B` | rules and buttons — 3.3:1 on paper, never text on a light ground |
 | `gold-bright` | `#C9A23F` | gold on dark grounds                        |
 
-The page is **beige-dominant**. Green is spent on deliberate bands — the masthead
-flowing into the hero, and the footer — not scattered through the body. Gold is
-sparing and always means something.
+The page is **white-dominant, with no cream, tan or beige anywhere** — those were
+retired in October 2026 and should not come back. The ground tokens keep the
+names `paper` / `paper-2` but are neutral. Green is spent on deliberate bands —
+the masthead, the footer, and the scrim over the hero footage — not scattered
+through the body. Gold is sparing and always means something.
 
 **Contrast rules that are load-bearing — do not "simplify" these away:**
 - `ink-muted` is a solid third rank precisely because alpha-fading `ink-soft` to
   `/45…/65` landed between 2.4:1 and 4.0:1 and failed AA.
-- `border-border` is a 1.39:1 hairline for separating records in a register. A real
-  control boundary (input, button, filter chip) needs `border-strong` (3.6:1) per
+- `border-border` is a 1.37:1 hairline for separating records in a register. A real
+  control boundary (input, button, filter chip) needs `border-strong` (3.8:1) per
   WCAG 1.4.11.
 - The focus ring is two layers on purpose: no single palette colour clears 3:1
   against both paper and pine-deep, so an ink outline carries light grounds, a gold
@@ -112,7 +114,6 @@ Utility classes in `index.css`:
   a person reads as prose.
 - `.meta-label` — the metadata voice: sentence-case sans at 14px.
 - `.prose-measure` — running prose under ~68ch (72ch for the serif).
-- `.duotone` — archival duotone photo treatment (see `DuotonePortrait`).
 
 **Spacing ranks:** `gutter` (28px), `stack` (44px, heading → content),
 `section` / `section-lg` (80 / 88px vertical section rhythm).
@@ -124,11 +125,30 @@ clear of: tracked-out all-caps eyebrow labels above headings; facts joined into 
 string with middle dots (`A · B · C`) instead of separate elements; `WORD — fragment`
 constructions with a spaced em dash; monospace used for human-readable labels;
 gradient washes as decoration; identical cards in a uniform grid; `hover:scale-*` on
-everything; and page-load animations. Headings should state a fact, not an aphorism.
+everything; and page-load animations (the hero footage is the one moving thing). Headings should state a fact, not an aphorism.
 
 Lists of records are built as **registers** (a finding aid: hairline-ruled rows,
-the whole row a link) rather than card grids. The homepage uses that one structure
-for both interviews and exhibits.
+the whole row a link) rather than card grids. The one deliberate exception is the
+homepage's voices grid ("The many depictions of An's life"): one tile per voice,
+unequal in size. Ẩn's own interviews carry photographs (`TILE_IMAGES` in
+`Index.tsx`); a voice with no photograph on file gets a plain tile.
+
+### Homepage
+
+Modelled on the Google Arts & Culture pages for Frida Kahlo and Nelson Mandela.
+In order: the video hero, "In collaboration with" (`Partners`), the voices grid,
+"What this archive holds", exhibits.
+
+- **Hero footage** is a silent 26-second loop cut from McMorris part 2 (the only
+  filmed interviews; the source is 704×528, so it is shown greyscale under a
+  pine-deep scrim rather than at full colour). Re-cut with ffmpeg from the media
+  URL in `interviews.ts`; keep it muted, a few MB at most, with a poster frame.
+- The loop is started from script, not `autoPlay`, so `prefers-reduced-motion`
+  gets the poster. The pause button is required (WCAG 2.2.2) — do not remove it.
+- `voices` in `interviews.ts` groups recordings: Ẩn's own by interviewer,
+  everyone else by name. Every tile carries the same three lines (name, who they
+  are to Ẩn, recording count) and is a single link to the voice's first
+  recording — no topic deep links, no per-part links, no status notes.
 
 ---
 
@@ -225,18 +245,20 @@ Live OHMS state and history: `docs/OHMS_STATUS.md`.
 
 ```
 src/
-  content/        bilingual copy — site.ts, bio.ts, project.ts, exhibits.ts, interviews.ts
+  content/        bilingual copy — site.ts, bio.ts, project.ts, exhibits.ts, interviews.ts,
+                  bibliography.ts
                   ohms-index.ts is GENERATED — do not hand-edit
   contexts/       LanguageContext.tsx — Lang, Bilingual, t()
-  components/     Layout, LanguageToggle, Eyebrow, DuotonePortrait,
+  components/     Layout, LanguageToggle, Partners,
                   OhmsViewer (iframe), OhmsNativePlayer, ui/ (shadcn)
   pages/          Index, AboutPxa, AboutProject, Interviews, InterviewDetail,
-                  Exhibits, ExhibitDetail, Contact, NotFound
+                  Exhibits, ExhibitDetail, Bibliography, Contact, NotFound
   lib/ohms.ts     OHMS XML parser (+ ohms.test.ts)
   lib/ohms-highlights.ts  reading the baked index (+ ohms-highlights.test.ts)
   index.css       design tokens + utility classes
-  assets/         pxa-hero.webp is the hero portrait; partner logos
+  assets/         partner logos; interview-pxa.jpg (Ẩn with Miller), pxa-hero.webp (portrait)
 public/
+  media/          hero loop + poster and the McMorris still — cut from the interview video
   ohms/           OHMS XML exports (source of truth for interviews)
   ohms-viewer/    baked static viewer pages — generated, committed
 scripts/ohms/     build-viewer.mjs, build-index.mjs, search-shim.js,

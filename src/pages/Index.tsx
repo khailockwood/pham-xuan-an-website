@@ -1,101 +1,43 @@
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ImageIcon } from "lucide-react";
+import { Pause, Play } from "lucide-react";
 import { useLanguage, type Bilingual } from "@/contexts/LanguageContext";
-import { DuotonePortrait } from "@/components/DuotonePortrait";
+import { Partners } from "@/components/Partners";
 import { cn } from "@/lib/utils";
-import { interviews } from "@/content/interviews";
-import { partners } from "@/content/project";
-import {
-  formatTimecode,
-  highlightsOf,
-  segmentCountOf,
-  segmentHref,
-} from "@/lib/ohms-highlights";
-import heroPortrait from "@/assets/pxa-hero.webp";
-import interviewPxaImg from "@/assets/interview-pxa.jpg";
+import { voices, type Voice } from "@/content/interviews";
+import millerWithAn from "@/assets/interview-pxa.jpg";
+import anPortrait from "@/assets/pxa-hero.webp";
 import exhibitViz1 from "@/assets/exhibit-viz-1.jpg";
 import exhibitViz2 from "@/assets/exhibit-viz-2.jpg";
 
-/* ---------------------------------------------------------------------------
-   The double record — the page's one structural argument.
+/* The hero footage: a silent 26-second loop cut from McMorris part 2, starting
+   at 16:26, with its first frame as the poster. Both live in public/media/. */
+const HERO_VIDEO = "/media/hero-mcmorris.mp4";
+const HERO_POSTER = "/media/hero-mcmorris.jpg";
+const HERO_SOURCE = "/interviews/mcmorris-pham-xuan-an-2";
 
-   1953–1976 read as a single chronology with two sides: the career his
-   colleagues in the Saigon press corps could see, and the one running underneath
-   it. Every year belongs to one side or the other, except 1975, which is the
-   only row with an entry on both — the page's pivot, and the reason the layout
-   is a spine rather than two lists.
-
-   Facts are the vetted ones from `content/bio.ts`; the split is kept local
-   because that file's timeline is flat and carries no public/concealed
-   distinction. TODO: have the VI strings reviewed.
---------------------------------------------------------------------------- */
-type RecordYear = {
-  year: string;
-  /** What the press corps knew at the time. */
-  seen?: Bilingual;
-  /** What was happening at the same time, and was not known until later. */
-  also?: Bilingual;
+/* Photographs for the voice tiles, keyed by `Voice.name`; `focus` is the
+   object-position that keeps the faces in a wide crop. A voice without an entry
+   gets a plain tile, so adding a photograph here is all it takes to give it one.
+   - McMorris: a frame from his own footage (public/media/).
+   - Miller: Ẩn with Miller.
+   - Berman: a portrait of Ẩn, standing in until a photograph of the two of them
+     is cleared. TODO: replace; the Larry Berman Collection at Texas Tech's
+     Vietnam Archive (collection 1237) holds his "Perfect Spy" photographs.
+   TODO: photographs of Morrow, Swanson and Cloud. */
+const TILE_IMAGES: Record<string, { src: string; focus: string }> = {
+  "Sean McMorris": { src: "/media/mcmorris-still.jpg", focus: "50% 12%" },
+  "Edward G. Miller": { src: millerWithAn, focus: "50% 18%" },
+  "Larry Berman": { src: anPortrait, focus: "50% 38%" },
 };
 
-const RECORD_HEADS = {
-  seen: { en: "What his colleagues saw", vi: "Điều các đồng nghiệp nhìn thấy" },
-  also: { en: "What was also true", vi: "Điều cũng là sự thật" },
-} satisfies Record<"seen" | "also", Bilingual>;
+/* McMorris filmed his interviews; everyone else recorded audio. */
+const isFilmed = (v: Voice) => v.recordings.some((iv) => iv.audio.endsWith(".mp4"));
 
-const doubleRecord: RecordYear[] = [
-  {
-    year: "1953",
-    also: {
-      en: "Joins the Việt Minh, and is later recruited into strategic intelligence.",
-      vi: "Gia nhập Việt Minh, sau đó được tuyển vào ngành tình báo chiến lược.",
-    },
-  },
-  {
-    year: "1957",
-    seen: {
-      en: "Sails to California to study journalism at Orange Coast College.",
-      vi: "Sang California học báo chí tại Orange Coast College.",
-    },
-  },
-  {
-    year: "1959",
-    seen: {
-      en: "Returns to Saigon and begins filing for Reuters.",
-      vi: "Trở về Sài Gòn và bắt đầu viết bài cho Reuters.",
-    },
-  },
-  {
-    year: "1960s",
-    also: {
-      en: "Begins sending intelligence north to Hanoi under the name Hai Trung.",
-      vi: "Bắt đầu gửi tin tình báo ra Hà Nội dưới bí danh Hai Trung.",
-    },
-  },
-  {
-    year: "1965",
-    seen: {
-      en: "Hired by Time, the magazine's only Vietnamese staff correspondent.",
-      vi: "Được Time tuyển dụng, phóng viên chính thức người Việt duy nhất của tạp chí.",
-    },
-  },
-  {
-    year: "1975",
-    seen: {
-      en: "Covers the fall of Saigon for Time.",
-      vi: "Đưa tin về sự kiện 30 tháng 4 cho Time.",
-    },
-    also: {
-      en: "Stays behind when the American correspondents fly out.",
-      vi: "Ở lại khi các phóng viên Mỹ rời đi.",
-    },
-  },
-  {
-    year: "1976",
-    also: {
-      en: "Publicly named a colonel in the People's Army of Vietnam.",
-      vi: "Được công khai phong hàm Đại tá Quân đội Nhân dân Việt Nam.",
-    },
-  },
+const archiveLinks: { to: string; label: Bilingual }[] = [
+  { to: "/about-project", label: { en: "About the project", vi: "Về dự án" } },
+  { to: "/interviews", label: { en: "Interviews", vi: "Phỏng vấn" } },
+  { to: "/bibliography", label: { en: "Bibliography", vi: "Thư mục" } },
 ];
 
 /* Exhibits in preparation. `exhibits.ts` still carries "Coming soon" titles, so
@@ -131,159 +73,250 @@ const forthcomingExhibits: {
   },
 ];
 
-/* Portraits on file. Only the recordings An himself sat for have one; the other
-   subjects fall back to the same placeholder mark `pages/Interviews.tsx` uses,
-   so the register keeps one shape until photographs arrive.
-   TODO: portraits for Morrow, Swanson and Cloud. */
-const PORTRAITS: Record<string, string> = {
-  "miller-pham-xuan-an": interviewPxaImg,
-  "mcmorris-pham-xuan-an-1": interviewPxaImg,
-  "mcmorris-pham-xuan-an-2": interviewPxaImg,
-  "berman-pham-xuan-an-1a": interviewPxaImg,
-  "berman-pham-xuan-an-1b": interviewPxaImg,
-};
-
 const Index = () => {
-  const { t, lang } = useLanguage();
+  const { t } = useLanguage();
 
-  const fmtDate = (iso: string) =>
-    new Date(iso).toLocaleDateString(lang === "vi" ? "vi-VN" : "en-GB", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    });
+  /* The loop starts from script rather than `autoPlay` so that a visitor who
+     asks for reduced motion gets the poster and a play button, not a video that
+     starts and is then stopped. */
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
+  useEffect(() => {
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      videoRef.current?.play().catch(() => {});
+    }
+  }, []);
+  const togglePlayback = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) video.play().catch(() => {});
+    else video.pause();
+  };
 
-  /* One record per voice in the archive, in catalogue order — An himself, then
-     the three people interviewed about him. The homepage shows the shape of the
-     collection rather than its first four rows, which are all the same subject. */
-  const featured = interviews
-    .filter((iv, i) => interviews.findIndex((o) => o.interviewee === iv.interviewee) === i)
-    .slice(0, 4);
+  /* The filmed voice leads, so its tile takes the large cell of the grid. */
+  const tiles = [...voices].sort((a, b) => Number(isFilmed(b)) - Number(isFilmed(a)));
 
-  const withAn = interviews.filter((iv) => iv.interviewee === "Pham Xuan An").length;
-  const aboutAn = interviews.length - withAn;
-
-  /** The chronology, stacked as two plain lists. Visible on small screens; kept
-      in the accessibility tree at every size, because the spine below is a
-      visual arrangement that does not read in a sensible order. */
-  const RecordList = ({ side }: { side: "seen" | "also" }) => (
-    <div>
-      <h3 className="mb-4 border-b border-strong pb-2 font-display text-lead">
-        {t(RECORD_HEADS[side])}
-      </h3>
-      <dl className="grid grid-cols-[3.75rem_1fr] gap-x-4 gap-y-3">
-        {doubleRecord
-          .filter((r) => r[side])
-          .map((r) => (
-            <div key={r.year} className="contents">
-              <dt className="font-display text-lead leading-snug tabular-nums text-ink-muted">
-                {r.year}
-              </dt>
-              <dd className="text-body text-ink-soft">{t(r[side]!)}</dd>
-            </div>
-          ))}
-      </dl>
-    </div>
-  );
+  /** Who this is, relative to Ẩn, and when. Only the first recording's year is
+      used: Morrow part 4 carries a future date in its export (see CLAUDE.md). */
+  const voiceLine = (v: Voice): Bilingual => {
+    const first = v.recordings[0];
+    const year = first.date.slice(0, 4);
+    if (!v.withAn) {
+      return {
+        en: `spoke to the project about him in ${year}`,
+        // TODO: verify VI
+        vi: `trò chuyện với dự án về ông năm ${year}`,
+      };
+    }
+    return first.dateDisplay
+      ? {
+          en: `interviewed Phạm Xuân Ẩn around ${year}`,
+          // TODO: verify VI
+          vi: `phỏng vấn Phạm Xuân Ẩn khoảng năm ${year}`,
+        }
+      : { en: `interviewed Phạm Xuân Ẩn in ${year}`, vi: `phỏng vấn Phạm Xuân Ẩn năm ${year}` };
+  };
 
   return (
     <>
       {/* ---------- Hero ----------
-          The name as it is filed in two places, the three sentences that make the
-          archive make sense, and the way in. No page-load motion: the material
-          is doing the work. */}
-      <section className="border-b-2 border-gold bg-pine-deep text-paper">
-        <div className="container grid items-center gap-12 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16 lg:py-24">
-          <div>
-            <h1 className="font-display text-title leading-[1.02] lg:text-masthead">
-              <span className="block text-paper">Phạm Xuân Ẩn</span>
-              <span className="block text-gold-bright">Hai Trung</span>
-            </h1>
-            <p className="mt-4 font-display text-lead tabular-nums text-paper/70">1927–2006</p>
+          Footage of Ẩn talking, full width, with the name and the one sentence
+          that makes the archive make sense. The scrim is there for contrast:
+          it holds the text above 4.5:1 whatever frame is behind it. */}
+      <section className="on-dark relative isolate flex min-h-[34rem] items-end overflow-hidden bg-pine-deep text-paper lg:min-h-[min(46rem,calc(100svh-68px))]">
+        <video
+          ref={videoRef}
+          className="absolute inset-0 -z-20 h-full w-full object-cover object-[50%_20%] grayscale"
+          src={HERO_VIDEO}
+          poster={HERO_POSTER}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+          tabIndex={-1}
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+        />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-pine-deep from-15% via-pine-deep/80 via-55% to-pine-deep/30" />
 
-            <p className="prose-measure mt-7 font-display text-lead text-paper/90">
-              {t({
-                en: "He reported the Vietnam War from Saigon for Reuters, the New York Herald Tribune, and Time. He also reported it to Hanoi, as an intelligence officer named Hai Trung. Most of his colleagues in the press corps learned this only after the war had ended.",
-                vi: "Ông đưa tin về Chiến tranh Việt Nam từ Sài Gòn cho Reuters, New York Herald Tribune và Time. Ông cũng đưa tin về cuộc chiến ấy cho Hà Nội, với tư cách một sĩ quan tình báo mang bí danh Hai Trung. Phần lớn đồng nghiệp trong giới báo chí chỉ biết điều này sau khi chiến tranh kết thúc.",
-              })}
-            </p>
+        <div className="container pb-12 pt-40 lg:pb-16">
+          <h1 className="font-display text-title leading-[1.02] lg:text-masthead">
+            <span className="block">Phạm Xuân Ẩn</span>
+            <span className="block text-gold-bright">Hai Trung</span>
+          </h1>
+          <p className="mt-4 font-display text-lead tabular-nums text-paper/80">1927–2006</p>
 
-            <div className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-4">
-              <Link
-                to="/interviews"
-                className="inline-flex items-center rounded-sm bg-gold px-6 py-3 text-label font-medium text-ink transition-colors hover:bg-gold-bright"
-              >
-                {t({ en: "Listen to the interviews", vi: "Nghe các cuộc phỏng vấn" })}
-              </Link>
-              <Link
-                to="/about-pxa"
-                className="border-b border-paper/30 pb-1 text-label text-paper/80 transition-colors hover:border-paper hover:text-paper"
-              >
-                {t({ en: "Who was Phạm Xuân Ẩn?", vi: "Phạm Xuân Ẩn là ai?" })}
-              </Link>
-            </div>
+          <p className="mt-6 max-w-[36em] font-display text-lead text-paper">
+            {t({
+              en: "He reported the Vietnam War for Reuters, the New York Herald Tribune, and Time, while also reporting it to Hanoi as the intelligence officer Hai Trung. His press colleagues learned this only after the war.",
+              // TODO: verify VI
+              vi: "Ông đưa tin về Chiến tranh Việt Nam cho Reuters, New York Herald Tribune và Time, đồng thời báo cáo về cuộc chiến ấy cho Hà Nội với tư cách sĩ quan tình báo mang bí danh Hai Trung, điều mà các đồng nghiệp trong giới báo chí chỉ biết sau khi chiến tranh kết thúc.",
+            })}
+          </p>
+
+          <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
+            <Link
+              to="/interviews"
+              className="inline-flex items-center rounded-sm bg-gold px-6 py-3 text-label font-medium text-ink transition-colors hover:bg-gold-bright"
+            >
+              {t({ en: "Listen to the interviews", vi: "Nghe các cuộc phỏng vấn" })}
+            </Link>
+            <Link
+              to={HERO_SOURCE}
+              className="border-b border-paper/40 pb-1 text-label text-paper transition-colors hover:border-paper"
+            >
+              {t({ en: "Watch this interview", vi: "Xem cuộc phỏng vấn này" })}
+            </Link>
+
+            {/* A looping video needs a way to stop it (WCAG 2.2.2). */}
+            <button
+              type="button"
+              onClick={togglePlayback}
+              className="ml-auto inline-flex h-11 w-11 items-center justify-center rounded-full border border-paper/70 text-paper transition-colors hover:bg-paper/15"
+              aria-label={
+                playing
+                  ? t({ en: "Pause the background video", vi: "Tạm dừng video nền" })
+                  : t({ en: "Play the background video", vi: "Phát video nền" })
+              }
+            >
+              {playing ? <Pause size={18} aria-hidden /> : <Play size={18} aria-hidden />}
+            </button>
           </div>
-
-          <DuotonePortrait
-            src={heroPortrait}
-            alt="Phạm Xuân Ẩn"
-            caption={t({ en: "Phạm Xuân Ẩn, Saigon", vi: "Phạm Xuân Ẩn, Sài Gòn" })}
-            credit={t({ en: "Project collection", vi: "Tư liệu dự án" })}
-            className="mx-auto w-full max-w-[320px] sm:max-w-[360px] lg:ml-auto lg:mr-0 lg:max-w-[380px]"
-          />
         </div>
       </section>
 
-      {/* ---------- The double record ---------- */}
-      <section className="container py-section lg:py-section-lg">
-        <h2 className="max-w-[14em] font-display text-head">
-          {t({ en: "Two careers, the same years.", vi: "Hai sự nghiệp, cùng một quãng thời gian." })}
+      {/* ---------- Partners ---------- */}
+      <section className="container py-14 lg:py-16">
+        <h2 className="font-display text-lead text-ink-muted">
+          {t({ en: "In collaboration with", vi: "Với sự hợp tác của" })}
         </h2>
-
-        {/* Stacked lists: the small-screen layout, and the reading order for
-            assistive technology at every size. */}
-        <div className="mt-stack grid gap-10 sm:grid-cols-2 md:sr-only">
-          <RecordList side="seen" />
-          <RecordList side="also" />
+        <div className="mt-6">
+          <Partners />
         </div>
+      </section>
 
-        {/* The spine: one chronology, entries hanging off the years to the side
-            they belong to. 1975 is the only year with both. */}
-        <div className="mt-stack hidden max-w-[60rem] md:mx-auto md:block" aria-hidden="true">
-          <div className="grid grid-cols-[1fr_5.5rem_1fr] items-end gap-x-8 border-b border-border pb-3">
-            <h3 className="font-display text-lead text-ink-muted md:text-right">
-              {t(RECORD_HEADS.seen)}
-            </h3>
-            <span />
-            <h3 className="font-display text-lead text-ink-muted">{t(RECORD_HEADS.also)}</h3>
-          </div>
+      {/* ---------- The voices ----------
+          One tile per voice rather than per recording: three people who
+          interviewed Ẩn, three who knew him, and the bibliography. A grid on
+          purpose — the rest of the site lists records as registers, and this is
+          the one place the collection is shown as a set of faces. Every tile
+          has the same three lines and is one link, to that voice's first
+          recording. Ẩn's own interviews have photographs and fill the top of
+          the grid; the three people who knew him follow as a row of their own. */}
+      <section className="container border-t border-border py-section lg:py-section-lg">
+        <h2 className="font-display text-title">Phạm Xuân Ẩn</h2>
+        <p className="mt-3 font-display text-lead text-ink-soft">
+          {t({
+            en: "The many depictions of An's life",
+            // TODO: verify VI
+            vi: "Những góc nhìn về cuộc đời ông Ẩn",
+          })}
+        </p>
 
-          {doubleRecord.map((r) => (
-            <div
-              key={r.year}
-              className="grid min-h-[5.75rem] grid-cols-[1fr_5.5rem_1fr] items-center gap-x-8"
+        <ul className="mt-stack grid gap-4 sm:grid-cols-2 lg:grid-cols-12">
+          {tiles.map((v) => {
+            const filmed = isFilmed(v);
+            const image = TILE_IMAGES[v.name];
+            const count = v.recordings.length;
+
+            return (
+              <li
+                key={v.name}
+                className={cn(
+                  image ? "sm:col-span-2 lg:col-span-6" : "lg:col-span-4",
+                  filmed && "lg:row-span-2"
+                )}
+              >
+                <Link
+                  to={`/interviews/${v.recordings[0].slug}`}
+                  className={cn(
+                    "group relative isolate flex h-full flex-col overflow-hidden p-gutter transition-colors",
+                    image
+                      ? "on-dark min-h-[20rem] bg-pine-deep text-paper"
+                      : "min-h-[13rem] bg-paper-2 hover:bg-pine-deep hover:text-paper"
+                  )}
+                >
+                  {image && (
+                    <>
+                      <img
+                        src={image.src}
+                        alt=""
+                        loading="lazy"
+                        style={{ objectPosition: image.focus }}
+                        className="absolute inset-0 -z-20 h-full w-full object-cover grayscale"
+                      />
+                      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-pine-deep from-5% via-pine-deep/60 via-45% to-pine-deep/10" />
+                    </>
+                  )}
+
+                  <h3
+                    className={cn(
+                      "font-display leading-tight",
+                      image ? "mt-auto" : "",
+                      filmed ? "text-head" : "text-sub"
+                    )}
+                  >
+                    {v.name}
+                  </h3>
+                  <p
+                    className={cn(
+                      "mt-2 text-body leading-snug",
+                      image ? "text-paper/90" : "text-ink-soft group-hover:text-paper/90"
+                    )}
+                  >
+                    {t(voiceLine(v))}
+                  </p>
+
+                  <p
+                    className={cn(
+                      "flex justify-between gap-4 border-t pt-3 text-label",
+                      image
+                        ? "mt-6 border-paper/40 text-paper/90"
+                        : "mt-auto border-strong text-ink-muted group-hover:border-paper/40 group-hover:text-paper/90"
+                    )}
+                  >
+                    <span>
+                      {count === 1
+                        ? t({ en: "1 recording", vi: "1 bản ghi" })
+                        : t({ en: `${count} recordings`, vi: `${count} bản ghi` })}
+                    </span>
+                    <span className={cn(!image && "text-pine group-hover:text-paper")}>
+                      {filmed ? t({ en: "Watch", vi: "Xem" }) : t({ en: "Listen", vi: "Nghe" })}
+                    </span>
+                  </p>
+                </Link>
+              </li>
+            );
+          })}
+
+          <li className="sm:col-span-2 lg:col-span-12">
+            <Link
+              to="/bibliography"
+              className="on-dark flex h-full min-h-[11rem] flex-col bg-pine-deep p-gutter text-paper"
             >
-              <p className="py-3 text-right text-body leading-snug text-ink-soft">
-                {r.seen && t(r.seen)}
+              <h3 className="font-display text-head leading-tight">
+                {t({ en: "Bibliography", vi: "Thư mục" })}
+              </h3>
+              <p className="mt-2 max-w-[30em] text-body leading-snug text-paper/90">
+                {t({
+                  en: "Books, articles and films about Phạm Xuân Ẩn.",
+                  vi: "Sách, bài viết và phim về Phạm Xuân Ẩn.",
+                })}
               </p>
-              {/* the year knocks a hole in the rule it sits on; `self-stretch`
-                  keeps the rule spanning the full row while the year centres */}
-              <div className="relative flex items-center justify-center self-stretch">
-                <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-ink/25" />
-                <span className="relative bg-paper px-2.5 font-display text-sub leading-none tabular-nums">
-                  {r.year}
-                </span>
-              </div>
-              <p className="py-3 text-body leading-snug text-ink-soft">{r.also && t(r.also)}</p>
-            </div>
-          ))}
-        </div>
+              <p className="mt-auto flex justify-between gap-4 border-t border-paper/40 pt-3 text-label text-paper/90">
+                <span>{t({ en: "In preparation", vi: "Đang chuẩn bị" })}</span>
+                <span>{t({ en: "Read", vi: "Đọc" })}</span>
+              </p>
+            </Link>
+          </li>
+        </ul>
 
         <Link
-          to="/about-pxa"
+          to="/interviews"
           className="mt-10 inline-flex border-b border-gold pb-0.5 text-label text-pine"
         >
-          {t({ en: "Read the full biography", vi: "Đọc tiểu sử đầy đủ" })}
+          {t({ en: "View all interviews", vi: "Xem tất cả phỏng vấn" })}
         </Link>
       </section>
 
@@ -302,182 +335,27 @@ const Index = () => {
             </p>
             <p>
               {t({
-                en: "Fifty years after the fall of Saigon, the aim is practical: put the sources in front of readers in both countries, in both languages.",
+                en: "Fifty years after the fall of Saigon, this project aims to showcase the many depictions of An's life, in front of readers in both countries, in both languages.",
                 vi: "Năm mươi năm sau ngày Sài Gòn sụp đổ, mục tiêu rất thực tế: đưa các nguồn tư liệu đến với độc giả ở cả hai nước, bằng cả hai ngôn ngữ.",
               })}
             </p>
-            <Link
-              to="/about-project"
-              className="inline-flex border-b border-gold pb-0.5 text-label text-pine"
-            >
-              {t({ en: "About the project", vi: "Về dự án" })}
-            </Link>
+            <ul className="flex flex-wrap gap-x-8 gap-y-3 pt-2">
+              {archiveLinks.map((l) => (
+                <li key={l.to}>
+                  <Link to={l.to} className="inline-flex border-b border-gold pb-0.5 text-label text-pine">
+                    {t(l.label)}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
 
-      {/* ---------- The recordings (finding aid) ----------
-          Every record gets the same entry: portrait, full citation, and the
-          opening run of its OHMS index, each topic linking to its own second of
-          audio (see `lib/ohms-highlights.ts`). The topics stand in for the
-          `summary` field in `interviews.ts`, which is auto-derived — all four
-          summaries open with the same sentence and say nothing that
-          distinguishes one recording from another. */}
-      <section className="container py-section lg:py-section-lg">
-        <h2 className="font-display text-head">{t({ en: "Interviews", vi: "Phỏng vấn" })}</h2>
-        <p className="prose-measure mt-4 text-body text-ink-soft">
-          {t({
-            en: `${interviews.length} recordings. ${withAn} are conversations with Phạm Xuân Ẩn himself, taped in 2005, the year before he died. The other ${aboutAn} are with colleagues and friends, recorded by the project since 2025.`,
-            vi: `${interviews.length} bản ghi. ${withAn} bản là các cuộc trò chuyện với chính Phạm Xuân Ẩn, ghi năm 2005, một năm trước khi ông qua đời. ${aboutAn} bản còn lại là với đồng nghiệp và bạn bè, do dự án thực hiện từ năm 2025.`,
-          })}
-        </p>
-
-        <ul className="mt-stack border-t border-border">
-          {featured.map((iv) => {
-            const portrait = PORTRAITS[iv.slug];
-            const topics = highlightsOf(iv, 4);
-            const segmentCount = segmentCountOf(iv);
-
-            return (
-              <li key={iv.slug}>
-                {/* An <article>, not a wrapping <Link>: the title and every
-                    topic are their own destination, and an anchor cannot
-                    contain anchors. */}
-                <article className="grid gap-x-10 gap-y-6 border-b border-border py-8 md:grid-cols-[minmax(0,200px)_1fr]">
-                  <div>
-                    <div className="aspect-[4/5] w-full max-w-[200px] overflow-hidden border border-border bg-paper-2">
-                      {portrait ? (
-                        <img
-                          src={portrait}
-                          alt=""
-                          loading="lazy"
-                          className="h-full w-full object-cover grayscale-[.35]"
-                        />
-                      ) : (
-                        /* No portrait on file for this subject yet. The frame
-                           stays so the register keeps one shape; the gap is
-                           meant to read as a gap. */
-                        <div className="flex h-full w-full items-center justify-center text-ink-muted">
-                          <ImageIcon size={26} strokeWidth={1.25} aria-hidden />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="mt-4 font-display text-lead leading-tight">
-                      {iv.interviewee}
-                    </div>
-                    {/* Each fact is its own element: a screen reader reads these
-                        as separate utterances rather than one run-on line. */}
-                    <dl className="meta-label mt-2 space-y-0.5">
-                      <div className="flex gap-1.5">
-                        <dt className="sr-only">
-                          {t({ en: "Interviewer", vi: "Người phỏng vấn" })}
-                        </dt>
-                        <dd>
-                          {t({ en: "Interviewed by", vi: "Phỏng vấn bởi" })} {iv.interviewer}
-                        </dd>
-                      </div>
-                      <dd>{iv.dateDisplay ?? fmtDate(iv.date)}</dd>
-                      {iv.duration !== "—" && <dd className="tabular-nums">{iv.duration}</dd>}
-                      {segmentCount > 0 && (
-                        <dd>
-                          {t({
-                            en: `${segmentCount} indexed segments`,
-                            // TODO: verify VI
-                            vi: `${segmentCount} đoạn được lập chỉ mục`,
-                          })}
-                        </dd>
-                      )}
-                    </dl>
-                  </div>
-
-                  <div>
-                    <h3 className="font-display text-sub leading-snug">
-                      <Link
-                        to={`/interviews/${iv.slug}`}
-                        className="transition-colors hover:text-pine"
-                      >
-                        {t(iv.title)}
-                      </Link>
-                    </h3>
-
-                    {topics.length > 0 ? (
-                      <>
-                        <p className="meta-label mt-5">
-                          {t({
-                            en: "Topics in this recording",
-                            // TODO: verify VI
-                            vi: "Các chủ đề trong bản ghi này",
-                          })}
-                        </p>
-                        {/* The rules and the hover ground run 12px wider than the
-                            column on each side, and the rows pad back in by the
-                            same amount — so the timecode keeps its gap from the
-                            edge of the shading without falling out of line with
-                            the title above it. */}
-                        <ol className="-mx-3 mt-2 border-t border-border">
-                          {topics.map((s) => (
-                            <li key={s.time}>
-                              <Link
-                                to={segmentHref(iv.slug, s.time)}
-                                className="group grid grid-cols-[4.5rem_1fr] items-baseline gap-x-4 border-b border-border px-3 py-3 transition-colors hover:bg-paper-2"
-                              >
-                                <span className="mono-label tabular-nums text-ink-muted">
-                                  {formatTimecode(s.time)}
-                                </span>
-                                {/* Segment titles come from the OHMS export,
-                                    which has no Vietnamese index yet — marked as
-                                    English rather than machine-translated. */}
-                                <span
-                                  lang="en"
-                                  className="text-body text-ink-soft transition-colors group-hover:text-pine"
-                                >
-                                  {s.titleAlt || s.title}
-                                </span>
-                              </Link>
-                            </li>
-                          ))}
-                        </ol>
-                        <Link
-                          to={`/interviews/${iv.slug}`}
-                          className="mt-5 inline-flex border-b border-gold pb-0.5 text-label text-pine"
-                        >
-                          {t({ en: "Open the full index", vi: "Mở chỉ mục đầy đủ" })}
-                        </Link>
-                      </>
-                    ) : (
-                      /* Published as audio while indexing continues — Berman
-                         1a/1b are in this state today. */
-                      <>
-                        <p className="prose-measure mt-4 text-ink-soft">{t(iv.summary)}</p>
-                        <Link
-                          to={`/interviews/${iv.slug}`}
-                          className="mt-5 inline-flex border-b border-gold pb-0.5 text-label text-pine"
-                        >
-                          {t({ en: "Listen to this recording", vi: "Nghe bản ghi này" })}
-                        </Link>
-                      </>
-                    )}
-                  </div>
-                </article>
-              </li>
-            );
-          })}
-        </ul>
-
-        <Link
-          to="/interviews"
-          className="mt-10 inline-flex border-b border-gold pb-0.5 text-label text-pine"
-        >
-          {t({ en: "View all interviews", vi: "Xem tất cả phỏng vấn" })}
-        </Link>
-      </section>
-
       {/* ---------- Exhibits ----------
-          Same register structure as the interviews above, so the page has one
-          way of listing things rather than two. Both entries are unpublished and
-          say so. */}
-      <section className="border-t border-border bg-paper-2">
+          A register: hairline-ruled rows, the whole row a link. Both entries
+          are unpublished and say so. */}
+      <section>
         <div className="container py-section lg:py-section-lg">
           <h2 className="font-display text-head">{t({ en: "Exhibits", vi: "Triển lãm" })}</h2>
           <p className="prose-measure mt-4 text-body text-ink-soft">
@@ -492,9 +370,9 @@ const Index = () => {
               <li key={ex.slug}>
                 <Link
                   to={`/exhibits/${ex.slug}`}
-                  className="group grid gap-x-8 gap-y-4 border-b border-border px-4 py-7 transition-colors hover:bg-paper sm:px-5 md:grid-cols-[220px_1fr]"
+                  className="group grid gap-x-8 gap-y-4 border-b border-border px-4 py-7 transition-colors hover:bg-paper-2 sm:px-5 md:grid-cols-[220px_1fr]"
                 >
-                  <div className="aspect-[4/3] w-full max-w-[280px] overflow-hidden border border-border bg-[#cfc6b2] md:max-w-none">
+                  <div className="aspect-[4/3] w-full max-w-[280px] overflow-hidden border border-border bg-paper-2 md:max-w-none">
                     <img
                       src={ex.cover}
                       alt=""
@@ -516,44 +394,6 @@ const Index = () => {
               </li>
             ))}
           </ul>
-        </div>
-      </section>
-
-      {/* ---------- Partners ---------- */}
-      <section className="container py-section lg:py-section-lg">
-        <h2 className="max-w-[15em] font-display text-head">
-          {t({
-            en: "A multi-institution, international collaboration.",
-            vi: "Sự cộng tác quốc tế giữa nhiều tổ chức.",
-          })}
-        </h2>
-        <div className="mt-stack grid border border-border sm:grid-cols-3">
-          {partners.map((p, i) => (
-            <a
-              key={p.go}
-              href={p.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(
-                "group flex min-w-0 flex-col px-8 py-9 transition-colors hover:bg-paper-2",
-                i < partners.length - 1 && "border-b border-border sm:border-b-0 sm:border-r"
-              )}
-            >
-              <div className="flex h-20 w-full items-center">
-                <img
-                  src={p.logo}
-                  alt={p.logoAlt}
-                  loading="lazy"
-                  className="max-h-full w-auto max-w-full object-contain object-left"
-                />
-              </div>
-              <div className="mt-7 font-display text-lead leading-snug">{t(p.name)}</div>
-              <div className="mt-1 text-label text-ink-muted">{t(p.sub)}</div>
-              <span className="mt-5 text-label text-pine transition-colors group-hover:text-pine-deep">
-                {p.go}
-              </span>
-            </a>
-          ))}
         </div>
       </section>
     </>

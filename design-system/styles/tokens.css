@@ -1,23 +1,23 @@
 /* ============================================================================
    Phạm Xuân Ẩn — Design System tokens
    Source of truth mirrors src/index.css + tailwind.config.ts.
-   Concept: press / editorial DNA over a documentary "dossier" undertone.
-   Archival paper tones, Dartmouth pine, gold accents. All colours HSL.
+   Concept: a white gallery ground, Dartmouth pine for institutional bands and
+   links, gold as a sparing accent. No cream or tan. All colours HSL.
    ============================================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
 :root {
-  --paper: 42 34% 89%;        /* #ECE6D8 */
-  --paper-2: 42 32% 84%;      /* #E3DBC9 */
-  --ink: 48 10% 10%;          /* #1B1A16 */
-  --ink-soft: 45 9% 18%;
-  --ink-muted: 45 9% 32%;
+  --paper: 0 0% 100%;         /* #FFFFFF */
+  --paper-2: 150 8% 95.5%;    /* #F3F4F4 */
+  --ink: 160 8% 9%;           /* #151918 */
+  --ink-soft: 160 6% 20%;
+  --ink-muted: 160 4% 36%;
   --pine: 157 100% 21%;       /* #00693E */
   --pine-deep: 152 80% 12%;   /* #06371F */
   --gold: 41 61% 43%;         /* #B0852B */
   --gold-bright: 43 56% 52%;
-  --border: 40 15% 76%;
+  --border: 150 6% 86%;
   --radius: 0.125rem;         /* 2px — sharp, document-like */
 
   --font-display: 'Newsreader', Georgia, serif;

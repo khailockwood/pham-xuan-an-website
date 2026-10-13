@@ -13,9 +13,9 @@ export const Layout = ({ children }: { children: ReactNode }) => {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
-  // Solid pine-green masthead on every page — it flows straight into the green
-  // hero on the homepage (no seam) and reads as a formal bar over paper content
-  // elsewhere. A hairline appears once scrolled to separate it from paper below.
+  // Solid pine-green masthead on every page — it sits directly on the video hero
+  // on the homepage and reads as a formal bar over the white ground elsewhere.
+  // A shadow appears once scrolled to separate it from the content below.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
@@ -36,7 +36,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
             {t(siteName)}
           </Link>
 
-          <nav className="hidden items-center gap-7 lg:flex">
+          <nav className="hidden items-center gap-7 xl:flex">
             {nav.map((n) => (
               <NavLink
                 key={n.to}
@@ -54,7 +54,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
             <LanguageToggle onDark />
           </nav>
 
-          <div className="flex items-center gap-3 lg:hidden">
+          <div className="flex items-center gap-3 xl:hidden">
             <LanguageToggle onDark />
             <button
               type="button"
@@ -68,7 +68,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         </div>
 
         {open && (
-          <div className="lg:hidden border-t border-paper/15 bg-pine-deep">
+          <div className="xl:hidden border-t border-paper/15 bg-pine-deep">
             <nav className="container py-4 flex flex-col gap-3 text-sm">
               {nav.map((n) => (
                 <NavLink
@@ -94,7 +94,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         {children}
       </main>
 
-      {/* Mirrors the hero's gold masthead rule, bookending the paper body. */}
+      {/* The gold rule marks the end of the white body. */}
       <footer className="border-t-2 border-gold bg-pine-deep text-paper/[0.82]">
         <div className="container py-14">
           <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">

@@ -5,52 +5,56 @@
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here.
 All colors MUST be HSL.
 
-Palette concept (see CLAUDE.md, "Design system"): press / editorial DNA over a
-documentary "dossier" undertone. Archival paper tones, Dartmouth pine, gold accents.
+Palette concept (see CLAUDE.md, "Design system"): a white gallery ground that
+lets the photographs and footage carry the colour, Dartmouth pine for the
+institutional bands and links, gold as a sparing accent. The ground tokens keep
+the names `paper` / `paper-2`; they are neutral, not tinted — the earlier cream
+and tan values were retired on purpose and should not come back.
 */
 
 @layer base {
   :root {
     /* ---- shadcn semantic tokens (mapped onto the new palette) ---- */
-    --background: 42 34% 89%;            /* paper      #ECE6D8 */
-    --foreground: 48 10% 10%;            /* ink        #1B1A16 */
+    --background: 0 0% 100%;             /* paper      #FFFFFF */
+    --foreground: 160 8% 9%;             /* ink        #151918 */
 
-    --card: 42 32% 84%;                  /* paper-2    #E3DBC9 */
-    --card-foreground: 48 10% 10%;
+    --card: 150 8% 95.5%;                /* paper-2    #F3F4F4 */
+    --card-foreground: 160 8% 9%;
 
-    --popover: 42 34% 89%;
-    --popover-foreground: 48 10% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 160 8% 9%;
 
     --primary: 157 100% 21%;             /* pine       #00693E */
-    --primary-foreground: 42 34% 89%;    /* paper */
+    --primary-foreground: 0 0% 100%;     /* paper */
 
     --secondary: 152 80% 12%;            /* pine-deep  #06371F */
-    --secondary-foreground: 42 34% 89%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 42 32% 84%;                 /* paper-2 */
-    --muted-foreground: 45 9% 32%;       /* softened ink */
+    --muted: 150 8% 95.5%;               /* paper-2 */
+    --muted-foreground: 160 4% 36%;      /* ink-muted */
 
     --accent: 41 61% 43%;                /* gold       #B0852B */
-    --accent-foreground: 48 10% 10%;     /* ink (gold CTAs carry dark text) */
+    --accent-foreground: 160 8% 9%;      /* ink (gold CTAs carry dark text) */
 
     --destructive: 0 70% 40%;
-    --destructive-foreground: 42 34% 89%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 40 15% 76%;                /* ink @ ~16% on paper */
-    --input: 40 15% 76%;
-    --ring: 48 10% 10%;                  /* ink — gold was 2.69:1 and failed as a focus ring */
+    --border: 150 6% 86%;                /* hairline   #D9DDDB — 1.37:1 on paper */
+    --input: 150 6% 86%;
+    --ring: 160 8% 9%;                   /* ink — gold is 3.3:1 at best and fails as a focus ring */
 
     --radius: 0.125rem;                  /* sharp, document-like corners (2px) */
 
     /* ---- named palette (use via Tailwind: bg-paper, text-ink, border-gold …) ---- */
-    --paper: 42 34% 89%;
-    --paper-2: 42 32% 84%;
-    --ink: 48 10% 10%;                   /* 13.9:1 on paper */
-    --ink-soft: 45 9% 18%;               /* 10.7:1 — secondary prose */
-    --ink-muted: 46 9% 32%;              /*  6.0:1 — metadata, captions, labels.
+    --paper: 0 0% 100%;                   /* white ground */
+    --paper-2: 150 8% 95.5%;             /* recessed bands — a neutral grey, never tan */
+    --ink: 160 8% 9%;                    /* 17.8:1 on paper */
+    --ink-soft: 160 6% 20%;              /* 12.3:1 — secondary prose */
+    --ink-muted: 160 4% 36%;             /*  6.5:1 on paper, 5.9:1 on paper-2 —
+                                            metadata, captions, labels.
                                             The third solid rank. Alpha-fading
-                                            ink-soft to /45…/65 landed between
-                                            2.4:1 and 4.0:1 and failed AA. */
+                                            ink-soft to /45…/65 fell below
+                                            4.5:1 and failed AA. */
     --pine: 157 100% 21%;
     --pine-deep: 152 80% 12%;
     --gold: 41 61% 43%;
@@ -58,7 +62,7 @@ documentary "dossier" undertone. Archival paper tones, Dartmouth pine, gold acce
 
     /* Two rule weights: the hairline that separates records in a register, and
        the 3:1 edge WCAG 1.4.11 requires of an actual control boundary. */
-    --rule-strong: 40 15% 44%;           /*  3.6:1 on paper */
+    --rule-strong: 150 4% 50%;           /*  3.8:1 on paper, 3.5:1 on paper-2 */
 
     /* ---- typography ---- */
     --font-display: 'Newsreader', Georgia, serif;
@@ -89,7 +93,8 @@ documentary "dossier" undertone. Archival paper tones, Dartmouth pine, gold acce
   }
 
   /* Two-layer focus ring. No single colour in the palette clears 3:1 against
-     both paper and pine-deep — gold is 2.69 on paper, pine is 2.02 on pine-deep
+     both paper and pine-deep — gold is 3.3 on paper but 2.4 as the bright halo,
+     pine is 2.02 on pine-deep
      — so the ink outline carries the contrast on light grounds, the gold halo
      carries it on dark, and the outline inverts to paper inside .on-dark. */
   :where(a, button, input, textarea, select, [tabindex]):focus-visible {
@@ -137,59 +142,5 @@ documentary "dossier" undertone. Archival paper tones, Dartmouth pine, gold acce
   .prose-measure.font-display {
     max-width: 72ch;
     line-height: 1.7;
-  }
-
-  /* Subtle archival duotone: a clean high-contrast black-and-white photograph
-     with a *whisper* of pine in the shadows and a warm paper lift in the
-     highlights — reads as a period print, not a green filter. Applied to a
-     wrapper containing a single <img>. See DuotonePortrait component. */
-  .duotone > img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: grayscale(1) contrast(1.09) brightness(1.02);
-  }
-  .duotone::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: hsl(var(--pine-deep));
-    mix-blend-mode: multiply;
-    opacity: 0.24;
-    pointer-events: none;
-  }
-  .duotone::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: hsl(var(--paper));
-    mix-blend-mode: screen;
-    opacity: 0.09;
-    pointer-events: none;
-  }
-
-  /* Redaction bar: a "classified" black block over the true-identity text that
-     wipes away once on load to "declassify" it — the signature device of the
-     dossier. Reduced-motion users just see the revealed text. */
-  .redaction {
-    position: relative;
-    display: inline-block;
-    vertical-align: baseline;
-  }
-  .redaction::after {
-    content: "";
-    position: absolute;
-    inset: -0.1em -0.3em;
-    background: hsl(var(--ink));
-    transform-origin: right center;
-    animation: declassify 0.72s cubic-bezier(0.65, 0, 0.35, 1) 1.05s both;
-    pointer-events: none;
-  }
-  @keyframes declassify {
-    from { transform: scaleX(1); }
-    to { transform: scaleX(0); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .redaction::after { animation: none; transform: scaleX(0); }
   }
 }
