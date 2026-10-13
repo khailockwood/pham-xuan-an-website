@@ -10,6 +10,7 @@ export const nav: { to: string; label: Bilingual }[] = [
   { to: "/about-project", label: { en: "The Pham Xuan An Project", vi: "Về dự án" } },
   { to: "/exhibits", label: { en: "Exhibits", vi: "Triển lãm" } },
   { to: "/interviews", label: { en: "Interviews", vi: "Phỏng vấn" } },
+  { to: "/bibliography", label: { en: "Bibliography", vi: "Thư mục" } },
   { to: "/contact", label: { en: "Contact", vi: "Liên hệ" } },
 ];
 

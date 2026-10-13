@@ -222,3 +222,23 @@ export const interviews: Interview[] = [
     ohmsXml: "/ohms/interview42707.xml",
   },
 ];
+
+/* One entry per voice in the archive, in catalogue order. Ẩn's own recordings
+   are split by who interviewed him — three separate projects, years apart in
+   method if not in date — and everyone else is grouped under their own name.
+   `name` is therefore the person who is not Ẩn in either case. */
+export type Voice = {
+  name: string;
+  /** True when the recordings are of Ẩn himself. */
+  withAn: boolean;
+  recordings: Interview[];
+};
+
+export const voices: Voice[] = interviews.reduce<Voice[]>((acc, iv) => {
+  const withAn = iv.interviewee === "Pham Xuan An";
+  const name = withAn ? iv.interviewer : iv.interviewee;
+  const found = acc.find((v) => v.name === name);
+  if (found) found.recordings.push(iv);
+  else acc.push({ name, withAn, recordings: [iv] });
+  return acc;
+}, []);

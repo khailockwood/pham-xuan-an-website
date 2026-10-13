@@ -12,6 +12,7 @@ import Exhibits from "./pages/Exhibits";
 import ExhibitDetail from "./pages/ExhibitDetail";
 import Interviews from "./pages/Interviews";
 import InterviewDetail from "./pages/InterviewDetail";
+import Bibliography from "./pages/Bibliography";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 
@@ -33,6 +34,7 @@ const App = () => (
               <Route path="/exhibits/:slug" element={<ExhibitDetail />} />
               <Route path="/interviews" element={<Interviews />} />
               <Route path="/interviews/:slug" element={<InterviewDetail />} />
+              <Route path="/bibliography" element={<Bibliography />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
