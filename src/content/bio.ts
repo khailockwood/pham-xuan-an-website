@@ -13,11 +13,11 @@ export const bioBody: Bilingual = {
 /* Birth and death, shown under the page title. */
 export const lifeDates: { label: Bilingual; value: Bilingual }[] = [
   {
-    label: { en: "Born", vi: "Sinh" },
+    label: { en: "Born:", vi: "Sinh:" },
     value: { en: "12 September 1927, Bien Hoa, French Indochina", vi: "Ngày 12 tháng 9 năm 1927, Biên Hòa, Đông Dương thuộc Pháp" },
   },
   {
-    label: { en: "Died", vi: "Mất" },
+    label: { en: "Died:", vi: "Mất:" },
     value: { en: "20 September 2006, Ho Chi Minh City", vi: "Ngày 20 tháng 9 năm 2006, Thành phố Hồ Chí Minh" },
   },
 ];

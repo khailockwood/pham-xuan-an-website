@@ -61,7 +61,7 @@ const AboutPxa = () => {
           with `bg-paper`. */}
       <section className="container border-t border-border py-section lg:py-section-lg">
         <h2 className="max-w-[14em] font-display text-head">
-          {t({ en: "Two careers, the same years.", vi: "Hai sự nghiệp, cùng một quãng thời gian." })}
+          {t({ en: "Two lives, simultaneously.", vi: "Hai cuộc đời, cùng một lúc." })}
         </h2>
 
         {/* Stacked lists: the small-screen layout, and the reading order for

@@ -300,8 +300,8 @@ const Index = () => {
               </h3>
               <p className="mt-2 max-w-[30em] text-body leading-snug text-paper/90">
                 {t({
-                  en: "Books, articles and films about Phạm Xuân Ẩn.",
-                  vi: "Sách, bài viết và phim về Phạm Xuân Ẩn.",
+                  en: "Sources about and relating to Phạm Xuân Ẩn.",
+                  vi: "Các nguồn thông tin và liên quan đến Phạm Xuân Ẩn.",
                 })}
               </p>
               <p className="mt-auto flex justify-between gap-4 border-t border-paper/40 pt-3 text-label text-paper/90">
@@ -360,8 +360,8 @@ const Index = () => {
           <h2 className="font-display text-head">{t({ en: "Exhibits", vi: "Triển lãm" })}</h2>
           <p className="prose-measure mt-4 text-body text-ink-soft">
             {t({
-              en: "Essays and data visualizations built from the recordings. Two are in preparation.",
-              vi: "Các tiểu luận và trực quan hóa dữ liệu dựng từ những bản ghi này. Hai triển lãm đang được chuẩn bị.",
+              en: "Essays and data visualizations built from the recordings. Coming soon.",
+              vi: "Các tiểu luận và trực quan hóa dữ liệu dựng từ những bản ghi này. Sắp ra mắt.",
             })}
           </p>
 

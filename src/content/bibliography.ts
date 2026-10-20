@@ -5,8 +5,8 @@ import type { Bilingual } from "@/contexts/LanguageContext";
 export const bibliographyTitle: Bilingual = { en: "Bibliography", vi: "Thư mục" };
 
 export const bibliographyDek: Bilingual = {
-  en: "Books, articles and films about Phạm Xuân Ẩn.",
-  vi: "Sách, bài viết và phim về Phạm Xuân Ẩn.",
+  en: "Sources about and relating to Phạm Xuân Ẩn.",
+  vi: "Các nguồn thông tin và liên quan đến Phạm Xuân Ẩn.",
 };
 
 export const bibliographyNote: Bilingual = {
