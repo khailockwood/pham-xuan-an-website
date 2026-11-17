@@ -242,3 +242,103 @@ export const voices: Voice[] = interviews.reduce<Voice[]>((acc, iv) => {
   else acc.push({ name, withAn, recordings: [iv] });
   return acc;
 }, []);
+
+/* What each voice is to Ẩn, and where to start listening. Keyed by
+   `Voice.name`. The homepage reads `subject` and `start`.
+
+   `relation` is not rendered at the moment. It is kept on purpose: it is the
+   project's sourced record of who each person was to Ẩn; drop it only once the
+   project decides that record is not wanted on the site.
+
+   `relation` is drawn from the OHMS index of the voice's own recordings where
+   they say it (Morrow, Swanson, Cloud), and from the interviewer's published
+   work otherwise. Every line is a fact about a real person and should be read
+   by the project before launch. TODO: verify each relation against the
+   project's own records.
+
+   `subject` is one broad line on what the recordings cover as a whole, read
+   from the full OHMS index (Berman's publish none, so his line says only what
+   is known of them). It leads each voice on the homepage, ahead of the
+   speaker. TODO: have the project check each line.
+
+   `start` points at the first indexed passage in which Ẩn comes up, so a tile
+   opens on him rather than on the narrator's childhood. A voice without one
+   starts at the beginning of its first recording: Ẩn's own interviews are
+   about him from the first minute, and Berman's publish no index. */
+export const voiceNotes: Record<string, { relation: Bilingual; subject: Bilingual; start?: { slug: string; time: number } }> = {
+  "Larry Berman": {
+    subject: {
+      en: "Long conversations with Ẩn, recorded while Berman was writing his biography of him.",
+      // TODO: verify VI
+      vi: "Những cuộc trò chuyện dài với ông Ẩn, được ghi khi Berman đang viết cuốn tiểu sử về ông.",
+    },
+    relation: {
+      en: "Historian, author of the biography Perfect Spy. Interviewed Ẩn.",
+      // TODO: verify VI
+      vi: "Nhà sử học, tác giả cuốn tiểu sử Perfect Spy. Đã phỏng vấn ông Ẩn.",
+    },
+  },
+  "Stanley Cloud": {
+    subject: {
+      en: "A Time bureau chief remembers working with Ẩn in Saigon, and hearing after the war that he had been a spy.",
+      // TODO: verify VI
+      vi: "Một trưởng văn phòng của Time nhớ lại thời làm việc cùng ông Ẩn ở Sài Gòn, và lúc biết tin sau chiến tranh rằng ông là một điệp viên.",
+    },
+    relation: {
+      en: "Time correspondent and bureau chief who worked alongside Ẩn in Saigon.",
+      // TODO: verify VI
+      vi: "Phóng viên và trưởng văn phòng của Time, từng làm việc cùng ông Ẩn tại Sài Gòn.",
+    },
+    start: { slug: "cloud-stanley", time: 1576 },
+  },
+  "Sean McMorris": {
+    subject: {
+      en: "Ẩn reflects on the war, American foreign policy, and Vietnam since 1975.",
+      // TODO: verify VI
+      vi: "Ông Ẩn suy ngẫm về cuộc chiến, chính sách đối ngoại của Mỹ, và Việt Nam từ sau năm 1975.",
+    },
+    relation: {
+      en: "Filmed a series of interviews with Ẩn.",
+      // TODO: verify VI
+      vi: "Đã quay phim một loạt cuộc phỏng vấn với ông Ẩn.",
+    },
+  },
+  "Edward G. Miller": {
+    subject: {
+      en: "Ẩn on the Ngô family and South Vietnamese politics in the 1950s and early 1960s.",
+      // TODO: verify VI
+      vi: "Ông Ẩn nói về gia đình họ Ngô và chính trường miền Nam Việt Nam trong thập niên 1950 và đầu thập niên 1960.",
+    },
+    relation: {
+      en: "Historian of South Vietnam. Interviewed Ẩn.",
+      // TODO: verify VI
+      vi: "Nhà sử học về miền Nam Việt Nam. Đã phỏng vấn ông Ẩn.",
+    },
+  },
+  "Michael Morrow": {
+    subject: {
+      en: "A reporter's life across Asia, including his capture in Cambodia and the part he believes Ẩn played in his release.",
+      // TODO: verify VI
+      vi: "Cuộc đời một phóng viên khắp châu Á, trong đó có lần ông bị bắt ở Campuchia và vai trò mà ông tin rằng ông Ẩn đã có trong việc ông được thả.",
+    },
+    relation: {
+      en: "Journalist held captive in Cambodia, who links his release to Ẩn.",
+      // TODO: verify VI
+      vi: "Nhà báo từng bị giam giữ ở Campuchia, người cho rằng việc mình được thả có liên quan đến ông Ẩn.",
+    },
+    start: { slug: "morrow-michael-3", time: 4009 },
+  },
+  "Germaine Swanson": {
+    subject: {
+      en: "A Reuters colleague and friend on working beside Ẩn, and on the years after the war.",
+      // TODO: verify VI
+      vi: "Một đồng nghiệp ở Reuters, cũng là bạn của ông Ẩn, kể về thời làm việc bên cạnh ông và về những năm sau chiến tranh.",
+    },
+    relation: {
+      en: "Colleague of Ẩn's at Reuters, and a friend after the war.",
+      // TODO: verify VI
+      vi: "Đồng nghiệp của ông Ẩn tại Reuters, và là bạn của ông sau chiến tranh.",
+    },
+    start: { slug: "swanson-germaine", time: 1459 },
+  },
+};

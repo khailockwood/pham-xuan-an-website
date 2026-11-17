@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Search, ImageIcon } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { usePageTitle } from "@/hooks/use-page-title";
 import { interviews } from "@/content/interviews";
 import { ui } from "@/content/site";
 import { Input } from "@/components/ui/input";
@@ -21,6 +22,7 @@ const thumbnails: Record<string, string> = {
 
 const Interviews = () => {
   const { t } = useLanguage();
+  usePageTitle({ en: "Interviews", vi: "Phỏng vấn" });
   const [q, setQ] = useState("");
   const [langFilter, setLangFilter] = useState<"all" | "en" | "vi">("all");
 

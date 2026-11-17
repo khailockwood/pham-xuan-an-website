@@ -8,41 +8,41 @@ import ttuLogo from "@/assets/ttu-logo.svg";
    a native reviewer. TODO: have the VI strings reviewed before launch. */
 
 export const standfirst: Bilingual = {
-  en: "A free, bilingual archive of oral history interviews with and about Phạm Xuân Ẩn, built so that readers in Vietnam and the United States can work from the same sources, each in their own language.",
-  vi: "Một kho lưu trữ song ngữ, truy cập miễn phí, gồm các cuộc phỏng vấn lịch sử truyền miệng với và về Phạm Xuân Ẩn, được xây dựng để độc giả ở Việt Nam và Hoa Kỳ cùng làm việc trên một nguồn tư liệu, mỗi người bằng ngôn ngữ của mình.",
+  en: "A free archive, in English and Vietnamese, of oral history interviews with Phạm Xuân Ẩn and with people who knew him. Readers in Vietnam and the United States work from the same recordings, each in their own language.",
+  vi: "Một kho lưu trữ miễn phí, bằng tiếng Anh và tiếng Việt, gồm các cuộc phỏng vấn lịch sử truyền miệng với Phạm Xuân Ẩn và với những người từng quen biết ông. Độc giả ở Việt Nam và Hoa Kỳ cùng làm việc trên những bản ghi giống nhau, mỗi người bằng ngôn ngữ của mình.",
 };
 
 export const mission: Bilingual = {
-  en: "In this oral history and digital humanities project, the Dartmouth Digital History Initiative (DDHI) at Dartmouth College collaborates with the Vietnam Studies Center at Fulbright University Vietnam to forge new interpretive approaches to the study of the Vietnam War.",
-  vi: "Trong dự án lịch sử truyền miệng và nhân văn số này, Sáng kiến Lịch sử Số Dartmouth (DDHI) thuộc Đại học Dartmouth hợp tác với Trung tâm Nghiên cứu Việt Nam thuộc Đại học Fulbright Việt Nam nhằm xây dựng những hướng tiếp cận diễn giải mới cho việc nghiên cứu Chiến tranh Việt Nam.",
+  en: "The Dartmouth Digital History Initiative (DDHI) at Dartmouth College runs the project with the Vietnam Studies Center at Fulbright University Vietnam.",
+  vi: "Sáng kiến Lịch sử Số Dartmouth (DDHI) thuộc Đại học Dartmouth thực hiện dự án cùng Trung tâm Nghiên cứu Việt Nam thuộc Đại học Fulbright Việt Nam.",
 };
 
 export const methodology: Bilingual = {
-  en: "The project is recovering, digitally enhancing, and making accessible a set of oral history interviews recorded more than twenty years ago with the late Phạm Xuân Ẩn, the most celebrated spy of the Vietnam War. Alongside those recordings we are building a free digital archive that holds the enhanced originals, new oral histories with An's associates, scholarly essays, and interactive data visualizations. It is aimed at readers in the United States, Vietnam, and elsewhere who want to work from the primary sources rather than from the accounts built on them, fifty years after the fall of Saigon.",
-  vi: "Dự án đang khôi phục, xử lý kỹ thuật số và mở quyền tiếp cận cho một loạt cuộc phỏng vấn lịch sử truyền miệng được ghi hơn hai mươi năm trước với cố nhà báo Phạm Xuân Ẩn, điệp viên nổi tiếng nhất của Chiến tranh Việt Nam. Song song với những bản ghi ấy, chúng tôi xây dựng một kho lưu trữ số miễn phí gồm các bản gốc đã xử lý, những cuộc phỏng vấn mới với người quen biết ông, các tiểu luận học thuật và công cụ trực quan hóa dữ liệu. Kho lưu trữ hướng tới độc giả tại Hoa Kỳ, Việt Nam và nhiều nơi khác, những người muốn làm việc trực tiếp với tư liệu gốc thay vì qua các diễn giải dựng trên đó, năm mươi năm sau ngày Sài Gòn sụp đổ.",
+  en: "Historians and writers recorded long conversations with Ẩn in 2005. We are restoring the audio of those recordings and publishing each one with an index you can search. Students and researchers at Fulbright and Dartmouth are adding new interviews with people who knew him. Essays and data visualizations built from the same material are in preparation.",
+  vi: "Năm 2005, các nhà sử học và nhà văn đã ghi lại những cuộc trò chuyện dài với ông Ẩn. Chúng tôi đang phục hồi âm thanh của những bản ghi ấy và công bố mỗi bản ghi kèm một chỉ mục có thể tìm kiếm. Sinh viên và nhà nghiên cứu tại Fulbright và Dartmouth đang bổ sung các cuộc phỏng vấn mới với những người từng quen biết ông. Các tiểu luận và trực quan hóa dữ liệu dựng từ chính nguồn tư liệu ấy đang được chuẩn bị.",
 };
 
 /** How a reader actually uses a recording on this site. */
 export const presentation: Bilingual = {
-  en: "Every recording is published through the OHMS viewer, the standard tool for oral history in the field. Rather than one long audio file, each interview arrives broken into indexed segments: a title, a synopsis, and a set of keywords for each passage, so you can read what a stretch of tape covers and jump straight to it. The index is searchable, and searching it returns the moments where a name or subject actually comes up.",
-  vi: "Mỗi bản ghi được công bố qua trình xem OHMS, công cụ tiêu chuẩn của ngành lịch sử truyền miệng. Thay vì một tệp âm thanh dài, mỗi cuộc phỏng vấn được chia thành các đoạn có lập chỉ mục: mỗi đoạn có tiêu đề, tóm lược và bộ từ khóa, để người dùng biết đoạn băng ấy nói về điều gì và chuyển thẳng tới đó. Chỉ mục có thể tìm kiếm, và kết quả trả về đúng những thời điểm một cái tên hay chủ đề được nhắc đến.",
+  en: "Every recording is published through OHMS, the viewer the University of Kentucky built for oral history archives. Each interview is split into indexed segments, each with a title, a synopsis and keywords, so you can read what a stretch of tape covers and jump straight to it. Searching the index returns the moments where a name or subject comes up.",
+  vi: "Mỗi bản ghi được công bố qua OHMS, trình xem do Đại học Kentucky xây dựng cho các kho lưu trữ lịch sử truyền miệng. Mỗi cuộc phỏng vấn được chia thành các đoạn có lập chỉ mục, mỗi đoạn có tiêu đề, tóm lược và từ khóa, để người dùng biết đoạn băng ấy nói về điều gì và chuyển thẳng tới đó. Tìm kiếm trong chỉ mục sẽ trả về những thời điểm một cái tên hay chủ đề được nhắc đến.",
 };
 
 /** What the two languages do and do not cover yet. */
 export const bilingualNote: Bilingual = {
-  en: "The site's interface, biography, and project text are written in both English and Vietnamese, and the toggle in the header switches everything at once. The recordings themselves are in their original language and are not dubbed. Where OHMS carries a translated index, the toggle switches that too.",
-  vi: "Giao diện, tiểu sử và phần giới thiệu dự án được viết bằng cả tiếng Anh và tiếng Việt; nút chuyển ở đầu trang đổi toàn bộ cùng lúc. Bản thân các bản ghi giữ nguyên ngôn ngữ gốc và không được lồng tiếng. Ở những bản ghi có chỉ mục đã dịch trong OHMS, nút chuyển cũng đổi phần đó.",
+  en: "Everything we wrote for the site is in English and Vietnamese, and the EN / VI toggle in the header switches all of it at once. The recordings stay in the language they were made in. Their index titles are in English for now: none of the current exports carries a Vietnamese index yet.",
+  vi: "Mọi nội dung chúng tôi viết cho trang đều có bằng tiếng Anh và tiếng Việt, và nút EN / VI ở đầu trang chuyển toàn bộ cùng lúc. Các bản ghi giữ nguyên ngôn ngữ lúc được ghi. Tiêu đề chỉ mục hiện chỉ có bằng tiếng Anh, vì chưa bản xuất nào có chỉ mục tiếng Việt.",
 };
 
 /** Named on the site only where the archive's own records name them. */
 export const teamNote: Bilingual = {
-  en: "The project is staffed by faculty, staff, and student researchers at Dartmouth College and Fulbright University Vietnam. A full roster and credits will be published here.",
-  vi: "Dự án được thực hiện bởi giảng viên, cán bộ và sinh viên nghiên cứu tại Đại học Dartmouth và Đại học Fulbright Việt Nam. Danh sách đầy đủ và phần ghi công sẽ được công bố tại đây.",
+  en: "Faculty, staff and student researchers at Dartmouth College and Fulbright University Vietnam run the project. A full list of names and credits will be published here.",
+  vi: "Dự án do giảng viên, cán bộ và sinh viên nghiên cứu tại Đại học Dartmouth và Đại học Fulbright Việt Nam thực hiện. Danh sách tên và phần ghi công đầy đủ sẽ được công bố tại đây.",
 };
 
 export const partnersNote: Bilingual = {
-  en: "The archive is a collaboration between three institutions on two continents.",
-  vi: "Kho lưu trữ là sự hợp tác giữa ba tổ chức trên hai châu lục.",
+  en: "Three institutions, in the United States and Vietnam, work on the archive.",
+  vi: "Ba tổ chức, ở Hoa Kỳ và Việt Nam, cùng thực hiện kho lưu trữ.",
 };
 
 export type Partner = {
@@ -86,8 +86,8 @@ export const partners: Partner[] = [
     name: { en: "Vietnam Center & Sam Johnson Archive", vi: "Vietnam Center & Sam Johnson Archive" },
     sub: { en: "Texas Tech University", vi: "Đại học Texas Tech" },
     role: {
-      en: "Archival partner, and home to one of the largest collections of Vietnam War material outside government hands.",
-      vi: "Đối tác lưu trữ, nơi lưu giữ một trong những bộ sưu tập tư liệu Chiến tranh Việt Nam lớn nhất ngoài khu vực nhà nước.",
+      en: "The archival partner. Its Vietnam Archive is one of the largest collections of Vietnam War material outside the U.S. government.",
+      vi: "Đối tác lưu trữ. Kho Lưu trữ Việt Nam của trung tâm là một trong những bộ sưu tập tư liệu Chiến tranh Việt Nam lớn nhất nằm ngoài chính phủ Mỹ.",
     },
     href: "https://www.vietnam.ttu.edu/",
     go: "vietnam.ttu.edu",
@@ -97,8 +97,15 @@ export const partners: Partner[] = [
 ];
 
 export const citeNote: Bilingual = {
-  en: "Material here may be quoted for research and teaching. Cite an interview by the person speaking, not by the page.",
-  vi: "Tư liệu tại đây có thể được trích dẫn cho mục đích nghiên cứu và giảng dạy. Xin trích dẫn theo người kể, không theo trang web.",
+  en: "You may quote this material for research and teaching. Cite an interview by the person speaking, in this form:",
+  vi: "Bạn có thể trích dẫn tư liệu này cho nghiên cứu và giảng dạy. Xin trích dẫn một cuộc phỏng vấn theo tên người kể, theo mẫu sau:",
+};
+
+/** How to cite one moment rather than a whole recording. */
+export const citeLinkNote: Bilingual = {
+  en: "Every indexed passage has a link of its own, under \"Direct segment link\" in the player, so a citation can point at the moment rather than the whole recording.",
+  // TODO: verify VI
+  vi: "Mỗi đoạn được lập chỉ mục có đường dẫn riêng, ở mục \"Direct segment link\" trong trình phát, để trích dẫn có thể trỏ đúng thời điểm thay vì cả bản ghi.",
 };
 
 export const cite: Bilingual = {
@@ -122,9 +129,9 @@ export const collectionNote = (n: {
   /** Indexed segments across every export. */
   segments: number;
 }): Bilingual => ({
-  en: `${n.recordings} recordings with ${n.people} people, ${n.hours} hours ${n.minutes} minutes in all, indexed into ${n.segments} passages. The 2005 sessions are conversations with An himself, recorded by historians and writers in the last year of his life. The rest were recorded by the project, with colleagues and friends who knew him.`,
+  en: `${n.recordings} recordings with ${n.people} people, ${n.hours} hours ${n.minutes} minutes in all, indexed into ${n.segments} passages. The 2005 sessions are conversations with Ẩn himself, recorded the year before he died. The project recorded the rest, with people who knew him.`,
   // TODO: verify VI
-  vi: `${n.recordings} bản ghi với ${n.people} người, tổng cộng ${n.hours} giờ ${n.minutes} phút, được lập chỉ mục thành ${n.segments} đoạn. Các buổi ghi năm 2005 là những cuộc trò chuyện với chính ông Ẩn, do các nhà sử học và nhà văn thực hiện trong năm cuối đời ông. Số còn lại do dự án ghi, với đồng nghiệp và bạn bè từng quen biết ông.`,
+  vi: `${n.recordings} bản ghi với ${n.people} người, tổng cộng ${n.hours} giờ ${n.minutes} phút, được lập chỉ mục thành ${n.segments} đoạn. Các buổi ghi năm 2005 là những cuộc trò chuyện với chính ông Ẩn, được ghi một năm trước khi ông mất. Số còn lại do dự án ghi, với những người từng quen biết ông.`,
 });
 
 /** Stated on the voice whose recordings are only partly indexed, so a passage

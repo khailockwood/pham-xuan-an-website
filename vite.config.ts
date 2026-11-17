@@ -28,8 +28,10 @@ import { componentTagger } from "lovable-tagger";
 function siteOrigin(): string {
   const explicit = (process.env.SITE_ORIGIN || "").trim();
   if (explicit) return explicit.replace(/\/+$/, "");
+  // Netlify sets URL (the site's primary address, with scheme) on every build.
+  if (process.env.NETLIFY === "true" && process.env.URL) return process.env.URL.trim().replace(/\/+$/, "");
   const host = (process.env.VERCEL_PROJECT_PRODUCTION_URL || "").trim();
-  if (!host) return ""; // local dev / non-Vercel build → root-relative URLs
+  if (!host) return ""; // local dev / other hosts → root-relative URLs
   return `https://${host.replace(/^https?:\/\//, "").replace(/\/+$/, "")}`;
 }
 

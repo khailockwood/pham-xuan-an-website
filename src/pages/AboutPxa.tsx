@@ -1,8 +1,10 @@
 import { useLanguage } from "@/contexts/LanguageContext";
+import { usePageTitle } from "@/hooks/use-page-title";
 import { bioBody, bioIntro, doubleRecord, lifeDates, recordHeads } from "@/content/bio";
 
 const AboutPxa = () => {
   const { t } = useLanguage();
+  usePageTitle({ en: "Who Was Pham Xuan An?", vi: "Phạm Xuân Ẩn là ai?" });
 
   /** The chronology, stacked as two plain lists. Visible on small screens; kept
       in the accessibility tree at every size, because the spine below is a
@@ -61,7 +63,7 @@ const AboutPxa = () => {
           with `bg-paper`. */}
       <section className="container border-t border-border py-section lg:py-section-lg">
         <h2 className="max-w-[14em] font-display text-head">
-          {t({ en: "Two lives, simultaneously.", vi: "Hai cuộc đời, cùng một lúc." })}
+          {t({ en: "Reporter and intelligence officer, at the same time", vi: "Phóng viên và sĩ quan tình báo, cùng một lúc" })}
         </h2>
 
         {/* Stacked lists: the small-screen layout, and the reading order for

@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { notFoundTitle, usePageTitle } from "@/hooks/use-page-title";
 import { exhibits } from "@/content/exhibits";
 import { interviews } from "@/content/interviews";
 import NotFound from "./NotFound";
@@ -9,11 +10,29 @@ const ExhibitDetail = () => {
   const { slug } = useParams();
   const { t } = useLanguage();
   const exhibit = exhibits.find((e) => e.slug === slug);
+  usePageTitle(exhibit ? exhibit.title : notFoundTitle);
   if (!exhibit) return <NotFound />;
 
   const related = (exhibit.relatedInterviews ?? [])
     .map((s) => interviews.find((i) => i.slug === s))
     .filter(Boolean);
+
+  /* Unpublished: an old link lands on the working title and its status,
+     never on the draft body, whose facts are not yet checked. */
+  if (!exhibit.published) {
+    return (
+      <article className="container py-section lg:py-section-lg">
+        <Link to="/exhibits" className="inline-flex items-center gap-2 text-label text-pine hover:text-pine-deep">
+          <ArrowLeft size={14} aria-hidden /> {t({ en: "Back to exhibits", vi: "Quay lại triển lãm" })}
+        </Link>
+        <h1 className="mt-8 font-display text-title">{t(exhibit.title)}</h1>
+        <p className="prose-measure mt-5 font-display text-lead text-ink-soft">{t(exhibit.dek)}</p>
+        <p className="meta-label mt-6">
+          {t({ en: "In preparation. This exhibit is not published yet.", vi: "Đang chuẩn bị. Triển lãm này chưa được công bố." })}
+        </p>
+      </article>
+    );
+  }
 
   return (
     <article className="container py-section prose-measure">

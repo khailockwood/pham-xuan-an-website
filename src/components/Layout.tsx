@@ -60,7 +60,8 @@ export const Layout = ({ children }: { children: ReactNode }) => {
               type="button"
               className="-mr-2 p-2 text-paper"
               onClick={() => setOpen((o) => !o)}
-              aria-label="Menu"
+              aria-expanded={open}
+              aria-label={t({ en: "Menu", vi: "Danh mục" })}
             >
               {open ? <X size={20} /> : <Menu size={20} />}
             </button>

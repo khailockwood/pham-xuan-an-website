@@ -1,72 +1,72 @@
 {
   "viewer": "viewer_4.0",
-  "builtAt": "2026-09-07T23:13:45.197Z",
+  "builtAt": "2026-11-17T20:54:01.115Z",
   "interviews": [
     {
       "id": "interview36980",
       "file": "interview36980.xml",
       "segments": 10,
-      "bytes": 1680563
+      "bytes": 1680219
     },
     {
       "id": "interview36981",
       "file": "interview36981.xml",
       "segments": 8,
-      "bytes": 804870
+      "bytes": 804526
     },
     {
       "id": "interview36982",
       "file": "interview36982.xml",
       "segments": 11,
-      "bytes": 553450
+      "bytes": 553106
     },
     {
       "id": "interview41608",
       "file": "interview41608.xml",
       "segments": 0,
-      "bytes": 177199
+      "bytes": 176855
     },
     {
       "id": "interview41609",
       "file": "interview41609.xml",
       "segments": 0,
-      "bytes": 76195
+      "bytes": 75851
     },
     {
       "id": "interview41646",
       "file": "interview41646.xml",
       "segments": 13,
-      "bytes": 171448
+      "bytes": 171104
     },
     {
       "id": "interview42105",
       "file": "interview42105.xml",
       "segments": 10,
-      "bytes": 311053
+      "bytes": 310709
     },
     {
       "id": "interview42197",
       "file": "interview42197.xml",
       "segments": 7,
-      "bytes": 211825
+      "bytes": 211481
     },
     {
       "id": "interview42211",
       "file": "interview42211.xml",
       "segments": 20,
-      "bytes": 462073
+      "bytes": 461729
     },
     {
       "id": "interview42374",
       "file": "interview42374.xml",
       "segments": 17,
-      "bytes": 1093973
+      "bytes": 1093629
     },
     {
       "id": "interview42707",
       "file": "interview42707.xml",
       "segments": 17,
-      "bytes": 1167042
+      "bytes": 1166698
     }
   ]
 }

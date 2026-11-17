@@ -19,10 +19,16 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     if (stored === "en" || stored === "vi") setLangState(stored);
   }, []);
 
+  /* Keep <html lang> in step with the interface, including a language
+     restored from storage on load, so screen readers pronounce the page in
+     the right language. */
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
   const setLang = (l: Lang) => {
     setLangState(l);
     localStorage.setItem("pxa-lang", l);
-    document.documentElement.lang = l;
   };
 
   const t = (b: Bilingual) => b[lang] ?? b.en;

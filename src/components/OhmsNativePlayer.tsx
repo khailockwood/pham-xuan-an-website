@@ -205,7 +205,8 @@ const OhmsNativePlayer = ({
 
   const canSyncLive = record?.mediaMode === "file";
 
-  const segments = record?.segments ?? [];
+  // Memoised so the empty fallback keeps one identity across renders.
+  const segments = useMemo(() => record?.segments ?? [], [record]);
 
   const activeSegment = useMemo(() => {
     if (!canSyncLive || segments.length === 0) return -1;
