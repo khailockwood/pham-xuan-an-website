@@ -57,6 +57,7 @@ and tan values were retired on purpose and should not come back.
                                             4.5:1 and failed AA. */
     --pine: 157 100% 21%;
     --pine-deep: 152 80% 12%;
+    --pine-pale: 147 39% 82%;             /* secondary type on pine-deep only — 9.6:1 there */
     --gold: 41 61% 43%;
     --gold-bright: 43 56% 52%;
 
@@ -131,16 +132,19 @@ and tan values were retired on purpose and should not come back.
     color: hsl(var(--ink-muted));
   }
 
-  /* Running prose sits under 75 characters. The serif display face carries a
-     slightly longer measure and more leading than the sans, per the type
-     scale's body rank. */
+  /* Running prose sits under 75 characters. The cap is in rem, not ch: a `ch`
+     is the width of "0", and IBM Plex Sans running text averages well under
+     that, so 68ch was rendering ~90 characters a line. 38rem holds the sans at
+     about 70 at 17px. The serif display face carries a slightly longer measure
+     and more leading, per the type scale's body rank. */
   .prose-measure {
-    max-width: 68ch;
+    max-width: 38rem;
     font-size: 1.0625rem;
     line-height: 1.65;
+    text-wrap: pretty;
   }
   .prose-measure.font-display {
-    max-width: 72ch;
+    max-width: 40rem;
     line-height: 1.7;
   }
 }

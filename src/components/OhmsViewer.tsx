@@ -85,11 +85,10 @@ const OhmsViewer = ({ url, title, heightClass = "h-[clamp(560px,78vh,880px)]" }:
       <div className="bg-card px-3 py-3 sm:px-4 sm:py-4 md:px-5">
         <iframe
           src={url}
-          title={t({ en: "Synchronized viewer — ", vi: "Trình xem đồng bộ — " }) + title}
+          title={t({ en: "Synchronized viewer: ", vi: "Trình xem đồng bộ: " }) + title}
           className={`w-full ${heightClass} border border-border bg-white`}
           loading="lazy"
           allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-          allowFullScreen
           referrerPolicy="no-referrer-when-downgrade"
         />
       </div>

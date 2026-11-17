@@ -85,6 +85,7 @@ and mirrors the same tokens.
 | `ink-muted`   |           | metadata, captions — 6.5:1 (5.9:1 on paper-2) |
 | `pine`        | `#00693E` | institutional accent, links                 |
 | `pine-deep`   | `#06371F` | masthead, footer, scrim over footage        |
+| `pine-pale`   | `#BFE3CF` | secondary type on pine-deep only — 9.6:1 there |
 | `gold`        | `#B0852B` | rules and buttons — 3.3:1 on paper, never text on a light ground |
 | `gold-bright` | `#C9A23F` | gold on dark grounds                        |
 
@@ -113,7 +114,7 @@ Utility classes in `index.css`:
   It is not the metadata voice; tracked-out mono is the wrong register for anything
   a person reads as prose.
 - `.meta-label` — the metadata voice: sentence-case sans at 14px.
-- `.prose-measure` — running prose under ~68ch (72ch for the serif).
+- `.prose-measure` — running prose at about 70 characters (38rem; 40rem for the serif).
 
 **Spacing ranks:** `gutter` (28px), `stack` (44px, heading → content),
 `section` / `section-lg` (80 / 88px vertical section rhythm).
@@ -129,26 +130,43 @@ everything; and page-load animations (the hero footage is the one moving thing).
 
 Lists of records are built as **registers** (a finding aid: hairline-ruled rows,
 the whole row a link) rather than card grids. The one deliberate exception is the
-homepage's voices grid ("The many depictions of An's life"): one tile per voice,
-unequal in size. Ẩn's own interviews carry photographs (`TILE_IMAGES` in
-`Index.tsx`); a voice with no photograph on file gets a plain tile.
+homepage's two records: Testimony and The written record sit side by side as
+two recessed panels of **the same width**, so neither pillar, and no account of
+Ẩn, is ranked above another (PRODUCT.md, "Every viewpoint, no verdict"). No
+photographs on the voices until there is one of every speaker; never someone
+else's face, and never Ẩn's face on another voice's entry.
 
 ### Homepage
 
-Modelled on the Google Arts & Culture pages for Frida Kahlo and Nelson Mandela.
-In order: the video hero, "In collaboration with" (`Partners`), the voices grid,
-"What this archive holds", exhibits.
+In order: the video hero, the two records side by side (Testimony / The
+written record, chosen by the owner on 2026-11-17 from three generated
+layouts), the double record (a two-sided timeline from `bio.ts` on a pine-deep
+band), "Citing a recording", and a one-line credit for the three partners.
+Exhibits are not on the homepage while they are unpublished. Keep the text
+below the video short: no intro paragraphs over the two records.
 
+- **The first screen is the footage and little else** (owner, 2026-11-17): the
+  name, "Hai Trung, 1927–2006", one line on who he was, a one-line credit for
+  the footage, and the pause control. No buttons over the footage; the two
+  records are what the visitor scrolls to.
 - **Hero footage** is a silent 26-second loop cut from McMorris part 2 (the only
   filmed interviews; the source is 704×528, so it is shown greyscale under a
-  pine-deep scrim rather than at full colour). Re-cut with ffmpeg from the media
+  light pine-deep tint and a neutral ink gradient rather than at full colour —
+  the green is a trace, not a wash). Re-cut with ffmpeg from the media
   URL in `interviews.ts`; keep it muted, a few MB at most, with a poster frame.
 - The loop is started from script, not `autoPlay`, so `prefers-reduced-motion`
   gets the poster. The pause button is required (WCAG 2.2.2) — do not remove it.
-- `voices` in `interviews.ts` groups recordings: Ẩn's own by interviewer,
-  everyone else by name. Every tile carries the same three lines (name, who they
-  are to Ẩn, recording count) and is a single link to the voice's first
-  recording — no topic deep links, no per-part links, no status notes.
+- **Testimony leads with what the recordings cover, not with who made them**
+  (owner, 2026-11-17), and broadly: one line per voice on the recordings as a
+  whole (`voiceNotes[name].subject` in `interviews.ts`, read from the full
+  OHMS index), not a single segment title, which undersells what a long
+  conversation covers. The speaker follows in small type. `voices` groups
+  recordings: Ẩn's own by interviewer, everyone else by name; Ẩn's own come
+  first, each group alphabetical by surname. `voiceNotes` also holds each
+  voice's `relation` and an optional `start` (the first indexed passage in
+  which Ẩn comes up), so an entry opens on him rather than on the narrator's
+  childhood. Relations are facts about real people, drawn from the
+  OHMS indexes where they say it; keep them sourced.
 
 ---
 
@@ -227,9 +245,11 @@ covered by unit tests in `src/lib/ohms.test.ts`.
 - McMorris parts 1–2 carry `2005?`, rendered as "2005 (date uncertain)".
 - Summaries are auto-derived from indexed segment titles and the Vietnamese copy is
   machine-drafted. **Both need curation before launch.**
-- `exhibits.ts` still holds "Coming soon" titles. The homepage marks both exhibits
-  "In preparation" rather than presenting them as published — keep that honest if
-  you touch the section.
+- Both exhibits are unpublished (`published: false` in `exhibits.ts`). The
+  Exhibits page lists their working titles marked "In preparation", and an
+  exhibit page shows only its title and status, never the draft body, whose facts
+  are unchecked. They are not on the homepage. Keep that honest until each one
+  is verified and its `published` flag is flipped.
 
 ### Blank-iframe failure modes
 - **http media or http viewer** on an https site → blocked as mixed content.
@@ -256,9 +276,9 @@ src/
   lib/ohms.ts     OHMS XML parser (+ ohms.test.ts)
   lib/ohms-highlights.ts  reading the baked index (+ ohms-highlights.test.ts)
   index.css       design tokens + utility classes
-  assets/         partner logos; interview-pxa.jpg (Ẩn with Miller), pxa-hero.webp (portrait)
+  assets/         partner logos; interview-pxa.jpg (Ẩn with Miller)
 public/
-  media/          hero loop + poster and the McMorris still — cut from the interview video
+  media/          hero loop + poster, cut from the McMorris interview video
   ohms/           OHMS XML exports (source of truth for interviews)
   ohms-viewer/    baked static viewer pages — generated, committed
 scripts/ohms/     build-viewer.mjs, build-index.mjs, search-shim.js,

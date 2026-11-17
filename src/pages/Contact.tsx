@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { z } from "zod";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { usePageTitle } from "@/hooks/use-page-title";
 import { ui } from "@/content/site";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,6 +16,7 @@ const schema = z.object({
 
 const Contact = () => {
   const { t } = useLanguage();
+  usePageTitle({ en: "Contact", vi: "Liên hệ" });
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
 

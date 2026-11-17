@@ -245,6 +245,9 @@ function transform(html, id, file) {
   html = html.split(`${ORIGIN}/viewer.php?cachefile=${file}`).join(target);
   // Any other absolute references to the local origin → page-relative.
   html = html.split(`${ORIGIN}/`).join(PUBLIC_BASE || "");
+  // The viewer prints a Google Analytics tag even when no measurement ID is
+  // configured: a request to Google that records nothing. Drop it.
+  html = html.replace(/<!-- Google tag \(gtag\.js\) -->[\s\S]*?gtag\('config', ''\);?\s*<\/script>/, "");
 
   const headInjection = `<link rel="stylesheet" href="ohms-embed.css">`;
   const bodyInjection =

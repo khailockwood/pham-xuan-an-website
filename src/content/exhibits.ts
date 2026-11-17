@@ -9,6 +9,9 @@ export type Exhibit = {
   cover: string;
   body: Bilingual; // paragraphs separated by \n\n
   relatedInterviews?: string[];
+  /** False while the exhibit is in preparation: the site shows its working
+      title and description, never the draft body. */
+  published: boolean;
 };
 
 /* Both exhibits are unpublished drafts. The bodies below are working text, not
@@ -18,11 +21,13 @@ export type Exhibit = {
 export const exhibits: Exhibit[] = [
   {
     slug: "the-double-life",
-    title: { en: "Coming soon", vi: "Sắp ra mắt" },
+    title: { en: "Mapping a divided career", vi: "Bản đồ một sự nghiệp bị chia đôi" },
     dek: {
-      en: "Exhibit coming soon.",
-      vi: "Triển lãm sắp ra mắt.",
+      en: "A data visualization of where Ẩn filed from and when, set against what he was sending to Hanoi in the same years.",
+      // TODO: verify VI
+      vi: "Một trực quan hóa dữ liệu về nơi và thời điểm ông Ẩn gửi bài, đối chiếu với những gì ông chuyển về Hà Nội trong cùng những năm đó.",
     },
+    published: false,
     cover: exhibitViz1,
     body: {
       en: "For nearly two decades Phạm Xuân Ẩn filed for the American press in Saigon and reported to Hanoi at the same time. This exhibit sets his colleagues' recollections alongside the documentary record and his own account, given late in his life.\n\nAn maintained to the end that he had betrayed no one. The interviews gathered here let visitors weigh that claim against what the people around him say.",
@@ -31,11 +36,13 @@ export const exhibits: Exhibit[] = [
   },
   {
     slug: "time-magazine-years",
-    title: { en: "Coming soon", vi: "Sắp ra mắt" },
+    title: { en: "Inside the Saigon bureau", vi: "Bên trong văn phòng Sài Gòn" },
     dek: {
-      en: "Exhibit coming soon.",
-      vi: "Triển lãm sắp ra mắt.",
+      en: "An essay on how Time's Saigon bureau worked between 1965 and 1975, and how its reporting reached readers in the United States.",
+      // TODO: verify VI
+      vi: "Một tiểu luận về cách văn phòng Time tại Sài Gòn vận hành giai đoạn 1965–1975, và cách những bài viết từ đó đến với độc giả Hoa Kỳ.",
     },
+    published: false,
     cover: exhibitViz2,
     body: {
       en: "Time hired An in 1965, and for the next decade he was the magazine's only Vietnamese staff correspondent. This exhibit reconstructs how the Saigon bureau worked day to day, and how its reporting reached American readers.",

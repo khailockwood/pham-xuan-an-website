@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useLanguage, type Bilingual } from "@/contexts/LanguageContext";
+import { usePageTitle } from "@/hooks/use-page-title";
 import { interviews, type Interview } from "@/content/interviews";
 import {
   bilingualNote,
@@ -49,6 +50,7 @@ const Spread = ({
 
 const AboutProject = () => {
   const { t } = useLanguage();
+  usePageTitle({ en: "About the project", vi: "Về dự án" });
 
   /* The composition of the collection, read off the records themselves and off
      the OHMS exports, so the page cannot drift out of date as interviews are
@@ -146,7 +148,7 @@ const AboutProject = () => {
 
       {/* ---------- Mission & method ---------- */}
       <section className="container space-y-16 py-section lg:space-y-20 lg:py-section-lg">
-        <Spread title={{ en: "Why this archive exists", vi: "Vì sao có kho lưu trữ này" }}>
+        <Spread title={{ en: "What the project does", vi: "Dự án làm gì" }}>
           <p>{t(mission)}</p>
           <p>{t(methodology)}</p>
         </Spread>

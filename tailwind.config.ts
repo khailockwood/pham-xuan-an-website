@@ -62,6 +62,9 @@ export default {
         pine: {
           DEFAULT: "hsl(var(--pine) / <alpha-value>)",
           deep: "hsl(var(--pine-deep) / <alpha-value>)",
+          /* Secondary type on a pine-deep wall (the alias, wall text, timeline
+             heads). Never on a light ground. */
+          pale: "hsl(var(--pine-pale) / <alpha-value>)",
         },
         gold: {
           DEFAULT: "hsl(var(--gold) / <alpha-value>)",

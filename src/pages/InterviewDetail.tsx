@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { ArrowLeft, Download } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { notFoundTitle, usePageTitle } from "@/hooks/use-page-title";
 import { interviews } from "@/content/interviews";
 import { parseSegmentHash } from "@/lib/ohms-highlights";
 import { ui } from "@/content/site";
@@ -27,6 +28,7 @@ const InterviewDetail = () => {
   }, [segment, slug]);
 
   const iv = interviews.find((i) => i.slug === slug);
+  usePageTitle(iv ? iv.title : notFoundTitle);
   if (!iv) return <NotFound />;
 
   const LANGUAGE_NAME: Record<string, { en: string; vi: string }> = {

@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { notFoundTitle, usePageTitle } from "@/hooks/use-page-title";
 
 /* An empty screen is an invitation to act, not an apology. No "Oops" — say what
    happened and give the reader the two places worth going. */
 const NotFound = () => {
   const { t } = useLanguage();
+  usePageTitle(notFoundTitle);
 
   return (
     <div className="container py-section lg:py-section-lg">
